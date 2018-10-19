@@ -21,4 +21,4 @@ Two things reagrding this optional cross-validation: first, this step greatly in
 
 ## Sample command:
 
-    python3 FeGenie.py
+    python3 FeGenie.v.5.py -DB HMM-lib/ -bin_dir your/genomes/ -bin_ext fa -contigs_source single -bit HMM-bitcutoffs.txt -d 10 -out fegenie-out -inflation 100 -t 4
