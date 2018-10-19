@@ -14,11 +14,13 @@ Two things reagrding this optional cross-validation: first, this step greatly in
 
 ## Dependencies:
 
-### Python (version 3.6 or higher)
-### Diamond (only necessary if you are doing the cross-validation against nr)
-### BLAST
-### HMMER
-### Prodigal
+### -Python (version 3.6 or higher)
+### -Diamond (only necessary if you are doing the cross-validation against nr)
+### -BLAST
+### -HMMER
+### -Prodigal
+
+
 
 ## Sample command:
 
