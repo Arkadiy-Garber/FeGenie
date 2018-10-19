@@ -14,6 +14,7 @@ Two things reagrding this optional cross-validation: first, this step greatly in
 
 ## Dependencies:
 
+### Python (version 3.6 or higher)
 ### Diamond
 ### BLAST
 ### HMMER
