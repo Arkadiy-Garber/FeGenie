@@ -23,4 +23,4 @@ Two things regarding this optional cross-validation: first, this step greatly in
 
 ## Citation
 This tool is introduced in an article in-prep:
-### Garber, A.I., Nealson, K.H., Merino, N. FeGenie: a new database and tool for identification of iron genes and iron gene clusters in genomes and metagenome assemblies.
+Garber, A.I., Nealson, K.H., Merino, N. FeGenie: a new database and tool for identification of iron genes and iron gene clusters in genomes and metagenome assemblies.
