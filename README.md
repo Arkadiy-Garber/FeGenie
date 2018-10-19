@@ -22,3 +22,5 @@ Two things reagrding this optional cross-validation: first, this step greatly in
 ## Sample command:
 
     python3 FeGenie.v.5.py -DB HMM-lib/ -bin_dir your/genomes/ -bin_ext fa -contigs_source single -bit HMM-bitcutoffs.txt -d 10 -out fegenie-out -inflation 100 -t 4
+
+A few more things: you can control a some parameters: the '-d' option controls the distance between genes that will is allowable for cluster-identication. In the sample command above, that paramters is set to 10, meaning that if two genes have less than 10 genes between them, they will be considered as part of a potential cluster. The '-inflation' parameters dictates the values that are outputed in the 
