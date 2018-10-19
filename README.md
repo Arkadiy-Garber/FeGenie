@@ -1,5 +1,7 @@
 # FeGenie
 
+Please see the Wiki page for introduction and tutorial on how to use this tool.
+
 ## Dependencies:
 
 ### -Python (version 3.6 or higher)
