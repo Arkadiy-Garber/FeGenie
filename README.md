@@ -11,7 +11,7 @@ Please see the Wiki page for introduction and tutorial on how to use this tool.
 ### -Prodigal
 ###
 
-## Obtaining necessary cross-validation files 
+## Obtaining NCBI's nr database for cross-validation
 
 Also, a part of this program includes an optional cross-validation of the identified putative iron genes against NCBI's nr database. This option is exercized by simply providing the script with the lcation of the nr database, which should be one large file (~100GB) called "nr.faa". The latest release of this databse can be downloaded by running:
 
