@@ -27,7 +27,7 @@ This tool is introduced in a publication that is currently in-prep:
 "Garber, A.I., Nealson, K.H., Merino, N. FeGenie: a new database and tool for identification of iron genes and iron gene clusters in genomes and metagenome assemblies."
 
 # Citing taxonsluice:
-taxonsluice is developed by Nancy Merino, Arkadiy Garber, and Kenneth Nealson, University of Southern California, Maine, USA.
+FeGenie is developed by Nancy Merino, Arkadiy Garber, and Kenneth Nealson, University of Southern California, Maine, USA.
 
 This project is still a work in progress, and is involved in a publication currently in preparation: "Garber, A.I., Nealson, K.H., Merino, N. FeGenie: a new database and tool for identification of iron genes and iron gene clusters in genomes and metagenome assemblies". If it was useful for your work, you can cite it as: Garber, A.I., and Merino, N. and Nealson, K.H. 2018: FeGenie, GitHub repository: https://github.com/Arkadiy-Garber/FeGenie/.
 
