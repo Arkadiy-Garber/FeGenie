@@ -190,7 +190,7 @@ parser = argparse.ArgumentParser(
     *******************************************************
     '''))
 
-parser.add_argument('-DB', type=str, help='HMM database; directory titled \'DB\', can be found in the FerrJinn-master folder')
+parser.add_argument('-hmm_lib', type=str, help='HMM database; directory titled \'HMM-lib\', can be found in the FeGenie folder')
 
 parser.add_argument('-bin_dir', type=str, help="directory of bins")
 
@@ -202,7 +202,7 @@ parser.add_argument('-contigs_source', type=str, help="are the provided contigs 
 
 parser.add_argument('-bit', type=str, help="tsv file with bitscore cut-offs for all HMMs")
 
-parser.add_argument('-d', type=int, help="maximium distance between genes to be considered in a genomic \'cluster\'."
+parser.add_argument('-d', type=int, help="maximum distance between genes to be considered in a genomic \'cluster\'."
                                          "This number should be an integer and should reflect the maximum number of "
                                          "genes in between putative iron-related genes identified by the HMM database "
                                          "(default=10)", default=10)
@@ -252,7 +252,7 @@ binDirLS = os.listdir(args.bin_dir)
 if args.nr != "NA":
     try:
         testFile = open(args.nr + ".dmnd")
-        print("Found Diamond database file: " + args.nr + "dmnd")
+        print("Found Diamond database file: " + args.nr + ".dmnd")
         print("Skipping the building")
 
     except FileNotFoundError:
@@ -306,13 +306,13 @@ for i in meta:
 # ******************* BEGINNING MAIN ALGORITHM **********************************))))
 
 
-FerrJinnDir = os.listdir(args.DB)
+FerrJinnDir = os.listdir(args.hmm_lib)
 for FeCategory in FerrJinnDir:
     if FeCategory != ".DS_Store":
         print("")
         print("Looking for following iron-related functional category: " + FeCategory)
-        hmmDir = args.DB + "/%s/" % FeCategory
-        hmmDirLS = os.listdir(args.DB + "/%s" % FeCategory)
+        hmmDir = args.hmm_lib + "/%s/" % FeCategory
+        hmmDirLS = os.listdir(args.hmm_lib + "/%s" % FeCategory)
 
         HMMdict = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: "EMPTY")))
         for i in binDirLS:  # ITERATION THROUGH EACH BIN IN A GIVEN DIRECTORY OF BINS
@@ -747,8 +747,8 @@ OUT3.close()
 
 # ************************** BLAST-BASED METHODS/LOOKING FOR UNMODELED MARKERS ********************************
 
-thermincola = args.DB + "/iron_reduction/non-aligned/TherJR_SLCs.faa"
-geobacter = args.DB + "/iron_reduction/non-aligned/geobacter_PCCs.faa"
+thermincola = args.hmm_lib + "/iron_reduction/non-aligned/TherJR_SLCs.faa"
+geobacter = args.hmm_lib + "/iron_reduction/non-aligned/geobacter_PCCs.faa"
 
 for i in binDirLS:
     if lastItem(i.split(".")) == args.bin_ext:
@@ -765,7 +765,7 @@ for i in binDirLS:
 
 
 geoDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
-geo = open(args.DB + "/iron_reduction/non-aligned/geobacter_PCCs.faa")
+geo = open(args.hmm_lib + "/iron_reduction/non-aligned/geobacter_PCCs.faa")
 geo = fasta(geo)
 for i in geo.keys():
     id = i.split(" ")[0]
@@ -775,7 +775,7 @@ for i in geo.keys():
     geoDict[id]["header"] = i
 
 thermDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
-therm = open(args.DB + "/iron_reduction/non-aligned/TherJR_SLCs.faa")
+therm = open(args.hmm_lib + "/iron_reduction/non-aligned/TherJR_SLCs.faa")
 therm = fasta(therm)
 for i in therm.keys():
     id = i.split(" ")[0]
@@ -957,7 +957,7 @@ for i in binDirLS:
         os.system("rm %s/%s-geobacter.blast" % (outDirectory, i))
 
 
-for i in os.listdir(args.DB):
+for i in os.listdir(args.hmm_lib):
     if i != ".DS_Store":
         os.system("rm %s/%s-summary.csv" % (outDirectory, i))
         os.system("rm %s/%s-summary.fa" % (outDirectory, i))
