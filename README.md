@@ -4,11 +4,11 @@ Please see the Wiki page for introduction and tutorial on how to use this tool.
 
 ## Dependencies:
 
-### -Python (version 3.6 or higher)
-### -Diamond (only necessary if you are doing the cross-validation against nr)
-### -BLAST
-### -HMMER
-### -Prodigal
+### Python (version 3.6 or higher)
+### Diamond (only necessary if you are doing the cross-validation against nr)
+### BLAST
+### HMMER
+### Prodigal
 ###
 
 ## Obtaining NCBI's nr database for cross-validation
