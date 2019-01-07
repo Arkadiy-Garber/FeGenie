@@ -677,7 +677,49 @@ Mtx2dict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
 FoxEYZdict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
 FoxABCdict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
 mamDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
+flavinDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
 for i in FilterDict.keys():
+    if len(FilterDict[i]["FmnA.hmm"]) > 0:
+        if len(FilterDict[i]["FmnA.hmm"]) + len(FilterDict[i]["DmkA.hmm"]) + len(FilterDict[i]["FmnB.hmm"]) + \
+                len(FilterDict[i]["PplA.hmm"]) + len(FilterDict[i]["Ndh2.hmm"]) + len(FilterDict[i]["EetA.hmm"]) + \
+            len(FilterDict[i]["EetB.hmm"]) + len(FilterDict[i]["DmkB.hmm"]) > 6:
+            flavinDict[i]["FmnA.hmm"] = "iron_reduction"
+    if len(FilterDict[i]["DmkA.hmm"]) > 0:
+        if len(FilterDict[i]["FmnA.hmm"]) + len(FilterDict[i]["DmkA.hmm"]) + len(FilterDict[i]["FmnB.hmm"]) + \
+                len(FilterDict[i]["PplA.hmm"]) + len(FilterDict[i]["Ndh2.hmm"]) + len(FilterDict[i]["EetA.hmm"]) + \
+            len(FilterDict[i]["EetB.hmm"]) + len(FilterDict[i]["DmkB.hmm"]) > 6:
+            flavinDict[i]["DmkA.hmm"] = "iron_reduction"
+    if len(FilterDict[i]["FmnB.hmm"]) > 0:
+        if len(FilterDict[i]["FmnA.hmm"]) + len(FilterDict[i]["DmkA.hmm"]) + len(FilterDict[i]["FmnB.hmm"]) + \
+                len(FilterDict[i]["PplA.hmm"]) + len(FilterDict[i]["Ndh2.hmm"]) + len(FilterDict[i]["EetA.hmm"]) + \
+            len(FilterDict[i]["EetB.hmm"]) + len(FilterDict[i]["DmkB.hmm"]) > 6:
+            flavinDict[i]["FmnB.hmm"] = "iron_reduction"
+    if len(FilterDict[i]["PplA.hmm"]) > 0:
+        if len(FilterDict[i]["FmnA.hmm"]) + len(FilterDict[i]["DmkA.hmm"]) + len(FilterDict[i]["FmnB.hmm"]) + \
+                len(FilterDict[i]["PplA.hmm"]) + len(FilterDict[i]["Ndh2.hmm"]) + len(FilterDict[i]["EetA.hmm"]) + \
+            len(FilterDict[i]["EetB.hmm"]) + len(FilterDict[i]["DmkB.hmm"]) > 6:
+            flavinDict[i]["PplA.hmm"] = "iron_reduction"
+    if len(FilterDict[i]["Ndh2.hmm"]) > 0:
+        if len(FilterDict[i]["FmnA.hmm"]) + len(FilterDict[i]["DmkA.hmm"]) + len(FilterDict[i]["FmnB.hmm"]) + \
+                len(FilterDict[i]["PplA.hmm"]) + len(FilterDict[i]["Ndh2.hmm"]) + len(FilterDict[i]["EetA.hmm"]) + \
+            len(FilterDict[i]["EetB.hmm"]) + len(FilterDict[i]["DmkB.hmm"]) > 6:
+            flavinDict[i]["Ndh2.hmm"] = "iron_reduction"
+    if len(FilterDict[i]["EetA.hmm"]) > 0:
+        if len(FilterDict[i]["FmnA.hmm"]) + len(FilterDict[i]["DmkA.hmm"]) + len(FilterDict[i]["FmnB.hmm"]) + \
+                len(FilterDict[i]["PplA.hmm"]) + len(FilterDict[i]["Ndh2.hmm"]) + len(FilterDict[i]["EetA.hmm"]) + \
+            len(FilterDict[i]["EetB.hmm"]) + len(FilterDict[i]["DmkB.hmm"]) > 6:
+            flavinDict[i]["EetA.hmm"] = "iron_reduction"
+    if len(FilterDict[i]["EetB.hmm"]) > 0:
+        if len(FilterDict[i]["FmnA.hmm"]) + len(FilterDict[i]["DmkA.hmm"]) + len(FilterDict[i]["FmnB.hmm"]) + \
+                len(FilterDict[i]["PplA.hmm"]) + len(FilterDict[i]["Ndh2.hmm"]) + len(FilterDict[i]["EetA.hmm"]) + \
+            len(FilterDict[i]["EetB.hmm"]) + len(FilterDict[i]["DmkB.hmm"]) > 6:
+            flavinDict[i]["EetB.hmm"] = "iron_reduction"
+    if len(FilterDict[i]["DmkB.hmm"]) > 0:
+        if len(FilterDict[i]["FmnA.hmm"]) + len(FilterDict[i]["DmkA.hmm"]) + len(FilterDict[i]["FmnB.hmm"]) + \
+                len(FilterDict[i]["PplA.hmm"]) + len(FilterDict[i]["Ndh2.hmm"]) + len(FilterDict[i]["EetA.hmm"]) + \
+            len(FilterDict[i]["EetB.hmm"]) + len(FilterDict[i]["DmkB.hmm"]) > 6:
+            flavinDict[i]["DmkB.hmm"] = "iron_reduction"
+
     if len(FilterDict[i]["Cyc1.hmm"]) > 0:
         if len(FilterDict[i]["Cyc2_repCluster1.hmm"] + FilterDict[i]["Cyc2_repCluster2.hmm"] +
                        FilterDict[i]["Cyc2_repCluster3.hmm"]) > 0:
@@ -833,6 +875,11 @@ for i in summary:
                         FoxABCdict[genome][hmm] + "," + genome + "," + orf + "," + hmm + "," + str(bitscore) + "," +
                         ncbiMatch + "," + str(ncbiEval) + "\n")
 
+                if genome in flavinDict.keys() and hmm in flavinDict[genome]:
+                    OUT3.write(
+                        flavinDict[genome][hmm] + "," + genome + "," + orf + "," + hmm + "," + str(bitscore) + "," +
+                        ncbiMatch + "," + str(ncbiEval) + "\n")
+
             elif category == "magnetosome_formation":
                 if genome in mamDict.keys() and hmm in mamDict.keys():
                     OUT3.write(
@@ -860,6 +907,10 @@ for i in summary:
                 if genome in FoxABCdict.keys() and hmm in FoxABCdict[genome]:
                     OUT3.write(
                         FoxABCdict[genome][hmm] + "," + genome + "," + orf + "," + hmm + "," + str(bitscore) + "\n")
+
+                if genome in flavinDict.keys() and hmm in flavinDict[genome]:
+                    OUT3.write(
+                        flavinDict[genome][hmm] + "," + genome + "," + orf + "," + hmm + "," + str(bitscore) + "\n")
 
             elif category == "magnetosome_formation":
                 if genome in mamDict.keys() and hmm in mamDict[genome]:
@@ -1378,8 +1429,38 @@ for i in clustListDict.keys():
             lsStripped = remove2(ls, ["MamW.hmm"])
 
         if len(lsStripped) > 0:
-            # if "Cyc1.hmm" in lsStripped:
-            #     print(ls)
+            lsStripped = ls
+            lsStripped = remove2(ls, ["FmnA.hmm"])
+
+        if len(lsStripped) > 0:
+            lsStripped = ls
+            lsStripped = remove2(ls, ["DmkA.hmm"])
+
+        if len(lsStripped) > 0:
+            lsStripped = ls
+            lsStripped = remove2(ls, ["FmnB.hmm"])
+
+        if len(lsStripped) > 0:
+            lsStripped = ls
+            lsStripped = remove2(ls, ["PplA.hmm"])
+
+        if len(lsStripped) > 0:
+            lsStripped = ls
+            lsStripped = remove2(ls, ["Ndh2.hmm"])
+
+        if len(lsStripped) > 0:
+            lsStripped = ls
+            lsStripped = remove2(ls, ["EetA.hmm"])
+
+        if len(lsStripped) > 0:
+            lsStripped = ls
+            lsStripped = remove2(ls, ["EetB.hmm"])
+
+        if len(lsStripped) > 0:
+            lsStripped = ls
+            lsStripped = remove2(ls, ["DmkB.hmm"])
+
+        if len(lsStripped) > 0:
             for j in clustListDict[i]["line"]:
                 out.write(j)
             out.write("" + "," + "" + "," + "" + "," + "" + "," + "" + "," + "" + "," + "" + "," + "" + "," + "" + "\n")
@@ -1414,7 +1495,6 @@ for i in os.listdir(args.bin_dir):
         # file = open("%s/%s" % (orfs, i), "r")
         file = fasta(file)
         normDict[i] = len(file.keys())
-        print(i)
 # print("\n\n")
 
 outHeat = open("%s/FeGenie-heatmap-data.csv" % args.out, "w")
@@ -1427,7 +1507,6 @@ for i in cats:
     outHeat.write(i + ",")
     for j in sorted(Dict.keys()):
         # filename = j + "-proteins.faa"
-        print(j)
         outHeat.write(str((len(Dict[j][i]) / int(normDict[j])) * float(args.inflation)) + ",")
     outHeat.write("\n")
 
@@ -1460,6 +1539,7 @@ os.system("rm %s/FinalSummary.csv" % args.out)
 os.system("rm %s/FeGenie-summary-fixed.csv" % args.out)
 os.system("rm %s/FeGenie-summary.csv" % args.out)
 os.system("rm %s/FeGenie-summary-fixed-blastclustered.csv" % args.out)
+os.system("rm %s/FeGenie-presummary.csv" % args.out)
 
 '''
 if args.R != "NA":
@@ -1467,5 +1547,4 @@ if args.R != "NA":
     os.system("Rscript --vanilla %s/DotPlot.R %s/FeGenie-heatmap-data.csv %s" % (args.R, args.out, args.out))
 '''
 
-print("Pipeline finished without crashing...hooray!!! Hopefully the output is all there. If not, feel free to "
-      "yell at me. Thanks for using :)")
+print("Pipeline finished without crashing!!! Hopefully the output is all there. If not, let me know. Thanks for using :)")
