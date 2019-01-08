@@ -21,7 +21,7 @@ Make sure you have enough room where you will be downloading it, and that your W
 
 Two things regarding this optional cross-validation: first, this step greatly increases the computational load and takes about 100 times longer to complete, compared to running the program without cross-validation. So what would have been a 5 minute analysis of a dozen genomes may take 10 hours, and if you are analyzing large metagenome assemblies, it may take several days to complete. However, the identification of the closest homolog in NCBI to your identified iron genes may be incredbily informative, escpially because our HMM library isn't perfect and false positives are a possibility (as they are with most annotation tools). Second, the part of the algorithm that is dedicated to the cross-validation step is largely untested. So by exercizing this optional parameter you are, in effect, acting as a beta tester for our program. So feel free to start issues on GitHub, or yell at me via email, if there are any snafus with the program or its output when the nr database is provided.
 
-# Citing taxonsluice:
+# Citing FeGenie:
 FeGenie is developed by Nancy Merino, Arkadiy Garber, and Kenneth Nealson, University of Southern California, Los Angeles, CA, USA.
 
 This project is still a work in progress, and is involved in a publication currently in preparation: "Garber, A.I., Nealson, K.H., Merino, N. FeGenie: a new database and tool for identification of iron genes and iron gene clusters in genomes and metagenome assemblies". If it was useful for your work, you can cite it as: Garber, A.I., and Merino, N. and Nealson, K.H. 2018: FeGenie, GitHub repository: https://github.com/Arkadiy-Garber/FeGenie/.
