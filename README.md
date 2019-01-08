@@ -6,10 +6,10 @@ Please see the Wiki page for introduction and tutorial on how to use this tool.
 
 #### Python (version 3.6 or higher)
 #### Diamond (only necessary if you are doing the cross-validation against nr)
-#### BLAST
-#### HMMER
-#### Prodigal
-#### R (required packages: ggplot2, ggdendro, reshape2, grid, argparse, ggpubr, tidyverse)
+#### BLAST (version 2.7.1+)
+#### HMMER (version 3.2.1)
+#### Prodigal (version 2.6.3)
+#### R (required packages: ggplot2, ggdendro, reshape2, grid, argparse, ggpubr, tidyverse) (version 3.5.1)
 
 ## Obtaining NCBI's nr database for cross-validation
 
