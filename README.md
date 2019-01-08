@@ -4,12 +4,12 @@ Please see the Wiki page for introduction and tutorial on how to use this tool.
 
 ## Dependencies:
 
-### Python (version 3.6 or higher)
-### Diamond (only necessary if you are doing the cross-validation against nr)
-### BLAST
-### HMMER
-### Prodigal
-### R (required packages: ggplot2, ggdendro, reshape2, grid, argparse, ggpubr, tidyverse)
+#### Python (version 3.6 or higher)
+#### Diamond (only necessary if you are doing the cross-validation against nr)
+#### BLAST
+#### HMMER
+#### Prodigal
+#### R (required packages: ggplot2, ggdendro, reshape2, grid, argparse, ggpubr, tidyverse)
 
 ## Obtaining NCBI's nr database for cross-validation
 
