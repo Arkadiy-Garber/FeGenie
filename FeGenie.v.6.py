@@ -212,17 +212,17 @@ parser = argparse.ArgumentParser(
     *******************************************************
     '''))
 
-parser.add_argument('-hmm_lib', type=str, help='HMM database; directory titled \'HMM-lib\', can be found in the FeGenie folder')
+parser.add_argument('-hmm_lib', type=str, help='HMM database; directory titled \'HMM-lib\', can be found in the FeGenie folder', default="NA")
 
-parser.add_argument('-bin_dir', type=str, help="directory of bins")
+parser.add_argument('-bin_dir', type=str, help="directory of bins", default="NA")
 
-parser.add_argument('-bin_ext', type=str, help="extension for bins (do not include the period)")
+parser.add_argument('-bin_ext', type=str, help="extension for bins (do not include the period)", default="NA")
 
 parser.add_argument('-contigs_source', type=str, help="are the provided contigs from a single organism (single)"
                                                      "or metagenomic/metatranscriptomic assemblies (meta)? "
                                                      "(default=single)", default="single")
 
-parser.add_argument('-bit', type=str, help="tsv file with bitscore cut-offs for all HMMs")
+parser.add_argument('-bit', type=str, help="tsv file with bitscore cut-offs for all HMMs", default="NA")
 
 parser.add_argument('-d', type=int, help="maximum distance between genes to be considered in a genomic \'cluster\'."
                                          "This number should be an integer and should reflect the maximum number of "
@@ -232,7 +232,7 @@ parser.add_argument('-d', type=int, help="maximum distance between genes to be c
 parser.add_argument('-pfam', type=str, help="location of Pfam HMM (optional, if you want the identified candidate"
                                             "iron genes to be compared against Pfam)", default="NA")
 
-parser.add_argument('-nr', type=str, help="path to NCBI's nr database (optional, if you want the identified candidate "
+parser.add_argument('-ref', type=str, help="path to NCBI's nr database (optional, if you want the identified candidate "
                                           "iron genes compared against NCBI)", default="NA")
 
 parser.add_argument('-R', type=str, help="location of R scripts directory (optional, only if you would like to obtain"
@@ -252,6 +252,24 @@ args = parser.parse_args()
 # **************************************************************************************************************
 # ********************************************* PART 1 *********************************************************
 # **************************************************************************************************************
+
+# ************** Checking for the HMM library and bitscore cutoffs files ******************* #
+if args.hmm_lib != "NA":
+    pass
+else:
+    print("You have not provided the location of the HMM library via the -hmm_lib argument. Please do so, and try "
+          "again. The HMM library is found within the same directory as the FeGenie executable.")
+    raise SystemExit
+
+
+if args.bit != "NA":
+    pass
+else:
+    print("You have not provided the location of the bitscore cutoffs file via the -bit argument. This file is found "
+          "in the same directory as the FeGenie executable.")
+    print("Exiting")
+    raise SystemExit
+
 
 # *************** SET DIRECTORY LOCATION VARIABLES ************************** #
 print("starting pipeline...")
@@ -278,18 +296,18 @@ binDirLS = os.listdir(args.bin_dir)
 
 
 # *************** MAKE NR A DIAMOND DB AND READ THE FILE INTO HASH MEMORY ************************ #
-if args.nr != "NA":
+if args.ref != "NA":
     try:
-        testFile = open(args.nr + ".dmnd")
-        print("Found Diamond database file: " + args.nr + ".dmnd")
+        testFile = open(args.ref + ".dmnd")
+        print("Found Diamond database file: " + args.ref + ".dmnd")
         print("Skipping the building")
 
     except FileNotFoundError:
         print("Diamond database not found. Mkaing the database now")
-        os.system("diamond makedb --in %s -d %s" % (args.nr, args.nr))
+        os.system("diamond makedb --in %s -d %s" % (args.ref, args.ref))
 
 
-    nr = open(args.nr, "r")
+    nr = open(args.ref, "r")
     nrDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
     print("Reading nr into Dict memory")
     for i in nr:
@@ -325,17 +343,20 @@ for i in binDirLS:
 
 
 # ******************** READ BITSCORE CUT-OFFS INTO HASH MEMORY ****************************** #
+
 meta = open(args.bit, "r")
+
 metaDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
 for i in meta:
     ls = i.rstrip().split("\t")
     metaDict[ls[0]] = ls[1]
 
+meta = open(args.bit, "r")
 
 # ******************* BEGINNING MAIN ALGORITHM **********************************))))
 
-
 FerrJinnDir = os.listdir(args.hmm_lib)
+
 for FeCategory in FerrJinnDir:
     if FeCategory != ".DS_Store":
         print("")
@@ -438,18 +459,18 @@ for FeCategory in FerrJinnDir:
                 numSeqs += 1
 
         if numSeqs > 0:
-            if args.nr != "NA":
+            if args.ref != "NA":
                 print("Performing Diamond BLASTx search of putative iron genes against NCBI's nr database")
                 if args.t <= 16:
                     os.system(
                         "diamond blastp --db %s.dmnd --out %s/%s.dmndout --max-target-seqs 1 --outfmt 6 --threads %d "
                         "--query %s/%s-summary.fa"
-                        % (args.nr, outDirectory, FeCategory, args.t, outDirectory, FeCategory))
+                        % (args.ref, outDirectory, FeCategory, args.t, outDirectory, FeCategory))
                 else:
                     os.system(
                         "diamond blastp --db %s.dmnd --out %s/%s.dmndout --max-target-seqs 1 --outfmt 6 --threads 16 "
                         "--query %s/%s-summary.fa"
-                        % (args.nr, outDirectory, FeCategory, outDirectory, FeCategory))
+                        % (args.ref, outDirectory, FeCategory, outDirectory, FeCategory))
 
                 print("reading BLASTx results")
                 dmndblastDict = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 'EMPTY')))
@@ -468,12 +489,12 @@ for FeCategory in FerrJinnDir:
 print("Preparing final summary file")
 OUT = open(outDirectory + "/FinalSummary.csv", "w")
 
-if args.nr != "NA":
+if args.ref != "NA":
     OUT.write(
         "category" + "," + "cell" + "," + "orf" + "," + "related_hmm" + "," + "HMM-bitscore" + "," + "NCBI_closest_match"
         + "," + "NCBI_aln_eval" + "\n")
 
-if args.nr == "NA":
+if args.ref == "NA":
     OUT.write("category" + "," + "cell" + "," + "orf" + "," + "related_hmm" + "," + "HMM-bitscore" + "\n")
 
 resultsDir = os.listdir(outDirectory)
@@ -492,7 +513,7 @@ for i in resultsDir:
             if cell != "cell":
 
                 OUT.write(i.split("-summary")[0] + "," + cell + "," + orf + "," + hmm + "," + str(bit) + ",")
-                if args.nr != "NA":
+                if args.ref != "NA":
                     if cell in dmndblastDict.keys() and orf in dmndblastDict[cell]:
                         OUT.write(
                             dmndblastDict[cell][orf]["target"] + "," + str(dmndblastDict[cell][orf]["e"]) + ",")
@@ -516,10 +537,10 @@ for i in summary:
             hmm = ls[3]
             hmmBit = ls[4]
 
-            if args.nr != "NA":
+            if args.ref != "NA":
                 NCBImatch = ls[5]
                 NCBIeval = ls[6]
-            if args.nr == "NA":
+            if args.ref == "NA":
                 pass
 
             if cell not in SummaryDict.keys():
@@ -527,7 +548,7 @@ for i in summary:
                 SummaryDict[cell][orf]["hmmBit"] = hmmBit
                 SummaryDict[cell][orf]["category"] = category
 
-                if args.nr != "NA":
+                if args.ref != "NA":
                     SummaryDict[cell][orf]["NCBImatch"] = NCBImatch
                     SummaryDict[cell][orf]["NCBIeval"] = NCBIeval
             else:
@@ -535,7 +556,7 @@ for i in summary:
                     SummaryDict[cell][orf]["hmm"] = hmm
                     SummaryDict[cell][orf]["hmmBit"] = hmmBit
                     SummaryDict[cell][orf]["category"] = category
-                    if args.nr != "NA":
+                    if args.ref != "NA":
                         SummaryDict[cell][orf]["NCBImatch"] = NCBImatch
                         SummaryDict[cell][orf]["NCBIeval"] = NCBIeval
                 else:
@@ -543,7 +564,7 @@ for i in summary:
                         SummaryDict[cell][orf]["hmm"] = hmm
                         SummaryDict[cell][orf]["hmmBit"] = hmmBit
                         SummaryDict[cell][orf]["category"] = category
-                        if args.nr != "NA":
+                        if args.ref != "NA":
                             SummaryDict[cell][orf]["NCBImatch"] = NCBImatch
                             SummaryDict[cell][orf]["NCBIeval"] = NCBIeval
                     else:
@@ -570,7 +591,7 @@ try:
                 if len(RemoveDuplicates(k)) == 1:
                     orf = j + "_" + str(k[0])
 
-                    if args.nr != "NA":
+                    if args.ref != "NA":
                         ncbiHomolog = SummaryDict[i][orf]["NCBImatch"]
                         if ncbiHomolog != "NA":
                             ncbiHomolog = ncbiHomolog.split("]")[0] + "]"
@@ -588,7 +609,7 @@ try:
                         OUT2.write("" + "," + "" + "," + "" + "," + "" + "," + "" + "," + "" + "," + "" + "," + "" + "," + "" + "\n")
 
                 else:
-                    if args.nr != "NA":
+                    if args.ref != "NA":
                         for l in RemoveDuplicates(k):
                             orf = j + "_" + str(l)
                             ncbiHomolog = SummaryDict[i][orf]["NCBImatch"]
@@ -620,7 +641,7 @@ except ValueError:
     OUT2 = open(outDirectory + "/FinalSummary-dereplicated-clustered.csv", "w")
     for i in SummaryDict.keys():
         for j in SummaryDict[i]:
-            if args.nr != "NA":
+            if args.ref != "NA":
                 ncbiHomolog = SummaryDict[i][j]["NCBImatch"]
                 if ncbiHomolog != "NA":
                     ncbiHomolog = ncbiHomolog.split("]")[0] + "]"
@@ -848,7 +869,7 @@ for i in summary:
         orf = ls[2]
         hmm = ls[3]
         bitscore = ls[4]
-        if args.nr != "NA":
+        if args.ref != "NA":
             ncbiMatch = ls[5]
             ncbiEval = ls[6]
 
@@ -938,12 +959,12 @@ for i in binDirLS:
         os.system(
             "makeblastdb -dbtype prot -in %s/%s-proteins.faa -out %s/%s-proteins.faa" % (binDir, i, binDir, i))
         os.system(
-            "blastp -query %s -db %s/%s-proteins.faa -num_threads 8 -outfmt 6 -out %s/%s-thermincola.blast -evalue 1E-4"
-            % (thermincola, binDir, i, outDirectory, i))
+            "blastp -query %s -db %s/%s-proteins.faa -num_threads %s -outfmt 6 -out %s/%s-thermincola.blast -evalue 1E-4"
+            % (thermincola, binDir, i, args.t, outDirectory, i))
 
         os.system(
-            "blastp -query %s -db %s/%s-proteins.faa -num_threads 8 -outfmt 6 -out %s/%s-geobacter.blast -evalue 1E-4"
-            % (geobacter, binDir, i, outDirectory, i))
+            "blastp -query %s -db %s/%s-proteins.faa -num_threads %s -outfmt 6 -out %s/%s-geobacter.blast -evalue 1E-4"
+            % (geobacter, binDir, i, args.t, outDirectory, i))
 
 
 geoDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
@@ -1070,7 +1091,7 @@ out.close()
 outfinal = open(outDirectory + "/FinalSummary-clustered-dereplicated-filtered-combined.csv", "w")
 summary = open(outDirectory + "/FinalSummary-clustered-dereplicated-filtered.csv", "r")
 GeoThermin = open(outDirectory + "/GeoThermin.csv", "r")
-if args.nr == "NA":
+if args.ref == "NA":
     if args.contigs_source == "single":
         outfinal.write("category" + "," + "genome" + "," + "ORF" + "," + "related_HMM" + "," + "bitscore" + "\n")
     else:
@@ -1156,7 +1177,7 @@ for i in final:
     ls = (i.rstrip().split(","))
     if count == 0:
 
-        if args.nr == "NA":
+        if args.ref == "NA":
             if args.contigs_source == "single":
                 out.write(
                     "category" + "," + "genome" + "," + "ORF" + "," + "related_HMM" + "," + "bitscore" + ","
@@ -1253,7 +1274,7 @@ try:
                 if len(RemoveDuplicates(k)) == 1:
                     orf = j + "_" + str(k[0])
 
-                    if args.nr != "NA":
+                    if args.ref != "NA":
                         ncbiHomolog = blastDict[i][orf]["NCBImatch"]
                         if ncbiHomolog != "NA":
                             ncbiHomolog = ncbiHomolog.split("]")[0] + "]"
@@ -1273,7 +1294,7 @@ try:
                         OUT2.write("" + "," + "" + "," + "" + "," + "" + "," + "" + "," + "" + "," + "" + "," + "" + "," + "" + "\n")
 
                 else:
-                    if args.nr != "NA":
+                    if args.ref != "NA":
                         for l in RemoveDuplicates(k):
                             orf = j + "_" + str(l)
                             ncbiHomolog = blastDict[i][orf]["NCBImatch"]
@@ -1528,7 +1549,7 @@ for i in os.listdir(args.hmm_lib):
     if i != ".DS_Store":
         os.system("rm %s/%s-summary.csv" % (args.out, i))
         os.system("rm %s/%s-summary.fa" % (args.out, i))
-        if args.nr != "NA":
+        if args.ref != "NA":
             os.system("rm %s/%s.dmndout" % (args.out, i))
 
 os.system("rm %s/GeoThermin.csv" % args.out)
