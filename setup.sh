@@ -30,7 +30,7 @@ mkdir -p ${CONDA_PREFIX}/etc/conda/activate.d
 ## adding FeGenie bin path and GToTree_HMM_dir variable:
 echo '#!/bin/sh'" \
 
-export PATH=\"$(pwd)/bin:"'$PATH'\"" \
+export PATH=\"$(pwd):"'$PATH'\"" \
 
 export HMM_dir=\"$(pwd)/HMM-lib\"" >> ${CONDA_PREFIX}/etc/conda/activate.d/env_vars.sh
 
