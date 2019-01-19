@@ -5,8 +5,6 @@ GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m'
 
-chmod 777 FeGenie.py
-
 gzip -d HMM-lib.tar.gz
 tar xf HMM-lib.tar
 
