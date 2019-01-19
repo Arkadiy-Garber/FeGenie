@@ -363,7 +363,7 @@ if conda == 1:
         HMMdir = (i.rstrip())
     os.system("rm HMMlib.txt")
 else:
-    hmmDir = args.hmm_lib
+    HMMdir = args.hmm_lib
 
 
 HMMbits = HMMdir + "/HMM-bitcutoffs.txt"
