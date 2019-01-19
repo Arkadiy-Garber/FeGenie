@@ -215,8 +215,6 @@ parser = argparse.ArgumentParser(
     *******************************************************
     '''))
 
-# parser.add_argument('-hmm_lib', type=str, help='HMM database; directory titled \'HMM-lib\', can be found in the FeGenie folder', default="NA")
-
 parser.add_argument('-bin_dir', type=str, help="directory of bins", default="NA")
 
 parser.add_argument('-bin_ext', type=str, help="extension for bins (do not include the period)", default="NA")
@@ -224,8 +222,6 @@ parser.add_argument('-bin_ext', type=str, help="extension for bins (do not inclu
 parser.add_argument('-contigs_source', type=str, help="are the provided contigs from a single organism (single)"
                                                      "or are you providing this program with metagenomic/metatranscriptomic assemblies (meta)? "
                                                      "(default=single)", default="single")
-
-# parser.add_argument('-bit', type=str, help="tsv file with bitscore cut-offs for all HMMs", default="NA")
 
 parser.add_argument('-d', type=int, help="maximum distance between genes to be considered in a genomic \'cluster\'."
                                          "This number should be an integer and should reflect the maximum number of "
@@ -245,27 +241,36 @@ parser.add_argument('-inflation', type=int, help="inflation factor for final gen
 parser.add_argument('-t', type=int, help="number of threads to use for DIAMOND BLAST and HMMSEARCH "
                                          "(default=1, max=16)", default=1)
 
+
+# CHECKING FOR CONDA INSTALL
+os.system("echo ${HMM_dir}/HMM-bitcutoffs.txt > HMMlib.txt")
+file = open("HMMlib.txt")
+for i in file:
+    location = i.rstrip()
+
+try:
+    bits = open(location)
+    conda = 1
+except FileNotFoundError:
+    conda = 0
+
+if conda == 0:
+    parser.add_argument('-hmm_lib', type=str, help='HMM database; directory titled \'HMM-lib\', can be found in the FeGenie folder', default="NA")
+
 args = parser.parse_args()
 
 
 # ************** Checking for the required arguments ******************* #
 cwd = os.getcwd()
 print("checking arguments")
-# if args.hmm_lib != "NA":
-#     print(".")
-# else:
-#     print("You have not provided the location of the HMM library via the -hmm_lib argument. Please do so, and try "
-#           "again. The HMM library is found within the same directory as the FeGenie executable.")
-#     print("Exiting")
-#     raise SystemExit
-#
-# if args.bit != "NA":
-#     print(".")
-# else:
-#     print("You have not provided the location of the bitscore cutoffs file via the -bit argument. This file is found "
-#           "in the same directory as the FeGenie executable.")
-#     print("Exiting")
-#     raise SystemExit
+if conda == 0:
+    if args.hmm_lib != "NA":
+        print(".")
+    else:
+        print("You have not provided the location of the HMM library via the -hmm_lib argument. Please do so, and try "
+              "again. The HMM library is found within the same directory as the FeGenie executable.")
+        print("Exiting")
+        raise SystemExit
 
 if args.bin_dir != "NA":
     binDir = args.bin_dir + "/"
@@ -351,11 +356,14 @@ for i in binDirLS:
 
 
 # ******************** READ BITSCORE CUT-OFFS INTO HASH MEMORY ****************************** #
-os.system("echo ${HMM_dir} > HMMlib.txt")
-file = open("HMMlib.txt")
-for i in file:
-    HMMdir = (i.rstrip())
-os.system("rm HMMlib.txt")
+if conda == 1:
+    os.system("echo ${HMM_dir} > HMMlib.txt")
+    file = open("HMMlib.txt")
+    for i in file:
+        HMMdir = (i.rstrip())
+    os.system("rm HMMlib.txt")
+else:
+    hmmDir = args.hmm_lib
 
 
 HMMbits = HMMdir + "/HMM-bitcutoffs.txt"
