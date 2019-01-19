@@ -2,24 +2,6 @@
 
 Please see the Wiki page for introduction and tutorial on how to use this tool.
 
-## Dependencies:
-
-#### Python (version 3.6 or higher)
-#### Diamond (version 0.9.22.123) (only necessary if you are doing the cross-validation against nr)
-#### BLAST (version 2.7.1+)
-#### HMMER (version 3.2.1)
-#### Prodigal (version 2.6.3)
-#### R (version 3.5.1) (required packages: ggplot2, ggdendro, reshape2, grid, argparse, ggpubr, tidyverse)
-
-## Obtaining NCBI's nr database for cross-validation
-
-Part of this program includes an optional cross-validation of the identified putative iron genes against a protein database of your choice. We recommend validating against NCBI's nr database, as that is one of, if not the, largest sequence repository; it, thus, offers the highest chance of providing a homolog. This option is exercized by simply providing the script with the lcation of a protein database, which should be one fasta. The latest release of the nr database can be downloaded by running:
-
-        wget ftp://ftp.ncbi.nih.gov/blast/db/FASTA/nr.gz
-
-Make sure you have enough room where you will be downloading it, and that your WiFi is good, otherwise, it may take a very long time!
-
-Two things regarding this optional cross-validation: first, this step greatly increases the computational load and takes about 100 times longer to complete, compared to running the program without cross-validation. So what would have been a 5 minute analysis of a dozen genomes may take 10 hours, and if you are analyzing large metagenome assemblies, it may take several days to complete. However, the identification of the closest homolog in NCBI to your identified iron genes may be incredbily informative, escpially because our HMM library isn't perfect and false positives are a possibility (as they are with most annotation tools). Second, the part of the algorithm that is dedicated to the cross-validation step is largely untested. So by exercizing this optional parameter you are, in effect, acting as a beta tester for our program. So feel free to start issues on GitHub, or yell at me via email, if there are any snafus with the program or its output when the nr database is provided.
 
 # Citing FeGenie:
 FeGenie is developed by Nancy Merino, Arkadiy Garber, and Kenneth Nealson, University of Southern California, Los Angeles, CA, USA.
