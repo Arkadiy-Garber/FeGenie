@@ -372,7 +372,6 @@ for FeCategory in HMMdirLS:
     if not re.match(r'\.', FeCategory) and FeCategory != "HMM-bitcutoffs.txt":
         print("")
         print("Looking for following iron-related functional category: " + FeCategory)
-        print("WTF")
         hmmDir = "%s/%s/" % (HMMdir, FeCategory)
         hmmDirLS2 = os.listdir("%s/%s" % (HMMdir, FeCategory))
 
