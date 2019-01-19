@@ -34,23 +34,6 @@ export PATH=\"$(pwd):"'$PATH'\"" \
 
 export HMM_dir=\"$(pwd)/HMM-lib\"" >> ${CONDA_PREFIX}/etc/conda/activate.d/env_vars.sh
 
-
-
-# printf "    ${GREEN}Setting up TaxonKit for adding lineage info to trees...${NC}\n\n"
-
-## downloading ncbi tax database for taxonkit and setting variable for location
-# mkdir -p ncbi_tax_info
-# cd ncbi_tax_info
-
-# curl --silent --retry 10 -O ftp://ftp.ncbi.nih.gov/pub/taxonomy/taxdump.tar.gz
-
-# tar -xzf taxdump.tar.gz
-# rm taxdump.tar.gz
-
-# echo "export TAXONKIT_DB=$(pwd)" >> ${CONDA_PREFIX}/etc/conda/activate.d/env_vars.sh
-
-# cd ../
-
 # re-activating environment so variable and PATH changes take effect
 source activate fegenie
 
