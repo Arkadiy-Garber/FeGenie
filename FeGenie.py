@@ -949,9 +949,17 @@ for i in summary:
         if args.ref != "NA":
             blasthit = dmndblastDict[ls[1]][ls[2]]["target"]
             e = dmndblastDict[ls[1]][ls[2]]["e"]
-            out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + str(float(HMMdict[ls[3].split(".")[0]]) / float(ls[4])) + "," + str(counter) + "," + str(hemes) + "," + blasthit + "," + str(e) + "," + seq + "\n")
+            try:
+                out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + str(float(metaDict[ls[3].split(".")[0]]) / float(ls[4])) + "," + str(counter) + "," + str(hemes) + "," + blasthit + "," + str(e) + "," + seq + "\n")
+            except TypeError:
+                out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + ls[4] + "," + str(counter) + "," + str(hemes) + "," + blasthit + "," + str(e) + "," + seq + "\n")
+
         else:
-            out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + str(float(HMMdict[ls[3].split(".")[0]]) / float(ls[4])) + "," + str(counter) + "," + str(hemes) + "," + seq + "\n")
+            try:
+                out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + str(float(metaDict[ls[3].split(".")[0]]) / float(ls[4])) + "," + str(counter) + "," + str(hemes) + "," + seq + "\n")
+
+            except TypeError:
+                out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + ls[4] + "," + str(counter) + "," + str(hemes) + "," + seq + "\n")
 
     else:
         counter += 1
