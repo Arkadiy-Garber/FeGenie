@@ -9,6 +9,7 @@ import ssl
 
 
 # TODO: ADD CYTOCHROME 579 HMM (next release)
+# TODO: ADD BITSCORE CUTOFF FOR EACH HMM HIT
 
 
 def unique(ls, ls2):
@@ -230,8 +231,8 @@ parser.add_argument('-d', type=int, help="maximum distance between genes to be c
 
 parser.add_argument('-ref', type=str, help="path to a reference protein database, which must be in FASTA format", default="NA")
 
-parser.add_argument('-R', type=str, help="location of R scripts directory (optional, only if you would like to obtain"
-                                         "dotplot, dendrogram, and heatmap summaries of your data)", default="NA")
+# parser.add_argument('-R', type=str, help="location of R scripts directory (optional, only if you would like to obtain"
+#                                          "dotplot, dendrogram, and heatmap summaries of your data)", default="NA")
 
 parser.add_argument('-out', type=str, help="name of output file; please provide full path (default=fegenie_out)", default="fegenie_out")
 
@@ -815,8 +816,8 @@ for i in (clusterDict.keys()):
             pass
 
     elif "iron_aquisition-siderophore_synthesis" in clusterDict[i]["category"] or \
-                    "iron_aquisition-siderophore_uptake" in clusterDict[i]["category"] or \
-                    "iron_aquisition-iron_uptake" in clusterDict[i]["category"] or "iron_aquisition-heme_uptake" in clusterDict[i]["category"]:
+                    "iron_aquisition-siderophore_transport" in clusterDict[i]["category"] or \
+                    "iron_aquisition-iron_transport" in clusterDict[i]["category"] or "iron_aquisition-heme_transport" in clusterDict[i]["category"]:
 
         if len(ls) > 1:
             for j in clusterDict[i]["line"]:
@@ -932,9 +933,9 @@ if args.ref != "NA":
 summary = open("%s/FeGenie-summary.csv" % args.out, "r")
 out = open("%s/FeGenie-summary-blasthits.csv" % args.out, "w")
 if args.ref != "NA":
-    out.write("category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore" + "," + "cluster" + "," + "heme_binding_motifs" + "," + "top_blast_hit" + "," + "blast_hit_evalue" + "," + "protein_sequence" + "\n")
+    out.write("category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore_ratio" + "," + "cluster" + "," + "heme_binding_motifs" + "," + "top_blast_hit" + "," + "blast_hit_evalue" + "," + "protein_sequence" + "\n")
 else:
-    out.write("category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore" + "," + "cluster" + "," + "heme_binding_motifs" + "," + "protein_sequence" + "\n")
+    out.write("category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore_ratio" + "," + "cluster" + "," + "heme_binding_motifs" + "," + "protein_sequence" + "\n")
 
 
 counter = 1
@@ -948,9 +949,9 @@ for i in summary:
         if args.ref != "NA":
             blasthit = dmndblastDict[ls[1]][ls[2]]["target"]
             e = dmndblastDict[ls[1]][ls[2]]["e"]
-            out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + ls[4] + "," + str(counter) + "," + str(hemes) + "," + blasthit + "," + str(e) + "," + seq + "\n")
+            out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + str(float(HMMdict[ls[3].split(".")[0]]) / float(ls[4])) + "," + str(counter) + "," + str(hemes) + "," + blasthit + "," + str(e) + "," + seq + "\n")
         else:
-            out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + ls[4] + "," + str(counter) + "," + str(hemes) + "," + seq + "\n")
+            out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + str(float(HMMdict[ls[3].split(".")[0]]) / float(ls[4])) + "," + str(counter) + "," + str(hemes) + "," + seq + "\n")
 
     else:
         counter += 1
@@ -960,9 +961,11 @@ out.close()
 
 
 # REMOVING FILES
+if args.ref != "NA":
+    os.system("rm %s/FeGenie-summary.dmndout" % args.out)
+    os.system("rm %s/FeGenie-summary.fasta" % args.out)
+
 os.system("rm %s/FeGenie-summary.csv" % args.out)
-os.system("rm %s/FeGenie-summary.dmndout" % args.out)
-os.system("rm %s/FeGenie-summary.fasta" % args.out)
 os.system("mv %s/FeGenie-summary-blasthits.csv %s/FeGenie-summary.csv" % (args.out, args.out))
 
 
