@@ -8,7 +8,7 @@ library("argparse", lib.loc = library.path)
 
 args <- commandArgs(trailingOnly = TRUE)
 
-
+# Reading in output CSV file
 FeGenie_heatmap_data_organized <- read.csv(args[1], header = FALSE)
 l = length(FeGenie_heatmap_data_organized)
 fegenie.t <- t(FeGenie_heatmap_data_organized[,3:l-1])
