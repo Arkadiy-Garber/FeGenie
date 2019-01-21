@@ -231,9 +231,6 @@ parser.add_argument('-d', type=int, help="maximum distance between genes to be c
 
 parser.add_argument('-ref', type=str, help="path to a reference protein database, which must be in FASTA format", default="NA")
 
-# parser.add_argument('-R', type=str, help="location of R scripts directory (optional, only if you would like to obtain"
-#                                          "dotplot, dendrogram, and heatmap summaries of your data)", default="NA")
-
 parser.add_argument('-out', type=str, help="name of output file; please provide full path (default=fegenie_out)", default="fegenie_out")
 
 parser.add_argument('-inflation', type=int, help="inflation factor for final gene category counts (default=1000)",
@@ -257,6 +254,11 @@ except FileNotFoundError:
 
 if conda == 0:
     parser.add_argument('-hmm_lib', type=str, help='HMM database; directory titled \'HMM-lib\', can be found in the FeGenie folder', default="NA")
+
+    parser.add_argument('-r', type=str,
+                        help="location of R scripts directory (note: this optional argument requires Rscript to be "
+                             "installed on your system). The R scripts directory is in the same directory as the "
+                             "FeGenie python code", default="NA")
 
 args = parser.parse_args()
 
@@ -976,6 +978,27 @@ if args.ref != "NA":
 os.system("rm %s/FeGenie-summary.csv" % args.out)
 os.system("mv %s/FeGenie-summary-blasthits.csv %s/FeGenie-summary.csv" % (args.out, args.out))
 
+os.system("Rscript -e 'install.packages(\"ggdendro\", repos = \"http://cran.us.r-project.org\")\'")
+os.system("Rscript -e 'install.packages(\"ggplot2\", repos = \"http://cran.us.r-project.org\")\'")
+os.system("Rscript -e 'install.packages(\"reshape\", repos = \"http://cran.us.r-project.org\")\'")
+os.system("Rscript -e 'install.packages(\"reshape2\", repos = \"http://cran.us.r-project.org\")\'")
+os.system("Rscript -e 'install.packages(\"tidyverse\", repos = \"http://cran.us.r-project.org\")\'")
+os.system("Rscript -e 'install.packages(\"argparse\", repos = \"http://cran.us.r-project.org\")\'")
+os.system("Rscript -e 'install.packages(\"ggdendro\", repos = \"http://cran.us.r-project.org\")\'")
+os.system("Rscript -e 'install.packages(\"grid\", repos = \"http://cran.us.r-project.org\")\'")
+
+if conda == 0:
+    Rdir = args.r
+else:
+    os.system("echo ${rscripts} > r.txt")
+    file = open("r.txt")
+    for i in file:
+        Rdir = (i.rstrip())
+    os.system("rm r.txt")
+    
+
+os.system("Rscript --vanilla %s/DotPlot.R %s/FeGenie-heatmap-data.csv %s" % (Rdir, args.out, args.out))
+os.system("Rscript --vanilla %s/dendro-heatmap.R %s/FeGenie-heatmap-data.csv %s" % (Rdir, args.out, args.out))
 
 print("")
 print("Pipeline finished without crashing!!! Hopefully the output is all there. If not, let me know. Thanks for using :)")
