@@ -978,13 +978,13 @@ if args.ref != "NA":
 os.system("rm %s/FeGenie-summary.csv" % args.out)
 os.system("mv %s/FeGenie-summary-blasthits.csv %s/FeGenie-summary.csv" % (args.out, args.out))
 
-os.system("Rscript -e 'install.packages(\"ggdendro\", repos = \"http://cran.us.r-project.org\")\'")
 os.system("Rscript -e 'install.packages(\"ggplot2\", repos = \"http://cran.us.r-project.org\")\'")
 os.system("Rscript -e 'install.packages(\"reshape\", repos = \"http://cran.us.r-project.org\")\'")
 os.system("Rscript -e 'install.packages(\"reshape2\", repos = \"http://cran.us.r-project.org\")\'")
 os.system("Rscript -e 'install.packages(\"tidyverse\", repos = \"http://cran.us.r-project.org\")\'")
 os.system("Rscript -e 'install.packages(\"argparse\", repos = \"http://cran.us.r-project.org\")\'")
 os.system("Rscript -e 'install.packages(\"ggdendro\", repos = \"http://cran.us.r-project.org\")\'")
+os.system("Rscript -e 'install.packages(\"ggpubr\", repos = \"http://cran.us.r-project.org\")\'")
 os.system("Rscript -e 'install.packages(\"grid\", repos = \"http://cran.us.r-project.org\")\'")
 
 if conda == 0:
