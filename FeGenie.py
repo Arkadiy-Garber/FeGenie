@@ -255,7 +255,7 @@ except FileNotFoundError:
 if conda == 0:
     parser.add_argument('-hmm_lib', type=str, help='HMM database; directory titled \'HMM-lib\', can be found in the FeGenie folder', default="NA")
 
-    parser.add_argument('-r', type=str,
+    parser.add_argument('-R', type=str,
                         help="location of R scripts directory (note: this optional argument requires Rscript to be "
                              "installed on your system). The R scripts directory is in the same directory as the "
                              "FeGenie python code", default="NA")
@@ -988,14 +988,14 @@ os.system("Rscript -e 'install.packages(\"ggdendro\", repos = \"http://cran.us.r
 os.system("Rscript -e 'install.packages(\"grid\", repos = \"http://cran.us.r-project.org\")\'")
 
 if conda == 0:
-    Rdir = args.r
+    Rdir = args.R
 else:
     os.system("echo ${rscripts} > r.txt")
     file = open("r.txt")
     for i in file:
         Rdir = (i.rstrip())
     os.system("rm r.txt")
-    
+
 
 os.system("Rscript --vanilla %s/DotPlot.R %s/FeGenie-heatmap-data.csv %s" % (Rdir, args.out, args.out))
 os.system("Rscript --vanilla %s/dendro-heatmap.R %s/FeGenie-heatmap-data.csv %s" % (Rdir, args.out, args.out))
