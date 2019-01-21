@@ -35,6 +35,8 @@ echo '#!/bin/sh'" \
 
 export PATH=\"$(pwd):"'$PATH'\"" \
 
+export rscripts=\"$(pwd)/rscripts\"
+
 export HMM_dir=\"$(pwd)/HMM-lib\"" >> ${CONDA_PREFIX}/etc/conda/activate.d/env_vars.sh
 
 # re-activating environment so variable and PATH changes take effect
