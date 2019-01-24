@@ -358,6 +358,7 @@ for i in binDirLS:
             print("ORFS for %s found. Skipping Prodigal, and going with %s-proteins.faa" % (i, i))
 
         except FileNotFoundError:
+            print("Finding ORFs for " + cell)
             if args.contigs_source == "single":
                 os.system("prodigal -i %s%s -a %s%s-proteins.faa -o %s%s-prodigal.out -q" % (binDir, i, binDir, i, binDir, i))
             elif args.contigs_source == "meta":
@@ -417,7 +418,8 @@ for FeCategory in HMMdirLS:
                 for hmm in hmmDirLS2:  # ITERATING THROUGH ALL THE HMM FILES IN THE HMM DIRECTORY
                     count += 1
                     perc = (count / len(hmmDirLS2)) * 100
-                    sys.stdout.write("analyzing " + i + ": %d%%   \r" % (perc + 1))
+                    print("")
+                    sys.stdout.write("analyzing " + i + ": %d%%   \r" % (perc))
                     sys.stdout.flush()
                     if len(metaDict[hmm.split(".")[0]]) == 0:
                         bit = 0
