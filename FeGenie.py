@@ -414,11 +414,11 @@ for FeCategory in HMMdirLS:
                 os.system(
                     "mkdir " + binDir + "/" + i + "-HMM")  # CREATING DIRECTORY, FOR EACH BIN, TO WHICH HMMSEARCH RESULTS WILL BE WRITTEN
 
+                print("")
                 count = 0
                 for hmm in hmmDirLS2:  # ITERATING THROUGH ALL THE HMM FILES IN THE HMM DIRECTORY
                     count += 1
                     perc = (count / len(hmmDirLS2)) * 100
-                    print("")
                     sys.stdout.write("analyzing " + i + ": %d%%   \r" % (perc))
                     sys.stdout.flush()
                     if len(metaDict[hmm.split(".")[0]]) == 0:
