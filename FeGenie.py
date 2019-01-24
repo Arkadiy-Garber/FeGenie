@@ -4,8 +4,7 @@ import re
 import os
 import textwrap
 import argparse
-import urllib.request
-import ssl
+import sys
 
 
 # TODO: ADD CYTOCHROME 579 HMM (next release)
@@ -348,14 +347,14 @@ for i in binDirLS:
 
         except FileNotFoundError:
             if args.contigs_source == "single":
-                os.system("prodigal -i %s%s -a %s%s-proteins.faa -o %s%s-prodigal.out" % (binDir, i, binDir, i, binDir, i))
+                os.system("prodigal -i %s%s -a %s%s-proteins.faa -o %s%s-prodigal.out -q" % (binDir, i, binDir, i, binDir, i))
             elif args.contigs_source == "meta":
-                os.system("prodigal -i %s%s -a %s%s-proteins.faa -o %s%s-prodigal.out -p meta" % (binDir, i, binDir, i, binDir, i))
+                os.system("prodigal -i %s%s -a %s%s-proteins.faa -o %s%s-prodigal.out -p meta -q" % (binDir, i, binDir, i, binDir, i))
             else:
                 print("WARNING: you did not specify whether the provided FASTA files are single genomes or "
                       "metagenome/metatranscriptome assemblies. By default, FeGenie is assuming that these are "
                       "single genomes, and running Prodigal accordingly. Just an FYI.")
-                os.system("prodigal -i %s%s -a %s%s-proteins.faa -o %s%s-prodigal.out" % (binDir, i, binDir, i, binDir, i))
+                os.system("prodigal -i %s%s -a %s%s-proteins.faa -o %s%s-prodigal.out -q" % (binDir, i, binDir, i, binDir, i))
 
         file = open(binDir + i + "-proteins.faa", "r")
         file = fasta(file)
@@ -388,6 +387,7 @@ HMMdirLS = os.listdir(HMMdir)
 for FeCategory in HMMdirLS:
     if not re.match(r'\.', FeCategory) and FeCategory != "HMM-bitcutoffs.txt":
         print("")
+        print(".")
         print("Looking for following iron-related functional category: " + FeCategory)
         hmmDir = "%s/%s/" % (HMMdir, FeCategory)
         hmmDirLS2 = os.listdir("%s/%s" % (HMMdir, FeCategory))
@@ -395,12 +395,18 @@ for FeCategory in HMMdirLS:
         HMMdict = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: "EMPTY")))
         for i in binDirLS:  # ITERATION THROUGH EACH BIN IN A GIVEN DIRECTORY OF BINS
             if lastItem(i.split(".")) == args.bin_ext:  # FILTERING OUT ANY NON-BIN-RELATED FILES
-                print("analyzing: " + i)
+                # print("analyzing: " + i)
                 FASTA = open(binDir + i + "-proteins.faa", "r")
                 FASTA = fasta(FASTA)
                 os.system(
                     "mkdir " + binDir + "/" + i + "-HMM")  # CREATING DIRECTORY, FOR EACH BIN, TO WHICH HMMSEARCH RESULTS WILL BE WRITTEN
+
+                count = 0
                 for hmm in hmmDirLS2:  # ITERATING THROUGH ALL THE HMM FILES IN THE HMM DIRECTORY
+                    count += 1
+                    perc = (count / len(hmmDirLS2)) * 100
+                    sys.stdout.write("analyzing " + i + ": %d%%   \r" % (perc + 1))
+                    sys.stdout.flush()
                     if len(metaDict[hmm.split(".")[0]]) == 0:
                         bit = 0
                     else:
@@ -986,16 +992,6 @@ os.system("mv %s/FeGenie-summary-blasthits.csv %s/FeGenie-summary.csv" % (args.o
 
 
 # ******** RUNNING RSCRIPT TO GENERATE PLOTS **************
-os.system("Rscript -e 'install.packages(\"ggplot2\", repos = \"http://cran.us.r-project.org\")\'")
-os.system("Rscript -e 'install.packages(\"reshape\", repos = \"http://cran.us.r-project.org\")\'")
-os.system("Rscript -e 'install.packages(\"reshape2\", repos = \"http://cran.us.r-project.org\")\'")
-os.system("Rscript -e 'install.packages(\"tidyverse\", repos = \"http://cran.us.r-project.org\")\'")
-os.system("Rscript -e 'install.packages(\"argparse\", repos = \"http://cran.us.r-project.org\")\'")
-os.system("Rscript -e 'install.packages(\"ggdendro\", repos = \"http://cran.us.r-project.org\")\'")
-os.system("Rscript -e 'install.packages(\"ggpubr\", repos = \"http://cran.us.r-project.org\")\'")
-os.system("Rscript -e 'install.packages(\"grid\", repos = \"http://cran.us.r-project.org\")\'")
-
-
 if args.makeplots == "y":
     if conda == 0:
         Rdir = args.R
@@ -1005,6 +1001,15 @@ if args.makeplots == "y":
         for i in file:
             Rdir = (i.rstrip())
         os.system("rm r.txt")
+
+    os.system("Rscript -e 'install.packages(\"ggplot2\", repos = \"http://cran.us.r-project.org\")\'")
+    os.system("Rscript -e 'install.packages(\"reshape\", repos = \"http://cran.us.r-project.org\")\'")
+    os.system("Rscript -e 'install.packages(\"reshape2\", repos = \"http://cran.us.r-project.org\")\'")
+    os.system("Rscript -e 'install.packages(\"tidyverse\", repos = \"http://cran.us.r-project.org\")\'")
+    os.system("Rscript -e 'install.packages(\"argparse\", repos = \"http://cran.us.r-project.org\")\'")
+    os.system("Rscript -e 'install.packages(\"ggdendro\", repos = \"http://cran.us.r-project.org\")\'")
+    os.system("Rscript -e 'install.packages(\"ggpubr\", repos = \"http://cran.us.r-project.org\")\'")
+    os.system("Rscript -e 'install.packages(\"grid\", repos = \"http://cran.us.r-project.org\")\'")
 
     os.system("Rscript --vanilla %s/DotPlot.R %s/FeGenie-heatmap-data.csv %s" % (Rdir, args.out, args.out))
     os.system("Rscript --vanilla %s/dendro-heatmap.R %s/FeGenie-heatmap-data.csv %s" % (Rdir, args.out, args.out))
