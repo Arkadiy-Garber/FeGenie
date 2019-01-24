@@ -289,6 +289,18 @@ else:
     print("Exiting")
     raise SystemExit
 
+if args.makeplots == 'y':
+    if args.R != "NA":
+        print(".")
+    else:
+        if conda == 0:
+            print('Looks like you told FeGenie to automatically generate R plots. '
+                  'However, you have not provided the location of the directory that contains the R scripts '
+                  '(as required of you because you did not go through the conda-based installation.')
+            print("Exiting")
+            raise SystemExit
+
+
 if args.bin_ext != "NA":
     print(".")
 else:
