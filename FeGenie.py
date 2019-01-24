@@ -239,7 +239,7 @@ parser.add_argument('-inflation', type=int, help="inflation factor for final gen
 parser.add_argument('-t', type=int, help="number of threads to use for DIAMOND BLAST and HMMSEARCH "
                                          "(default=1, max=16)", default=1)
 
-parser.add_argument('-makeplots', type=int, help="Would you like FeGenie to make some figures from your data? y = yes, n = no (default = n). "
+parser.add_argument('-makeplots', type=str, help="Would you like FeGenie to make some figures from your data? y = yes, n = no (default = n). "
                                                  "If so, you will need to have Rscipt installed. It is a way for R to be called directly from the command line. "
                                                  "Warning: this part of the program is currently under beta-testing, and if there are any problems running Rscript, "
                                                  "or installing any of the required packages, you may get a bunch of error messages at the end. "
