@@ -414,7 +414,7 @@ for FeCategory in HMMdirLS:
                 os.system(
                     "mkdir " + binDir + "/" + i + "-HMM")  # CREATING DIRECTORY, FOR EACH BIN, TO WHICH HMMSEARCH RESULTS WILL BE WRITTEN
 
-                print("")
+
                 count = 0
                 for hmm in hmmDirLS2:  # ITERATING THROUGH ALL THE HMM FILES IN THE HMM DIRECTORY
                     count += 1
@@ -462,6 +462,7 @@ for FeCategory in HMMdirLS:
                                             HMMdict[i][orf]["evalue"] = evalue
                                             HMMdict[i][orf]["bit"] = bit
 
+                print("")
                 os.system("rm -rf " + binDir + "/" + i + "-HMM")
 
         out = open(outDirectory + "/%s-summary.csv" % (FeCategory), "w")
