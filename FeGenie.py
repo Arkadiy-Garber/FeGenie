@@ -290,10 +290,10 @@ else:
     raise SystemExit
 
 if args.makeplots == 'y':
-    if args.R != "NA":
-        print(".")
-    else:
-        if conda == 0:
+    if conda == 0:
+        if args.R != "NA":
+            print(".")
+        else:
             print('Looks like you told FeGenie to automatically generate R plots. '
                   'However, you have not provided the location of the directory that contains the R scripts '
                   '(as required of you because you did not go through the conda-based installation.')
