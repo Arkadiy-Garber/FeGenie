@@ -817,7 +817,11 @@ for i in (clusterDict.keys()):
     elif "FoxA.hmm" in ls or "FoxB.hmm" in ls or "FoxC.hmm" in ls:
         foxabc = ["FoxA.hmm", "FoxB.hmm", "FoxC.hmm"]
         if unique(ls, foxabc) < 2:
-            pass
+            for j in clusterDict[i]["line"]:
+                out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
+
+            out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+
         else:
             for j in clusterDict[i]["line"]:
                 if j[3] not in foxabc:
@@ -827,8 +831,16 @@ for i in (clusterDict.keys()):
 
     elif "FoxE.hmm" in ls or "FoxY.hmm" in ls or "FoxZ.hmm" in ls:
         foxeyz = ["FoxE.hmm", "FoxY.hmm", "FoxZ.hmm"]
-        if unique(ls, foxeyz) < 2:
-            pass
+        if "FoxE.hmm" not in ls:
+            if unique(ls, foxeyz) < 1:
+                pass
+            else:
+                for j in clusterDict[i]["line"]:
+                    if j[3] not in foxeyz:
+                        out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
+
+                out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+
         else:
             for j in clusterDict[i]["line"]:
                 if j[3] not in foxeyz:
