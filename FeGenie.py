@@ -751,8 +751,8 @@ for i in summary:
 out = open("%s/FinalSummary-dereplicated-clustered-blast-filtered.csv" % outDirectory, "w")
 for i in (clusterDict.keys()):
     ls = (clusterDict[i]["gene"])
-    if "EetA.hmm" in ls or "EetB.hmm" in ls or "Ndh2.hmm" in ls or "FmnB.hmm" in ls or "FmnA.hmm" in ls or "DmkA.hmm" in ls or "DmkB.hmm" in ls or "PplA.hmm" in ls:
-        fleet = ["EetA.hmm", "EetB.hmm", "Ndh2.hmm", "FmnB.hmm", "FmnA.hmm", "DmkA.hmm", "DmkB.hmm", "PplA.hmm"]
+    if "EetA" in ls or "EetB" in ls or "Ndh2" in ls or "FmnB" in ls or "FmnA" in ls or "DmkA" in ls or "DmkB" in ls or "PplA" in ls:
+        fleet = ["EetA", "EetB", "Ndh2", "FmnB", "FmnA", "DmkA", "DmkB", "PplA"]
 
         if unique(ls, fleet) < 5:  # If there are less than 5 FLEET genes in the cluster
             if len(remove2(ls, fleet)) < 1:  # If FLEET genes are the only ones in the cluster
@@ -770,11 +770,11 @@ for i in (clusterDict.keys()):
 
             out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
 
-    elif "MamB.hmm" in ls or "MamC.hmm" in ls or "MamD.hmm" in ls or "MamF.hmm" in ls or "MamG.hmm" in ls or "MamJ.hmm" \
-            in ls or "MamK.hmm" in ls or "MamM.hmm" in ls or "MamP.hmm" in ls or "MamW.hmm" in ls or "MamX.hmm" in ls or "MamY.hmm" in ls:
-        mam = ["MamB.hmm", "MamC.hmm", "MamD.hmm", "MamF.hmm", "MamG.hmm", "MamJ.hmm", "MamK.hmm", "MamM.hmm", "MamP.hmm", "MamW.hmm", "MamX.hmm", "MamY.hmm"]
+    elif "MamA" in ls or "MamB" in ls or "MamE" in ls or "MamK" in ls or "MamM" in ls or "MamO" \
+            in ls or "MamP" in ls or "MamQ" in ls or "MamI" in ls or "MamL" in ls:
+        mam = ["MamA", "MamB", "MamE", "MamK", "MamP", "MamM", "MamP", "MamQ", "MamI", "MamL", "MamO"]
 
-        if unique(ls, mam) < 7:
+        if unique(ls, mam) < 5:
             if len(remove2(ls, mam)) < 1:
                 pass
             else:
