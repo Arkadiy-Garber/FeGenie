@@ -234,7 +234,7 @@ parser.add_argument('-contigs_source', type=str, help="are the provided contigs 
 parser.add_argument('-d', type=int, help="maximum distance between genes to be considered in a genomic \'cluster\'."
                                          "This number should be an integer and should reflect the maximum number of "
                                          "genes in between putative iron-related genes identified by the HMM database "
-                                         "(default=10)", default=10)
+                                         "(default=5)", default=5)
 
 parser.add_argument('-ref', type=str, help="path to a reference protein database, which must be in FASTA format", default="NA")
 
@@ -835,7 +835,7 @@ for i in (clusterDict.keys()):
 
             else:
                 for j in clusterDict[i]["line"]:
-                    if j[2] not in foxabc:
+                    if j[3] not in foxabc:
                         out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
 
                 out.write(
@@ -855,7 +855,7 @@ for i in (clusterDict.keys()):
 
             else:
                 for j in clusterDict[i]["line"]:
-                    if j[2] not in foxeyz:
+                    if j[3] not in foxeyz:
                         out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
                 out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
         else:
