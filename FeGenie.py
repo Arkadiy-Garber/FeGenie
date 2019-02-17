@@ -850,7 +850,6 @@ for i in (clusterDict.keys()):
     elif "FoxE.hmm" in ls or "FoxY.hmm" in ls or "FoxZ.hmm" in ls:
         foxeyz = ["FoxE.hmm", "FoxY.hmm", "FoxZ.hmm"]
         if "FoxE.hmm" not in ls:
-            print("not in LS")
             if len(remove2(ls, foxeyz)) < 1:
                 pass
 
@@ -860,9 +859,7 @@ for i in (clusterDict.keys()):
                         out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
                 out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
         else:
-            print("IN LS")
             for j in clusterDict[i]["line"]:
-                print(j)
                 out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
 
             out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
@@ -913,27 +910,27 @@ summary = open("%s/FinalSummary-dereplicated-clustered-blast-filtered.csv" % out
 for i in summary:
     if not re.match(r'#', i):
         ls = (i.rstrip().split(","))
-        cluDict[ls[6]].append(i.rstrip())
-        cluDictIndex[ls[6]].append(ls)
+        cluDict[ls[5]].append(i.rstrip())
+        cluDictIndex[ls[5]].append(ls)
 
-acceptableSingltons = ["sulfocyanin.hmm", "Cyc2_repCluster1", "Cyc2_repCluster2", "Cyc2_repCluster3", "Transferrin_TbpB_binding_protein_Haemophilus_influenzae_P44971.hmm",
+acceptableSingltons = ["sulfocyanin.hmm", "Cyc2_repCluster1.hmm", "Cyc2_repCluster2.hmm", "Cyc2_repCluster3.hmm", "Transferrin_TbpB_binding_protein_Haemophilus_influenzae_P44971.hmm",
                        "PF13668_Ferritin_like_domain.hmm", "PF00210-Ferritin_like_domain.hmm", "Sid_YqjI_regulator_for_YqjH_P64588_Escherichia_coli_180606.hmm",
                        "Sid_PvdS_regulator_Paeruginosa_PA2426_180620.hmm", "Sid_PchR_pyochelin_regulator_Pseudomonas_aeruginosa_PA4227_180623.hmm", "Sid_FpvI_regulator_PA2387_Paeruginosa_PAO1_180620.hmm",
                        "PF09012_sub-FeoC_like_transcriptional_regulator.hmm", "PF04773_FecR.hmm", "PF02742-Iron_dependent_repressor-dtxR_family_metal_binding_domain.hmm",
                        "PF01475-Iron_dependent_repressor-fur_family.hmm", "PF01325-Iron_dependent_repressor-dtxR_family_N.hmm"]
 
-out = open("%s/FinalSummary-dereplicated-clustered-blast-filtered2.csv" % outDirectory, "r")
+out = open("%s/FinalSummary-dereplicated-clustered-blast-filtered2.csv" % outDirectory, "w")
 for i in cluDict.keys():
     if (len(cluDict[i])) == 1:
         ls = cluDictIndex[i][0]
         if ls[3] in acceptableSingltons:
             for j in cluDict[i]:
                 out.write(j + "\n")
-            out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+            out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
     else:
         for j in cluDict[i]:
             out.write(j + "\n")
-        out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+        out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
 
 out.close()
 
