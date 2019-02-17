@@ -746,6 +746,12 @@ os.system("cat %s/FinalSummary-dereplicated-clustered.csv %s/GeoThermin.csv > %s
 
 # ****************************** FILTERING OUT LIKELY FALSE POSITIVES *************************************
 # print("Filtering out likely false positives")
+fleet = ["EetA.hmm", "EetB.hmm", "Ndh2.hmm", "FmnB.hmm", "FmnA.hmm", "DmkA.hmm", "DmkB.hmm", "PplA.hmm"]
+mam = ["MamA.hmm", "MamB.hmm", "MamE.hmm", "MamK.hmm", "MamP.hmm", "MamM.hmm", "MamP.hmm", "MamQ.hmm", "MamI.hmm", "MamL.hmm", "MamO.hmm"]
+foxabc = ["FoxA.hmm", "FoxB.hmm", "FoxC.hmm"]
+foxeyz = ["FoxE.hmm", "FoxY.hmm", "FoxZ.hmm"]
+
+
 clusterDict = defaultdict(lambda: defaultdict(list))
 summary = open("%s/FinalSummary-dereplicated-clustered-blast.csv" % outDirectory, "r")
 for i in summary:
@@ -759,8 +765,6 @@ for i in summary:
 out = open("%s/FinalSummary-dereplicated-clustered-blast-filtered.csv" % outDirectory, "w")
 for i in (clusterDict.keys()):
     ls = (clusterDict[i]["gene"])
-    print("")
-    print(ls)
     if "EetA.hmm" in ls or "EetB.hmm" in ls or "Ndh2.hmm" in ls or "FmnB.hmm" in ls or "FmnA.hmm" in ls or "DmkA.hmm" in ls or "DmkB.hmm" in ls or "PplA.hmm" in ls:
         fleet = ["EetA.hmm", "EetB.hmm", "Ndh2.hmm", "FmnB.hmm", "FmnA.hmm", "DmkA.hmm", "DmkB.hmm", "PplA.hmm"]
 
@@ -783,7 +787,6 @@ for i in (clusterDict.keys()):
     elif "MamA.hmm" in ls or "MamB.hmm" in ls or "MamE.hmm" in ls or "MamK.hmm" in ls or "MamM.hmm" in ls or "MamO.hmm" \
             in ls or "MamP.hmm" in ls or "MamQ.hmm" in ls or "MamI.hmm" in ls or "MamL.hmm" in ls:
         mam = ["MamA.hmm", "MamB.hmm", "MamE.hmm", "MamK.hmm", "MamP.hmm", "MamM.hmm", "MamP.hmm", "MamQ.hmm", "MamI.hmm", "MamL.hmm", "MamO.hmm"]
-
         if unique(ls, mam) < 5:
             if len(remove2(ls, mam)) < 1:
                 pass
@@ -803,7 +806,7 @@ for i in (clusterDict.keys()):
     elif "MtoA.hmm" in ls or "MtrA.hmm" in ls or "MtrC_TIGR03507.hmm" in ls or "MtrB_TIGR03509.hmm" in ls:
         if "MtoA.hmm" in ls and "MtrB_TIGR03509.hmm" in ls:
             for j in clusterDict[i]["line"]:
-                if j[3] in ["MtrB_TIGR03509.hmm", "MtoA.hmm"]:
+                if j[3] in ["MtrB_TIGR03509.hmm", "MtoA.hmm", "CymA.hmm"]:
                     out.write("iron_oxidation" + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
 
                 else:
@@ -824,7 +827,6 @@ for i in (clusterDict.keys()):
         elif "MtrB_TIGR03509.hmm" not in ls:
             pass
 
-
     elif "FoxA.hmm" in ls or "FoxB.hmm" in ls or "FoxC.hmm" in ls:
         foxabc = ["FoxA.hmm", "FoxB.hmm", "FoxC.hmm"]
         if unique(ls, foxabc) < 2:
@@ -844,7 +846,6 @@ for i in (clusterDict.keys()):
                 out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
 
             out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
-
 
     elif "FoxE.hmm" in ls or "FoxY.hmm" in ls or "FoxZ.hmm" in ls:
         foxeyz = ["FoxE.hmm", "FoxY.hmm", "FoxZ.hmm"]
@@ -905,6 +906,37 @@ for i in (clusterDict.keys()):
 
 out.close()
 
+# ****************************** REMOVING SINGLETONS *************************************
+cluDict = defaultdict(list)
+cluDictIndex = defaultdict(list)
+summary = open("%s/FinalSummary-dereplicated-clustered-blast-filtered.csv" % outDirectory, "r")
+for i in summary:
+    if not re.match(r'#', i):
+        ls = (i.rstrip().split(","))
+        cluDict[ls[6]].append(i.rstrip())
+        cluDictIndex[ls[6]].append(ls)
+
+acceptableSingltons = ["sulfocyanin.hmm", "Cyc2_repCluster1", "Cyc2_repCluster2", "Cyc2_repCluster3", "Transferrin_TbpB_binding_protein_Haemophilus_influenzae_P44971.hmm",
+                       "PF13668_Ferritin_like_domain.hmm", "PF00210-Ferritin_like_domain.hmm", "Sid_YqjI_regulator_for_YqjH_P64588_Escherichia_coli_180606.hmm",
+                       "Sid_PvdS_regulator_Paeruginosa_PA2426_180620.hmm", "Sid_PchR_pyochelin_regulator_Pseudomonas_aeruginosa_PA4227_180623.hmm", "Sid_FpvI_regulator_PA2387_Paeruginosa_PAO1_180620.hmm",
+                       "PF09012_sub-FeoC_like_transcriptional_regulator.hmm", "PF04773_FecR.hmm", "PF02742-Iron_dependent_repressor-dtxR_family_metal_binding_domain.hmm",
+                       "PF01475-Iron_dependent_repressor-fur_family.hmm", "PF01325-Iron_dependent_repressor-dtxR_family_N.hmm"]
+
+out = open("%s/FinalSummary-dereplicated-clustered-blast-filtered2.csv" % outDirectory, "r")
+for i in cluDict.keys():
+    if (len(cluDict[i])) == 1:
+        ls = cluDictIndex[i][0]
+        if ls[3] in acceptableSingltons:
+            for j in cluDict[i]:
+                out.write(j + "\n")
+            out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+    else:
+        for j in cluDict[i]:
+            out.write(j + "\n")
+        out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+
+out.close()
+
 
 # ****************************** CREATING A HEATMAP-COMPATIBLE CSV FILE *************************************
 # print("Writing heatmap-compatible CSV")
@@ -913,7 +945,7 @@ cats = ["iron_aquisition-iron_transport", "iron_aquisition-heme_transport", "iro
         "iron_storage", "magnetosome_formation"]
 
 Dict = defaultdict(lambda: defaultdict(list))
-final = open("%s/FinalSummary-dereplicated-clustered-blast-filtered.csv" % args.out, "r")
+final = open("%s/FinalSummary-dereplicated-clustered-blast-filtered2.csv" % args.out, "r")
 for i in final:
     ls = (i.rstrip().split(","))
     if ls[0] != "" and ls[1] != "assembly" and ls[1] != "genome":
@@ -955,7 +987,8 @@ os.system("rm %s/FinalSummary-dereplicated-clustered-blast.csv" % args.out)
 os.system("rm %s/*blast" % args.out)
 os.system("rm %s/FinalSummary.csv" % args.out)
 os.system("rm %s/FinalSummary-dereplicated-clustered.csv" % args.out)
-os.system("mv %s/FinalSummary-dereplicated-clustered-blast-filtered.csv %s/FeGenie-summary.csv" % (args.out, args.out))
+os.system("rm %s/FinalSummary-dereplicated-clustered-blast-filtered.csv" % args.out)
+os.system("mv %s/FinalSummary-dereplicated-clustered-blast-filtered2.csv %s/FeGenie-summary.csv" % (args.out, args.out))
 
 
 # CROSS-VALIDATION AGAINST REFERENCE DATABASE
