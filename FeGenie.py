@@ -19,6 +19,14 @@ def unique(ls, ls2):
     return len(unqlist)
 
 
+def Unique(ls):
+    unqList = []
+    for i in ls:
+        if i not in unqList:
+            unqList.append(i)
+    return unqList
+
+
 def derep(ls):
     outLS = []
     for i in ls:
@@ -751,6 +759,8 @@ for i in summary:
 out = open("%s/FinalSummary-dereplicated-clustered-blast-filtered.csv" % outDirectory, "w")
 for i in (clusterDict.keys()):
     ls = (clusterDict[i]["gene"])
+    print("")
+    print(ls)
     if "EetA.hmm" in ls or "EetB.hmm" in ls or "Ndh2.hmm" in ls or "FmnB.hmm" in ls or "FmnA.hmm" in ls or "DmkA.hmm" in ls or "DmkB.hmm" in ls or "PplA.hmm" in ls:
         fleet = ["EetA.hmm", "EetB.hmm", "Ndh2.hmm", "FmnB.hmm", "FmnA.hmm", "DmkA.hmm", "DmkB.hmm", "PplA.hmm"]
 
@@ -814,37 +824,45 @@ for i in (clusterDict.keys()):
         elif "MtrB_TIGR03509.hmm" not in ls:
             pass
 
+
     elif "FoxA.hmm" in ls or "FoxB.hmm" in ls or "FoxC.hmm" in ls:
         foxabc = ["FoxA.hmm", "FoxB.hmm", "FoxC.hmm"]
         if unique(ls, foxabc) < 2:
+            if len(remove2(ls, foxabc)) < 1:
+                pass
+
+            else:
+                for j in clusterDict[i]["line"]:
+                    if j[2] not in foxabc:
+                        out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
+
+                out.write(
+                    "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+        else:
+
             for j in clusterDict[i]["line"]:
                 out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
 
             out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
 
-        else:
-            for j in clusterDict[i]["line"]:
-                if j[3] not in foxabc:
-                    out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
-
-            out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
 
     elif "FoxE.hmm" in ls or "FoxY.hmm" in ls or "FoxZ.hmm" in ls:
         foxeyz = ["FoxE.hmm", "FoxY.hmm", "FoxZ.hmm"]
         if "FoxE.hmm" not in ls:
-            if unique(ls, foxeyz) < 1:
+            print("not in LS")
+            if len(remove2(ls, foxeyz)) < 1:
                 pass
+
             else:
                 for j in clusterDict[i]["line"]:
-                    if j[3] not in foxeyz:
+                    if j[2] not in foxeyz:
                         out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
-
                 out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
-
         else:
+            print("IN LS")
             for j in clusterDict[i]["line"]:
-                if j[3] not in foxeyz:
-                    out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
+                print(j)
+                out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
 
             out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
 
@@ -860,7 +878,7 @@ for i in (clusterDict.keys()):
                     "iron_aquisition-siderophore_transport" in clusterDict[i]["category"] or \
                     "iron_aquisition-iron_transport" in clusterDict[i]["category"] or "iron_aquisition-heme_transport" in clusterDict[i]["category"]:
 
-        if len(ls) > 1:
+        if len(Unique(ls)) > 2:
             for j in clusterDict[i]["line"]:
                 out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
 
@@ -974,9 +992,9 @@ if args.ref != "NA":
 summary = open("%s/FeGenie-summary.csv" % args.out, "r")
 out = open("%s/FeGenie-summary-blasthits.csv" % args.out, "w")
 if args.ref != "NA":
-    out.write("category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore_ratio" + "," + "cluster" + "," + "heme_binding_motifs" + "," + "top_blast_hit" + "," + "blast_hit_evalue" + "," + "protein_sequence" + "\n")
+    out.write("category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore" + "," + "bitscore_cutoff" + "," + "cluster" + "," + "heme_binding_motifs" + "," + "top_blast_hit" + "," + "blast_hit_evalue" + "," + "protein_sequence" + "\n")
 else:
-    out.write("category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore_ratio" + "," + "cluster" + "," + "heme_binding_motifs" + "," + "protein_sequence" + "\n")
+    out.write("category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore" + "," + "bitscore_cutoff" + "," + "cluster" + "," + "heme_binding_motifs" + "," + "protein_sequence" + "\n")
 
 
 counter = 1
@@ -991,13 +1009,13 @@ for i in summary:
             blasthit = dmndblastDict[ls[1]][ls[2]]["target"]
             e = dmndblastDict[ls[1]][ls[2]]["e"]
             try:
-                out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + str(float(metaDict[ls[3].split(".")[0]]) / float(ls[4])) + "," + str(counter) + "," + str(hemes) + "," + blasthit + "," + str(e) + "," + seq + "\n")
+                out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + str(ls[4]) + "," + str(metaDict[ls[3].split(".")[0]]) + "," + str(counter) + "," + str(hemes) + "," + blasthit + "," + str(e) + "," + seq + "\n")
             except TypeError:
                 out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + ls[4] + "," + str(counter) + "," + str(hemes) + "," + blasthit + "," + str(e) + "," + seq + "\n")
 
         else:
             try:
-                out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + str(float(metaDict[ls[3].split(".")[0]]) / float(ls[4])) + "," + str(counter) + "," + str(hemes) + "," + seq + "\n")
+                out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + str(ls[4]) + "," + str(metaDict[ls[3].split(".")[0]]) + "," + str(counter) + "," + str(hemes) + "," + seq + "\n")
 
             except TypeError:
                 out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + ls[4] + "," + str(counter) + "," + str(hemes) + "," + seq + "\n")
