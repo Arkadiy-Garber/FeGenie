@@ -1,4 +1,4 @@
-Copy and paste the following commands into your terminal window:
+# Copy and paste the following commands into your terminal window:
 
 os.system("Rscript -e 'install.packages(\"ggplot2\", repos = \"http://cran.us.r-project.org\")\'")
 os.system("Rscript -e 'install.packages(\"reshape\", repos = \"http://cran.us.r-project.org\")\'")
