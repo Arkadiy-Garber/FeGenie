@@ -7,8 +7,8 @@ import argparse
 import sys
 
 
-# TODO: ADD CYTOCHROME 579 HMM (next release)
-# TODO: ADD BITSCORE CUTOFF FOR EACH HMM HIT
+# TODO: ADD CYTOCHROME 579 HMM
+# TODO: ADD COLUMN WITH ORF STRAND
 
 
 def unique(ls, ls2):
@@ -220,6 +220,15 @@ parser = argparse.ArgumentParser(
     University of Southern California, Earth Sciences
     Please send comments and inquiries to arkadiyg@usc.edu
 
+                _ ,          __ ,                       
+          ,- -         ,-| ~                        
+         _||_         ('||/__,              '       
+        ' ||    _-_  (( |||  |  _-_  \\/\\ \\  _-_  
+          ||   || \\ (( |||==| || \\ || || || || \\ 
+          |,   ||/    ( / |  , ||/   || || || ||/   
+        _-/    \\,/    -____/  \\,/  \\ \\ \\ \\,/  
+            
+    
     *******************************************************
     '''))
 
@@ -1077,14 +1086,14 @@ if args.makeplots == "y":
             Rdir = (i.rstrip())
         os.system("rm r.txt")
 
-    os.system("Rscript -e 'install.packages(\"ggplot2\", repos = \"http://cran.us.r-project.org\")\'")
-    os.system("Rscript -e 'install.packages(\"reshape\", repos = \"http://cran.us.r-project.org\")\'")
-    os.system("Rscript -e 'install.packages(\"reshape2\", repos = \"http://cran.us.r-project.org\")\'")
-    os.system("Rscript -e 'install.packages(\"tidyverse\", repos = \"http://cran.us.r-project.org\")\'")
-    os.system("Rscript -e 'install.packages(\"argparse\", repos = \"http://cran.us.r-project.org\")\'")
-    os.system("Rscript -e 'install.packages(\"ggdendro\", repos = \"http://cran.us.r-project.org\")\'")
-    os.system("Rscript -e 'install.packages(\"ggpubr\", repos = \"http://cran.us.r-project.org\")\'")
-    os.system("Rscript -e 'install.packages(\"grid\", repos = \"http://cran.us.r-project.org\")\'")
+    # os.system("Rscript -e 'install.packages(\"ggplot2\", repos = \"http://cran.us.r-project.org\")\'")
+    # os.system("Rscript -e 'install.packages(\"reshape\", repos = \"http://cran.us.r-project.org\")\'")
+    # os.system("Rscript -e 'install.packages(\"reshape2\", repos = \"http://cran.us.r-project.org\")\'")
+    # os.system("Rscript -e 'install.packages(\"tidyverse\", repos = \"http://cran.us.r-project.org\")\'")
+    # os.system("Rscript -e 'install.packages(\"argparse\", repos = \"http://cran.us.r-project.org\")\'")
+    # os.system("Rscript -e 'install.packages(\"ggdendro\", repos = \"http://cran.us.r-project.org\")\'")
+    # os.system("Rscript -e 'install.packages(\"ggpubr\", repos = \"http://cran.us.r-project.org\")\'")
+    # os.system("Rscript -e 'install.packages(\"grid\", repos = \"http://cran.us.r-project.org\")\'")
 
     os.system("Rscript --vanilla %s/DotPlot.R %s/FeGenie-heatmap-data.csv %s" % (Rdir, args.out, args.out))
     os.system("Rscript --vanilla %s/dendro-heatmap.R %s/FeGenie-heatmap-data.csv %s" % (Rdir, args.out, args.out))
@@ -1114,6 +1123,3 @@ if args.makeplots == "y":
 
 print("")
 print("Pipeline finished without crashing!!! Thanks for using :)")
-
-
-
