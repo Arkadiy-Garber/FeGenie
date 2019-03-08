@@ -220,13 +220,13 @@ parser = argparse.ArgumentParser(
     University of Southern California, Earth Sciences
     Please send comments and inquiries to arkadiyg@usc.edu
 
-                                                                                                                        
-        )`-.--.  )\.---.     )\.-.    )\.---.   )\  )\  .'(   )\.---.  
-    ) ,-._( (   ,-._(  ,' ,-,_)  (   ,-._( (  \, /  \  ) (   ,-._( 
-    \ `-._   \  '-,   (  .   __   \  '-,    ) \ (   ) (   \  '-,   
-     ) ,_(    ) ,-`    ) '._\ _)   ) ,-`   ( ( \ \  \  )   ) ,-`   
-    (  \     (  ``-.  (  ,   (    (  ``-.   `.)/  )  ) \  (  ``-.  
-     ).'      )..-.(   )/'._.'     )..-.(      '.(    )/   )..-.(  
+                                                                                                                            
+            )`-.--.  )\.---.     )\.-.    )\.---.   )\  )\  .'(   )\.---.  
+        ) ,-._( (   ,-._(  ,' ,-,_)  (   ,-._( (  \, /  \  ) (   ,-._( 
+        \ `-._   \  '-,   (  .   __   \  '-,    ) \ (   ) (   \  '-,   
+         ) ,_(    ) ,-`    ) '._\ _)   ) ,-`   ( ( \ \  \  )   ) ,-`   
+        (  \     (  ``-.  (  ,   (    (  ``-.   `.)/  )  ) \  (  ``-.  
+         ).'      )..-.(   )/'._.'     )..-.(      '.(    )/   )..-.(  
                                                                                                                                                                                             
                                                                                            
                                                                                            
@@ -286,7 +286,10 @@ parser = argparse.ArgumentParser(
                                 ."-....-".
                               .':.        `.
                               "-..______..-"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+    
+    
+    Image design: Nancy Merino (2018);
+    ASCII art: https://manytools.org/hacker-tools/convert-images-to-ascii-art/                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
     *******************************************************
     '''))
 
@@ -943,7 +946,7 @@ for i in (clusterDict.keys()):
                     "iron_aquisition-siderophore_transport" in clusterDict[i]["category"] or \
                     "iron_aquisition-iron_transport" in clusterDict[i]["category"] or "iron_aquisition-heme_transport" in clusterDict[i]["category"]:
 
-        if len(Unique(ls)) > 2:
+        if len(Unique(ls)) > 1:
             for j in clusterDict[i]["line"]:
                 out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
 
