@@ -1047,48 +1047,6 @@ for i in cluDict.keys():
 out.close()
 
 
-# ****************************** CREATING A HEATMAP-COMPATIBLE CSV FILE *************************************
-# print("Writing heatmap-compatible CSV")
-cats = ["iron_aquisition-iron_transport", "iron_aquisition-heme_transport", "iron_aquisition-heme_oxygenase", "iron_aquisition-siderophore_synthesis",
-        "iron_aquisition-siderophore_transport", "iron_gene_regulation", "iron_oxidation", "iron_reduction",
-        "iron_storage", "magnetosome_formation"]
-
-Dict = defaultdict(lambda: defaultdict(list))
-final = open("%s/FinalSummary-dereplicated-clustered-blast-filtered2.csv" % args.out, "r")
-for i in final:
-    ls = (i.rstrip().split(","))
-    if ls[0] != "" and ls[1] != "assembly" and ls[1] != "genome":
-        if not re.match(r'#', i):
-            process = ls[0]
-            cell = ls[1]
-            orf = ls[2]
-            gene = ls[3]
-            Dict[cell][process].append(gene)
-
-normDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
-for i in os.listdir(args.bin_dir):
-    if lastItem(i.split(".")) == args.bin_ext:
-        file = open("%s/%s-proteins.faa" % (args.bin_dir, i), "r")
-        file = fasta(file)
-        normDict[i] = len(file.keys())
-
-
-outHeat = open("%s/FeGenie-heatmap-data.csv" % args.out, "w")
-outHeat.write("X" + ',')
-for i in sorted(Dict.keys()):
-    outHeat.write(i + ",")
-outHeat.write("\n")
-
-for i in cats:
-    outHeat.write(i + ",")
-    for j in sorted(Dict.keys()):
-        if not re.match(r'#', j):
-            outHeat.write(str((len(Dict[j][i]) / int(normDict[j])) * float(args.inflation)) + ",")
-    outHeat.write("\n")
-
-outHeat.close()
-
-
 # REMOVING FILES
 os.system("rm %s/GeoThermin.csv" % args.out)
 os.system("rm %s/*summary*" % args.out)
@@ -1180,7 +1138,7 @@ os.system("mv %s/FeGenie-summary-blasthits.csv %s/FeGenie-summary.csv" % (args.o
 
 
 # FILTERING OUT FALSE POSITIVES FOR SIDEROPHORE GENES
-MAP = HMMdir + "/FeGenie-map.txt"
+MAP = open(HMMdir + "/FeGenie-map.txt", "r")
 mapDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
 for i in MAP:
     ls = i.rstrip().split("\t")
@@ -1269,7 +1227,49 @@ for i in clusterDict.keys():
                 memoryDict[dataset][orf]["cutoff"] + "," + clu + "," + memoryDict[dataset][orf]["heme"] + "," +
                 memoryDict[dataset][orf]["seq"] + "\n")
 
+out.close()
 os.system("mv %s/FeGenie-summary-fixed.csv %s/FeGenie-summary.csv" % (args.out, args.out))
+
+
+# ****************************** CREATING A HEATMAP-COMPATIBLE CSV FILE *************************************
+cats = ["iron_aquisition-iron_transport", "iron_aquisition-heme_transport", "iron_aquisition-heme_oxygenase", "iron_aquisition-siderophore_synthesis",
+        "iron_aquisition-siderophore_transport", "iron_gene_regulation", "iron_oxidation", "iron_reduction",
+        "iron_storage", "magnetosome_formation"]
+
+Dict = defaultdict(lambda: defaultdict(list))
+final = open("%s/FeGenie-summary.csv" % args.out, "r")
+for i in final:
+    ls = (i.rstrip().split(","))
+    if ls[0] != "" and ls[1] != "assembly" and ls[1] != "genome":
+        if not re.match(r'#', i):
+            process = ls[0]
+            cell = ls[1]
+            orf = ls[2]
+            gene = ls[3]
+            Dict[cell][process].append(gene)
+
+normDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
+for i in os.listdir(args.bin_dir):
+    if lastItem(i.split(".")) == args.bin_ext:
+        file = open("%s/%s-proteins.faa" % (args.bin_dir, i), "r")
+        file = fasta(file)
+        normDict[i] = len(file.keys())
+
+
+outHeat = open("%s/FeGenie-heatmap-data.csv" % args.out, "w")
+outHeat.write("X" + ',')
+for i in sorted(Dict.keys()):
+    outHeat.write(i + ",")
+outHeat.write("\n")
+
+for i in cats:
+    outHeat.write(i + ",")
+    for j in sorted(Dict.keys()):
+        if not re.match(r'#', j):
+            outHeat.write(str((len(Dict[j][i]) / int(normDict[j])) * float(args.inflation)) + ",")
+    outHeat.write("\n")
+
+outHeat.close()
 
 
 # ******** RUNNING RSCRIPT TO GENERATE PLOTS **************
