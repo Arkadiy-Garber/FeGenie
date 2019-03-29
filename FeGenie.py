@@ -1246,15 +1246,24 @@ for i in final:
             cell = ls[1]
             orf = ls[2]
             gene = ls[3]
+            print(cell)
+            print(process)
+            print(gene)
             Dict[cell][process].append(gene)
+print("\n\n\n\n")
+
 
 normDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
 for i in os.listdir(args.bin_dir):
+    print(i)
     if lastItem(i.split(".")) == args.bin_ext:
+        print(i + "-proteins.faa")
         file = open("%s/%s-proteins.faa" % (args.bin_dir, i), "r")
         file = fasta(file)
         normDict[i] = len(file.keys())
-
+        print(i)
+        print(len(file.keys()))
+print("\n\n\n\n")
 
 outHeat = open("%s/FeGenie-heatmap-data.csv" % args.out, "w")
 outHeat.write("X" + ',')
@@ -1263,9 +1272,13 @@ for i in sorted(Dict.keys()):
 outHeat.write("\n")
 
 for i in cats:
+    print(i)
     outHeat.write(i + ",")
     for j in sorted(Dict.keys()):
+        print(j)
         if not re.match(r'#', j):
+            print(j)
+            print(normDict[j])
             outHeat.write(str((len(Dict[j][i]) / int(normDict[j])) * float(args.inflation)) + ",")
     outHeat.write("\n")
 
