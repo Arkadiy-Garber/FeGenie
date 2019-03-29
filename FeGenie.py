@@ -27,6 +27,48 @@ def Unique(ls):
     return unqList
 
 
+def Unique2(ls):
+    unqList = []
+    for i in ls:
+        hmm = i.split("|")[0]
+        if hmm not in unqList:
+            unqList.append(hmm)
+    return unqList
+
+
+def check(ls):
+    count = 0
+    uniqueLS = []
+    for i in ls:
+        hmm = i.split("|")[0]
+        if hmm not in uniqueLS:
+            uniqueLS.append(hmm)
+            if geneToCatDict[hmm] in ["iron_aquisition-siderophore_transport", "iron_aquisition-siderophore_synthesis"]:
+                count += 1
+    return count
+
+
+def checkReg(ls):
+    count = 0
+    for i in ls:
+        hmm = i.split("|")[0]
+        if re.findall(r'aquisition', geneToCatDict[hmm]):
+            count += 1
+    return count
+
+
+def checkMam(ls):
+    count = 0
+    uniqueLS = []
+    for i in ls:
+        hmm = i.split("|")[0]
+        if hmm not in uniqueLS:
+            uniqueLS.append(hmm)
+            if geneToCatDict[hmm] == "magnetosome_formation":
+                count += 1
+    return count
+
+
 def derep(ls):
     outLS = []
     for i in ls:
@@ -1058,7 +1100,7 @@ os.system("rm %s/FinalSummary-dereplicated-clustered-blast-filtered.csv" % args.
 os.system("mv %s/FinalSummary-dereplicated-clustered-blast-filtered2.csv %s/FeGenie-summary.csv" % (args.out, args.out))
 
 
-# CROSS-VALIDATION AGAINST REFERENCE DATABASE
+# OPTIONAL CROSS-VALIDATION AGAINST REFERENCE DATABASE
 if args.ref != "NA":
     print("")
     print("Performing Diamond BLASTx search of putative iron genes against reference database")
@@ -1097,6 +1139,7 @@ else:
     out.write("category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore" + "," + "bitscore_cutoff" + "," + "cluster" + "," + "heme_binding_motifs" + "," + "protein_sequence" + "\n")
 
 
+# SUMMARIZING CROSS-REFERNCE RESULTS AND COUNTING HEME-BINDING MOTIFS
 counter = 1
 for i in summary:
     if not re.match(r'#', i):
@@ -1136,6 +1179,99 @@ os.system("rm %s/FeGenie-summary.csv" % args.out)
 os.system("mv %s/FeGenie-summary-blasthits.csv %s/FeGenie-summary.csv" % (args.out, args.out))
 
 
+# FILTERING OUT FALSE POSITIVES FOR SIDEROPHORE GENES
+MAP = HMMdir + "/FeGenie-map.txt"
+mapDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
+for i in MAP:
+    ls = i.rstrip().split("\t")
+    mapDict[ls[0]] = ls[1]
+
+
+out = open(args.out + "/FeGenie-summary-fixed.csv", "w")
+geneToCatDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
+memoryDict = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 'EMPTY')))
+clusterDict = defaultdict(list)
+infile = open(args.out + "/FeGenie-summary.csv")
+for i in infile:
+    if not re.match(r'#', i):
+        ls = i.rstrip().split(",")
+        if ls[6] != "cluster":
+            if not re.findall(r'defaultdict', ls[5]):
+                clu = ls[6]
+                cat = ls[0]
+                dataset = ls[1]
+                orf = ls[2]
+                hmm = allButTheLast(ls[3], ".")
+                clusterDict[clu].append(hmm + "|" + dataset + "|" + orf)
+                geneToCatDict[hmm] = cat
+                hmm = allButTheLast(ls[3], ".")
+                memoryDict[dataset][orf]["cat"] = ls[0]
+                memoryDict[dataset][orf]["gene"] = ls[3]
+                memoryDict[dataset][orf]["bit"] = ls[4]
+                memoryDict[dataset][orf]["cutoff"] = ls[5]
+                memoryDict[dataset][orf]["clu"] = clu
+                memoryDict[dataset][orf]["heme"] = ls[7]
+                memoryDict[dataset][orf]["seq"] = ls[8]
+            else:
+                cat = ls[0]
+                dataset = ls[1]
+                orf = ls[2]
+                clu = ls[7]
+                hmm = ls[3]
+                memoryDict[dataset][orf]["cat"] = ls[0]
+                memoryDict[dataset][orf]["gene"] = ls[3]
+                memoryDict[dataset][orf]["bit"] = ls[4]
+                memoryDict[dataset][orf]["cutoff"] = "evalue-cutoff: 1E-10"
+                memoryDict[dataset][orf]["clu"] = ls[7]
+                memoryDict[dataset][orf]["heme"] = ls[8]
+                memoryDict[dataset][orf]["seq"] = ls[9]
+                geneToCatDict[hmm] = cat
+                clusterDict[ls[7]].append(hmm + "|" + dataset + "|" + orf)
+        else:
+            out.write(i.rstrip())
+
+
+for i in clusterDict.keys():
+    out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+    for j in clusterDict[i]:
+        hmm = j.split("|")[0]
+        dataset = j.split("|")[1]
+        orf = j.split("|")[2]
+        cat = memoryDict[dataset][orf]["cat"]
+        if cat in ["iron_aquisition-siderophore_transport", "iron_aquisition-siderophore_synthesis"]:
+            if len(Unique2(clusterDict[i])) < 3:
+                break
+            elif check(clusterDict[i]) < 3:
+                pass
+            else:
+                out.write(memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + mapDict[hmm] + "," + memoryDict[dataset][orf]["bit"] + "," + memoryDict[dataset][orf]["cutoff"] + "," + clu + "," + memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["seq"] + "\n")
+        elif cat == "iron_gene_regulation":
+            if checkReg(clusterDict[i]) < 1:
+                pass
+            else:
+                out.write(
+                    memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," + memoryDict[dataset][orf]["bit"] + "," +
+                    memoryDict[dataset][orf]["cutoff"] + "," + clu + "," + memoryDict[dataset][orf]["heme"] + "," +
+                    memoryDict[dataset][orf]["seq"] + "\n")
+
+        elif cat == "magnetosome_formation":
+            if checkMam(clusterDict[i]) < 5:
+                pass
+            else:
+                out.write(
+                    memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," + memoryDict[dataset][orf]["bit"] + "," +
+                    memoryDict[dataset][orf]["cutoff"] + "," + clu + "," + memoryDict[dataset][orf]["heme"] + "," +
+                    memoryDict[dataset][orf]["seq"] + "\n")
+
+        else:
+            out.write(
+                memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," + memoryDict[dataset][orf]["bit"] + "," +
+                memoryDict[dataset][orf]["cutoff"] + "," + clu + "," + memoryDict[dataset][orf]["heme"] + "," +
+                memoryDict[dataset][orf]["seq"] + "\n")
+
+os.system("mv %s/FeGenie-summary-fixed.csv %s/FeGenie-summary.csv" % (args.out, args.out))
+
+
 # ******** RUNNING RSCRIPT TO GENERATE PLOTS **************
 if args.makeplots == "y":
     if conda == 0:
@@ -1146,15 +1282,6 @@ if args.makeplots == "y":
         for i in file:
             Rdir = (i.rstrip())
         os.system("rm r.txt")
-
-    # os.system("Rscript -e 'install.packages(\"ggplot2\", repos = \"http://cran.us.r-project.org\")\'")
-    # os.system("Rscript -e 'install.packages(\"reshape\", repos = \"http://cran.us.r-project.org\")\'")
-    # os.system("Rscript -e 'install.packages(\"reshape2\", repos = \"http://cran.us.r-project.org\")\'")
-    # os.system("Rscript -e 'install.packages(\"tidyverse\", repos = \"http://cran.us.r-project.org\")\'")
-    # os.system("Rscript -e 'install.packages(\"argparse\", repos = \"http://cran.us.r-project.org\")\'")
-    # os.system("Rscript -e 'install.packages(\"ggdendro\", repos = \"http://cran.us.r-project.org\")\'")
-    # os.system("Rscript -e 'install.packages(\"ggpubr\", repos = \"http://cran.us.r-project.org\")\'")
-    # os.system("Rscript -e 'install.packages(\"grid\", repos = \"http://cran.us.r-project.org\")\'")
 
     os.system("Rscript --vanilla %s/DotPlot.R %s/FeGenie-heatmap-data.csv %s" % (Rdir, args.out, args.out))
     os.system("Rscript --vanilla %s/dendro-heatmap.R %s/FeGenie-heatmap-data.csv %s" % (Rdir, args.out, args.out))
