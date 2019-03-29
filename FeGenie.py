@@ -518,7 +518,7 @@ for i in meta:
 print("starting main pipeline...")
 HMMdirLS = os.listdir(HMMdir)
 for FeCategory in HMMdirLS:
-    if not re.match(r'\.', FeCategory) and FeCategory != "HMM-bitcutoffs.txt":
+    if not re.match(r'\.', FeCategory) and FeCategory not in ["HMM-bitcutoffs.txt", "FeGenie-map.txt"]:
         print("")
         print(".")
         print("Looking for following iron-related functional category: " + FeCategory)
