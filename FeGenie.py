@@ -1240,7 +1240,7 @@ Dict = defaultdict(lambda: defaultdict(list))
 final = open("%s/FeGenie-summary.csv" % args.out, "r")
 for i in final:
     ls = (i.rstrip().split(","))
-    if ls[0] != "" and ls[1] != "assembly" and ls[1] != "genome":
+    if ls[0] != "" and ls[1] != "assembly" and ls[1] != "genome" and ls[1] != "genome/assembly":
         if not re.match(r'#', i):
             process = ls[0]
             cell = ls[1]
