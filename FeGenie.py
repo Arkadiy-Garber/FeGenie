@@ -36,14 +36,26 @@ def Unique2(ls):
     return unqList
 
 
-def check(ls):
+def check1(ls):
     count = 0
     uniqueLS = []
     for i in ls:
         hmm = i.split("|")[0]
         if hmm not in uniqueLS:
             uniqueLS.append(hmm)
-            if geneToCatDict[hmm] in ["iron_aquisition-siderophore_transport", "iron_aquisition-siderophore_synthesis"]:
+            if geneToCatDict[hmm] in ["iron_aquisition-siderophore_transport", "iron_aquisition-siderophore_synthesis", "iron_aquisition-heme_transport"]:
+                count += 1
+    return count
+
+
+def check2(ls):
+    count = 0
+    uniqueLS = []
+    for i in ls:
+        hmm = i.split("|")[0]
+        if hmm not in uniqueLS:
+            uniqueLS.append(hmm)
+            if geneToCatDict[hmm] in ["iron_aquisition-iron_transport", "iron_aquisition-heme_oxygenase"]:
                 count += 1
     return count
 
@@ -513,6 +525,7 @@ metaDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
 for i in meta:
     ls = i.rstrip().split("\t")
     metaDict[ls[0]] = ls[1]
+
 
 # ******************* BEGINNING MAIN ALGORITHM **********************************))))
 print("starting main pipeline...")
@@ -1196,13 +1209,24 @@ for i in clusterDict.keys():
         dataset = j.split("|")[1]
         orf = j.split("|")[2]
         cat = memoryDict[dataset][orf]["cat"]
-        if cat in ["iron_aquisition-siderophore_transport", "iron_aquisition-siderophore_synthesis", "iron_aquisition-iron_transport", "iron_aquisition-heme_transport", "iron_aquisition-heme_oxygenase"]:
+        if cat in ["iron_aquisition-siderophore_transport", "iron_aquisition-siderophore_synthesis", "iron_aquisition-heme_transport"]:
             if len(Unique2(clusterDict[i])) < 3:
                 break
-            elif check(clusterDict[i]) < 3:
+            elif check1(clusterDict[i]) < 3:
                 pass
             else:
+
                 out.write(memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + mapDict[hmm] + "," + memoryDict[dataset][orf]["bit"] + "," + memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," + memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["seq"] + "\n")
+
+        elif cat in ["iron_aquisition-iron_transport", "iron_aquisition-heme_oxygenase"]:
+            if len(Unique2(clusterDict[i])) < 2:
+                break
+            elif check2(clusterDict[i]) < 2:
+                pass
+            else:
+
+                out.write(memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + mapDict[hmm] + "," + memoryDict[dataset][orf]["bit"] + "," + memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," + memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["seq"] + "\n")
+
         elif cat == "iron_gene_regulation":
             if checkReg(clusterDict[i]) < 1:
                 pass
@@ -1231,6 +1255,30 @@ out.close()
 os.system("mv %s/FeGenie-summary-fixed.csv %s/FeGenie-summary.csv" % (args.out, args.out))
 
 
+# ****************************** FINAL ALTERATION OF THE OUTPUT FILE ***************************************
+clu = 0
+summaryDict = defaultdict(list)
+summary = open(args.out + "/FeGenie-summary.csv")
+for i in summary:
+    if re.search(r'#', i):
+        clu += 1
+    else:
+        ls = i.rstrip().split(",")
+        summaryDict[clu].append(i.rstrip())
+
+
+out = open(args.out + "/FeGenie-summary-altered.csv", "w")
+for i in summaryDict.keys():
+    if len(summaryDict[i]) > 2:
+        for j in summaryDict[i]:
+            out.write(j + "\n")
+        out.write("#####################################################################################################"
+                  "#####################################################################################################\n")
+out.close()
+
+os.system("mv %s/FeGenie-summary-altered.csv %s/FeGenie-summary.csv" % (args.out, args.out))
+
+
 # ****************************** CREATING A HEATMAP-COMPATIBLE CSV FILE *************************************
 cats = ["iron_aquisition-iron_transport", "iron_aquisition-heme_transport", "iron_aquisition-heme_oxygenase", "iron_aquisition-siderophore_synthesis",
         "iron_aquisition-siderophore_transport", "iron_gene_regulation", "iron_oxidation", "iron_reduction",
@@ -1240,30 +1288,23 @@ Dict = defaultdict(lambda: defaultdict(list))
 final = open("%s/FeGenie-summary.csv" % args.out, "r")
 for i in final:
     ls = (i.rstrip().split(","))
-    if ls[0] != "" and ls[1] != "assembly" and ls[1] != "genome" and ls[1] != "genome/assembly":
-        if not re.match(r'#', i):
-            process = ls[0]
-            cell = ls[1]
-            orf = ls[2]
-            gene = ls[3]
-            print(cell)
-            print(process)
-            print(gene)
-            Dict[cell][process].append(gene)
-print("\n\n\n\n")
+    if not re.search(r'#', i):
+        if ls[0] != "" and ls[1] != "assembly" and ls[1] != "genome" and ls[1] != "genome/assembly":
+            if not re.match(r'#', i):
+                process = ls[0]
+                cell = ls[1]
+                orf = ls[2]
+                gene = ls[3]
+                Dict[cell][process].append(gene)
 
 
 normDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
 for i in os.listdir(args.bin_dir):
-    print(i)
     if lastItem(i.split(".")) == args.bin_ext:
-        print(i + "-proteins.faa")
         file = open("%s/%s-proteins.faa" % (args.bin_dir, i), "r")
         file = fasta(file)
         normDict[i] = len(file.keys())
-        print(i)
-        print(len(file.keys()))
-print("\n\n\n\n")
+
 
 outHeat = open("%s/FeGenie-heatmap-data.csv" % args.out, "w")
 outHeat.write("X" + ',')
@@ -1272,13 +1313,9 @@ for i in sorted(Dict.keys()):
 outHeat.write("\n")
 
 for i in cats:
-    print(i)
     outHeat.write(i + ",")
     for j in sorted(Dict.keys()):
-        print(j)
         if not re.match(r'#', j):
-            print(j)
-            print(normDict[j])
             outHeat.write(str((len(Dict[j][i]) / int(normDict[j])) * float(args.inflation)) + ",")
     outHeat.write("\n")
 
