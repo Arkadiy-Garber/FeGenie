@@ -1196,20 +1196,20 @@ for i in clusterDict.keys():
         dataset = j.split("|")[1]
         orf = j.split("|")[2]
         cat = memoryDict[dataset][orf]["cat"]
-        if cat in ["iron_aquisition-siderophore_transport", "iron_aquisition-siderophore_synthesis"]:
+        if cat in ["iron_aquisition-siderophore_transport", "iron_aquisition-siderophore_synthesis", "iron_aquisition-iron_transport", "iron_aquisition-heme_transport", "iron_aquisition-heme_oxygenase"]:
             if len(Unique2(clusterDict[i])) < 3:
                 break
             elif check(clusterDict[i]) < 3:
                 pass
             else:
-                out.write(memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + mapDict[hmm] + "," + memoryDict[dataset][orf]["bit"] + "," + memoryDict[dataset][orf]["cutoff"] + "," + clu + "," + memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["seq"] + "\n")
+                out.write(memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + mapDict[hmm] + "," + memoryDict[dataset][orf]["bit"] + "," + memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," + memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["seq"] + "\n")
         elif cat == "iron_gene_regulation":
             if checkReg(clusterDict[i]) < 1:
                 pass
             else:
                 out.write(
                     memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," + memoryDict[dataset][orf]["bit"] + "," +
-                    memoryDict[dataset][orf]["cutoff"] + "," + clu + "," + memoryDict[dataset][orf]["heme"] + "," +
+                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," + memoryDict[dataset][orf]["heme"] + "," +
                     memoryDict[dataset][orf]["seq"] + "\n")
 
         elif cat == "magnetosome_formation":
@@ -1218,13 +1218,13 @@ for i in clusterDict.keys():
             else:
                 out.write(
                     memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," + memoryDict[dataset][orf]["bit"] + "," +
-                    memoryDict[dataset][orf]["cutoff"] + "," + clu + "," + memoryDict[dataset][orf]["heme"] + "," +
+                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," + memoryDict[dataset][orf]["heme"] + "," +
                     memoryDict[dataset][orf]["seq"] + "\n")
 
         else:
             out.write(
                 memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," + memoryDict[dataset][orf]["bit"] + "," +
-                memoryDict[dataset][orf]["cutoff"] + "," + clu + "," + memoryDict[dataset][orf]["heme"] + "," +
+                memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," + memoryDict[dataset][orf]["heme"] + "," +
                 memoryDict[dataset][orf]["seq"] + "\n")
 
 out.close()
