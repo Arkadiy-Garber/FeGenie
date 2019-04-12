@@ -1326,15 +1326,17 @@ for i in summaryDict.keys():
                   "#####################################################################################################\n")
 out.close()
 
-os.system("mv %s/FeGenie-summary-altered.csv %s/FeGenie-geneSummary-sep.csv" % (args.out, args.out))
+os.system("mv %s/FeGenie-summary-altered.csv %s/FeGenie-geneSummary-clusters.csv" % (args.out, args.out))
 
 
 # ****************************** REMOVING #'S ***************************************
-summary = open("%s/FeGenie-geneSummary-sep.csv" % args.out, "r")
+summary = open("%s/FeGenie-geneSummary-clusters.csv" % args.out, "r")
 out = open("%s/FeGenie-geneSummary.csv" % args.out, "r")
 for i in summary:
     if not re.search(r'#', i):
         out.write(i.rstrip() + "\n")
+
+out.close()
 
 
 # ****************************** CREATING A HEATMAP-COMPATIBLE CSV FILE *************************************
@@ -1343,7 +1345,7 @@ cats = ["iron_aquisition-iron_transport", "iron_aquisition-heme_transport", "iro
         "iron_storage", "magnetosome_formation"]
 
 Dict = defaultdict(lambda: defaultdict(list))
-final = open("%s/FeGenie-geneSummary-sep.csv" % args.out, "r")
+final = open("%s/FeGenie-geneSummary-clusters.csv" % args.out, "r")
 for i in final:
     ls = (i.rstrip().split(","))
     if not re.search(r'#', i):
