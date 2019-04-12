@@ -1126,13 +1126,13 @@ for i in cluDict.keys():
 out.close()
 
 # REMOVING FILES
-os.system("rm %s/GeoThermin.csv" % args.out)
-os.system("rm %s/*summary*" % args.out)
-os.system("rm %s/FinalSummary-dereplicated-clustered-blast.csv" % args.out)
-os.system("rm %s/*blast" % args.out)
-os.system("rm %s/FinalSummary.csv" % args.out)
-os.system("rm %s/FinalSummary-dereplicated-clustered.csv" % args.out)
-os.system("rm %s/FinalSummary-dereplicated-clustered-blast-filtered.csv" % args.out)
+# os.system("rm %s/GeoThermin.csv" % args.out)
+# os.system("rm %s/*summary*" % args.out)
+# os.system("rm %s/FinalSummary-dereplicated-clustered-blast.csv" % args.out)
+# os.system("rm %s/*blast" % args.out)
+# os.system("rm %s/FinalSummary.csv" % args.out)
+# os.system("rm %s/FinalSummary-dereplicated-clustered.csv" % args.out)
+# os.system("rm %s/FinalSummary-dereplicated-clustered-blast-filtered.csv" % args.out)
 os.system("mv %s/FinalSummary-dereplicated-clustered-blast-filtered2.csv %s/FeGenie-summary.csv" % (args.out, args.out))
 
 # OPTIONAL CROSS-VALIDATION AGAINST REFERENCE DATABASE
