@@ -1360,7 +1360,6 @@ for i in summaryDict.keys():
             "#####################################################################################################\n")
 out.close()
 
-os.system("mv %s/FeGenie-summary-altered.csv %s/FeGenie-geneSummary-clusters.csv" % (args.out, args.out))
 
 # ****************************** REMOVING #'S ***************************************
 summary = open("%s/FeGenie-geneSummary-altered.csv" % args.out, "r")
