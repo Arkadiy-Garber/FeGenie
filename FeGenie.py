@@ -989,6 +989,48 @@ for i in (clusterDict.keys()):
 
             out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
 
+    elif "DFE_0448.hmm" in ls or "DFE_0449.hmm" in ls or "DFE_0450.hmm" in ls or "DFE_0451.hmm" in ls:
+        DFE1 = ["DFE_0448.hmm", "DFE_0449.hmm", "DFE_0450.hmm", "DFE_0451.hmm"]
+
+        if unique(ls, DFE1) < 3:
+            if len(remove2(ls, DFE1)) < 1:
+                pass
+
+            else:
+                for j in clusterDict[i]["line"]:
+                    if j[3] not in DFE1:
+                        out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
+
+                out.write(
+                    "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+        else:
+
+            for j in clusterDict[i]["line"]:
+                out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
+
+            out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+
+    elif "DFE_0461.hmm" in ls or "DFE_0462.hmm" in ls or "DFE_0463.hmm" in ls or "DFE_0464.hmm" in ls or "DFE_0465.hmm" in ls:
+        DFE2 = ["DFE_0461.hmm", "DFE_0462.hmm", "DFE_0463.hmm", "DFE_0464.hmm", "DFE_0465"]
+
+        if unique(ls, DFE2) < 3:
+            if len(remove2(ls, DFE2)) < 1:
+                pass
+
+            else:
+                for j in clusterDict[i]["line"]:
+                    if j[3] not in DFE2:
+                        out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
+
+                out.write(
+                    "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+        else:
+
+            for j in clusterDict[i]["line"]:
+                out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
+
+            out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+
     elif "Cyc1.hmm" in ls:
         if "Cyc2_repCluster3.hmm" not in ls and "Cyc2_repCluster2.hmm" not in ls and "Cyc2_repCluster1.hmm" not in ls:
             pass
