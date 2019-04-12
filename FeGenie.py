@@ -1331,7 +1331,7 @@ os.system("mv %s/FeGenie-summary-altered.csv %s/FeGenie-geneSummary-clusters.csv
 
 # ****************************** REMOVING #'S ***************************************
 summary = open("%s/FeGenie-geneSummary-clusters.csv" % args.out, "r")
-out = open("%s/FeGenie-geneSummary.csv" % args.out, "r")
+out = open("%s/FeGenie-geneSummary.csv" % args.out, "w")
 for i in summary:
     if not re.search(r'#', i):
         out.write(i.rstrip() + "\n")
