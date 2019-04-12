@@ -872,14 +872,14 @@ out = open("%s/FinalSummary-dereplicated-clustered-blast.csv" % outDirectory, "w
 DeRepDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
 for i in summary:
     ls = i.rstrip().split(",")
-    unique = ls[1] + "|" + + ls[2]
+    unique = ls[1] + "|" + ls[2]
     DeRepDict[unique] = ls[0]
     out.write(i.rstrip() + "\n")
 
 blastHits = open("%s/GeoThermin.csv" % outDirectory)
 for i in blastHits:
     ls = i.rstrip().split(",")
-    unique = ls[1] + "|" + + ls[2]
+    unique = ls[1] + "|" + ls[2]
     if unique not in DeRepDict.keys():
         out.write(i.rstrip() + "\n")
 
