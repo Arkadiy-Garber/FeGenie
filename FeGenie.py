@@ -1266,7 +1266,15 @@ for i in clusterDict.keys():
             elif check2(clusterDict[i]) < 2:
                 pass
             else:
-
+                print(memoryDict[dataset][orf]["cat"])
+                print(dataset)
+                print(orf)
+                print(mapDict[hmm])
+                print(memoryDict[dataset][orf]["bit"])
+                print(memoryDict[dataset][orf]["cutoff"])
+                print(memoryDict[dataset][orf]["heme"])
+                print(memoryDict[dataset][orf]["seq"])
+                print("")
                 out.write(memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + mapDict[hmm] + "," + memoryDict[dataset][orf]["bit"] + "," + memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," + memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["seq"] + "\n")
 
         elif cat == "iron_gene_regulation":
@@ -1297,7 +1305,7 @@ out.close()
 os.system("mv %s/FeGenie-summary-fixed.csv %s/FeGenie-summary.csv" % (args.out, args.out))
 
 
-# ****************************** FINAL ALTERATION OF THE OUTPUT FILE ***************************************
+# ****************************** PRE-FINAL ALTERATION OF THE OUTPUT FILE ***************************************
 clu = 0
 summaryDict = defaultdict(list)
 summary = open(args.out + "/FeGenie-summary.csv")
@@ -1318,7 +1326,15 @@ for i in summaryDict.keys():
                   "#####################################################################################################\n")
 out.close()
 
-os.system("mv %s/FeGenie-summary-altered.csv %s/FeGenie-summary.csv" % (args.out, args.out))
+os.system("mv %s/FeGenie-summary-altered.csv %s/FeGenie-geneSummary-sep.csv" % (args.out, args.out))
+
+
+# ****************************** REMOVING #'S ***************************************
+summary = open("%s/FeGenie-geneSummary-sep.csv" % args.out, "r")
+out = open("%s/FeGenie-geneSummary.csv" % args.out, "r")
+for i in summary:
+    if not re.search(r'#', i):
+        out.write(i.rstrip() + "\n")
 
 
 # ****************************** CREATING A HEATMAP-COMPATIBLE CSV FILE *************************************
@@ -1327,7 +1343,7 @@ cats = ["iron_aquisition-iron_transport", "iron_aquisition-heme_transport", "iro
         "iron_storage", "magnetosome_formation"]
 
 Dict = defaultdict(lambda: defaultdict(list))
-final = open("%s/FeGenie-summary.csv" % args.out, "r")
+final = open("%s/FeGenie-geneSummary-sep.csv" % args.out, "r")
 for i in final:
     ls = (i.rstrip().split(","))
     if not re.search(r'#', i):
