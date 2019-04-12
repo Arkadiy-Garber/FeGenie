@@ -1362,7 +1362,7 @@ out.close()
 
 
 # ****************************** REMOVING #'S ***************************************
-summary = open("%s/FeGenie-geneSummary-altered.csv" % args.out, "r")
+summary = open("%s/FeGenie-geneSummary-clusters.csv" % args.out, "r")
 out = open("%s/FeGenie-geneSummary.csv" % args.out, "w")
 for i in summary:
     if not re.search(r'#', i):
