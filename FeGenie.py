@@ -36,6 +36,18 @@ def Unique2(ls):
     return unqList
 
 
+def checkFe(ls):
+    count = 0
+    uniqueLS = []
+    for i in ls:
+        hmm = i.split("|")[0]
+        if hmm not in uniqueLS:
+            uniqueLS.append(hmm)
+            if geneToCatDict[hmm] in ["iron_reduction", "iron_oxidation"]:
+                count += 1
+    return count
+
+
 def check1(ls):
     count = 0
     uniqueLS = []
@@ -43,7 +55,7 @@ def check1(ls):
         hmm = i.split("|")[0]
         if hmm not in uniqueLS:
             uniqueLS.append(hmm)
-            if geneToCatDict[hmm] in ["iron_aquisition-siderophore_transport", "iron_aquisition-siderophore_synthesis", "iron_aquisition-heme_transport"]:
+            if geneToCatDict[hmm] in ["iron_aquisition-siderophore_transport", "iron_aquisition-heme_transport"]:
                 count += 1
     return count
 
@@ -56,6 +68,18 @@ def check2(ls):
         if hmm not in uniqueLS:
             uniqueLS.append(hmm)
             if geneToCatDict[hmm] in ["iron_aquisition-iron_transport", "iron_aquisition-heme_oxygenase"]:
+                count += 1
+    return count
+
+
+def check3(ls):
+    count = 0
+    uniqueLS = []
+    for i in ls:
+        hmm = i.split("|")[0]
+        if hmm not in uniqueLS:
+            uniqueLS.append(hmm)
+            if geneToCatDict[hmm] in ["iron_aquisition-siderophore_synthesis"]:
                 count += 1
     return count
 
@@ -131,15 +155,15 @@ def RemoveDuplicates(ls):
 def allButTheLast(iterable, delim):
     x = ''
     length = len(iterable.split(delim))
-    for i in range(0, length-1):
+    for i in range(0, length - 1):
         x += iterable.split(delim)[i]
         x += delim
-    return x[0:len(x)-1]
+    return x[0:len(x) - 1]
 
 
 def secondToLastItem(ls):
     x = ''
-    for i in ls[0:len(ls)-1]:
+    for i in ls[0:len(ls) - 1]:
         x = i
     return x
 
@@ -274,16 +298,16 @@ parser = argparse.ArgumentParser(
     University of Southern California, Earth Sciences
     Please send comments and inquiries to arkadiyg@usc.edu
 
-                                                                                                                            
+
             )`-.--.  )\.---.     )\.-.    )\.---.   )\  )\  .'(   )\.---.  
         ) ,-._( (   ,-._(  ,' ,-,_)  (   ,-._( (  \, /  \  ) (   ,-._( 
         \ `-._   \  '-,   (  .   __   \  '-,    ) \ (   ) (   \  '-,   
          ) ,_(    ) ,-`    ) '._\ _)   ) ,-`   ( ( \ \  \  )   ) ,-`   
         (  \     (  ``-.  (  ,   (    (  ``-.   `.)/  )  ) \  (  ``-.  
          ).'      )..-.(   )/'._.'     )..-.(      '.(    )/   )..-.(  
-                                                                                                                                                                                            
-                                                                                           
-                                                                                           
+
+
+
                    .                *&@@@&/    .,,.                                        
                 .,***.         (&(#@#(((((@((@&...                                         
                 .,***,.      &((%&(((((((((&((((@                                          
@@ -340,8 +364,8 @@ parser = argparse.ArgumentParser(
                                 ."-....-".
                               .':.        `.
                               "-..______..-"
-    
-    
+
+
     Image design: Nancy Merino (2018);
     ASCII art: https://manytools.org/hacker-tools/convert-images-to-ascii-art/                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
     *******************************************************
@@ -352,17 +376,19 @@ parser.add_argument('-bin_dir', type=str, help="directory of bins", default="NA"
 parser.add_argument('-bin_ext', type=str, help="extension for bins (do not include the period)", default="NA")
 
 parser.add_argument('-contigs_source', type=str, help="are the provided contigs from a single organism (single)"
-                                                     "or are you providing this program with metagenomic/metatranscriptomic assemblies (meta)? "
-                                                     "(default=single)", default="single")
+                                                      "or are you providing this program with metagenomic/metatranscriptomic assemblies (meta)? "
+                                                      "(default=single)", default="single")
 
 parser.add_argument('-d', type=int, help="maximum distance between genes to be considered in a genomic \'cluster\'."
                                          "This number should be an integer and should reflect the maximum number of "
                                          "genes in between putative iron-related genes identified by the HMM database "
                                          "(default=5)", default=5)
 
-parser.add_argument('-ref', type=str, help="path to a reference protein database, which must be in FASTA format", default="NA")
+parser.add_argument('-ref', type=str, help="path to a reference protein database, which must be in FASTA format",
+                    default="NA")
 
-parser.add_argument('-out', type=str, help="name of output file; please provide full path (default=fegenie_out)", default="fegenie_out")
+parser.add_argument('-out', type=str, help="name of output file; please provide full path (default=fegenie_out)",
+                    default="fegenie_out")
 
 parser.add_argument('-inflation', type=int, help="inflation factor for final gene category counts (default=1000)",
                     default=1000)
@@ -370,12 +396,13 @@ parser.add_argument('-inflation', type=int, help="inflation factor for final gen
 parser.add_argument('-t', type=int, help="number of threads to use for DIAMOND BLAST and HMMSEARCH "
                                          "(default=1, max=16)", default=1)
 
-parser.add_argument('-makeplots', type=str, help="Would you like FeGenie to make some figures from your data? y = yes, n = no (default = n). "
-                                                 "If so, you will need to have Rscipt installed. It is a way for R to be called directly from the command line. "
-                                                 "Warning: this part of the program is currently under beta-testing, and if there are any problems running Rscript, "
-                                                 "or installing any of the required packages, you may get a bunch of error messages at the end. "
-                                                 "This will not crash the program, however, and you can still expect to "
-                                                 "see the main output (CSV files) from FeGenie.", default="n")
+parser.add_argument('-makeplots', type=str,
+                    help="Would you like FeGenie to make some figures from your data? y = yes, n = no (default = n). "
+                         "If so, you will need to have Rscipt installed. It is a way for R to be called directly from the command line. "
+                         "Warning: this part of the program is currently under beta-testing, and if there are any problems running Rscript, "
+                         "or installing any of the required packages, you may get a bunch of error messages at the end. "
+                         "This will not crash the program, however, and you can still expect to "
+                         "see the main output (CSV files) from FeGenie.", default="n")
 
 # CHECKING FOR CONDA INSTALL
 os.system("echo ${HMM_dir}/HMM-bitcutoffs.txt > HMMlib.txt")
@@ -390,7 +417,9 @@ except FileNotFoundError:
     conda = 0
 
 if conda == 0:
-    parser.add_argument('-hmm_lib', type=str, help='HMM database; directory titled \'HMM-lib\', can be found in the FeGenie folder', default="NA")
+    parser.add_argument('-hmm_lib', type=str,
+                        help='HMM database; directory titled \'HMM-lib\', can be found in the FeGenie folder',
+                        default="NA")
 
     parser.add_argument('-R', type=str,
                         help="location of R scripts directory (note: this optional argument requires Rscript to be "
@@ -398,7 +427,6 @@ if conda == 0:
                              "FeGenie python code", default="NA")
 
 args = parser.parse_args()
-
 
 # ************** Checking for the required arguments ******************* #
 cwd = os.getcwd()
@@ -432,7 +460,6 @@ if args.makeplots == 'y':
             print("Exiting")
             raise SystemExit
 
-
 if args.bin_ext != "NA":
     print(".")
 else:
@@ -457,7 +484,6 @@ except FileNotFoundError:
 print("All required arguments provided!")
 print("")
 
-
 # *************** MAKE NR A DIAMOND DB AND READ THE FILE INTO HASH MEMORY ************************ #
 if args.ref != "NA":
     try:
@@ -479,7 +505,6 @@ if args.ref != "NA":
 else:
     pass
 
-
 # *************** CALL ORFS FROM BINS AND READ THE ORFS INTO HASH MEMORY ************************ #
 BinDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
 for i in binDirLS:
@@ -492,21 +517,23 @@ for i in binDirLS:
         except FileNotFoundError:
             print("Finding ORFs for " + cell)
             if args.contigs_source == "single":
-                os.system("prodigal -i %s%s -a %s%s-proteins.faa -o %s%s-prodigal.out -q" % (binDir, i, binDir, i, binDir, i))
+                os.system(
+                    "prodigal -i %s%s -a %s%s-proteins.faa -o %s%s-prodigal.out -q" % (binDir, i, binDir, i, binDir, i))
             elif args.contigs_source == "meta":
-                os.system("prodigal -i %s%s -a %s%s-proteins.faa -o %s%s-prodigal.out -p meta -q" % (binDir, i, binDir, i, binDir, i))
+                os.system("prodigal -i %s%s -a %s%s-proteins.faa -o %s%s-prodigal.out -p meta -q" % (
+                binDir, i, binDir, i, binDir, i))
             else:
                 print("WARNING: you did not specify whether the provided FASTA files are single genomes or "
                       "metagenome/metatranscriptome assemblies. By default, FeGenie is assuming that these are "
                       "single genomes, and running Prodigal accordingly. Just an FYI.")
-                os.system("prodigal -i %s%s -a %s%s-proteins.faa -o %s%s-prodigal.out -q" % (binDir, i, binDir, i, binDir, i))
+                os.system(
+                    "prodigal -i %s%s -a %s%s-proteins.faa -o %s%s-prodigal.out -q" % (binDir, i, binDir, i, binDir, i))
 
         file = open(binDir + i + "-proteins.faa", "r")
         file = fasta(file)
         for j in file.keys():
             orf = j.split(" # ")[0]
             BinDict[cell][orf] = file[j]
-
 
 # ******************** READ BITSCORE CUT-OFFS INTO HASH MEMORY ****************************** #
 if conda == 1:
@@ -518,14 +545,12 @@ if conda == 1:
 else:
     HMMdir = args.hmm_lib
 
-
 HMMbits = HMMdir + "/HMM-bitcutoffs.txt"
 meta = open(HMMbits, "r")
 metaDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
 for i in meta:
     ls = i.rstrip().split("\t")
     metaDict[ls[0]] = ls[1]
-
 
 # ******************* BEGINNING MAIN ALGORITHM **********************************))))
 print("starting main pipeline...")
@@ -547,7 +572,6 @@ for FeCategory in HMMdirLS:
                 os.system(
                     "mkdir " + binDir + "/" + i + "-HMM")  # CREATING DIRECTORY, FOR EACH BIN, TO WHICH HMMSEARCH RESULTS WILL BE WRITTEN
 
-
                 count = 0
                 for hmm in hmmDirLS2:  # ITERATING THROUGH ALL THE HMM FILES IN THE HMM DIRECTORY
                     count += 1
@@ -558,7 +582,6 @@ for FeCategory in HMMdirLS:
                         bit = 0
                     else:
                         bit = metaDict[hmm.split(".")[0]]
-
 
                         # print("performing HMMSEARCH")
                         os.system(
@@ -629,7 +652,6 @@ for i in resultsDir:
 
 out.close()
 
-
 # ****************************************** DEREPLICATION *********************************************************
 summary = open(outDirectory + "/FinalSummary.csv", "r")
 SummaryDict = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 'EMPTY')))
@@ -660,7 +682,6 @@ for i in summary:
                         SummaryDict[cell][orf]["hmmBit"] = hmmBit
                         SummaryDict[cell][orf]["category"] = category
 
-
 # ****************************** CLUSTERING OF ORFS BASED ON GENOMIC PROXIMITY *************************************
 print("Identifying genomic proximities and putative operons")
 CoordDict = defaultdict(lambda: defaultdict(list))
@@ -689,16 +710,21 @@ for i in CoordDict.keys():
                     if ncbiHomolog != "NA":
                         ncbiHomolog = ncbiHomolog.split("]")[0] + "]"
 
-                    out.write(SummaryDict[i][orf]["category"] + "," + i + "," + orf + "," + SummaryDict[i][orf]["hmm"] + "," +
-                              str(SummaryDict[i][orf]["hmmBit"]) + "," + str(counter) + "," + ncbiHomolog + "," + str(SummaryDict[i][orf]["NCBIeval"]) + "\n")
+                    out.write(
+                        SummaryDict[i][orf]["category"] + "," + i + "," + orf + "," + SummaryDict[i][orf]["hmm"] + "," +
+                        str(SummaryDict[i][orf]["hmmBit"]) + "," + str(counter) + "," + ncbiHomolog + "," + str(
+                            SummaryDict[i][orf]["NCBIeval"]) + "\n")
 
-                    out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+                    out.write(
+                        "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
                     counter += 1
 
                 else:
-                    out.write(SummaryDict[i][orf]["category"] + "," + i + "," + orf + "," + SummaryDict[i][orf]["hmm"] + "," + str(SummaryDict[i][orf]["hmmBit"]) + "," + str(counter) + "\n")
+                    out.write(SummaryDict[i][orf]["category"] + "," + i + "," + orf + "," + SummaryDict[i][orf][
+                        "hmm"] + "," + str(SummaryDict[i][orf]["hmmBit"]) + "," + str(counter) + "\n")
 
-                    out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+                    out.write(
+                        "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
                     counter += 1
 
             else:
@@ -709,21 +735,25 @@ for i in CoordDict.keys():
                         if ncbiHomolog != "NA":
                             ncbiHomolog = ncbiHomolog.split("]")[0] + "]"
 
-                        out.write(SummaryDict[i][orf]["category"] + "," + i + "," + orf + "," + SummaryDict[i][orf]["hmm"]
-                            + "," + str(SummaryDict[i][orf]["hmmBit"]) + "," + str(counter) + "," + ncbiHomolog + "," + str(SummaryDict[i][orf]["NCBIeval"]) + "\n")
+                        out.write(
+                            SummaryDict[i][orf]["category"] + "," + i + "," + orf + "," + SummaryDict[i][orf]["hmm"]
+                            + "," + str(SummaryDict[i][orf]["hmmBit"]) + "," + str(
+                                counter) + "," + ncbiHomolog + "," + str(SummaryDict[i][orf]["NCBIeval"]) + "\n")
 
-                    out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+                    out.write(
+                        "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
                     counter += 1
                 else:
                     for l in RemoveDuplicates(k):
                         orf = j + "_" + str(l)
 
-                        out.write(SummaryDict[i][orf]["category"] + "," + i + "," + orf + "," + SummaryDict[i][orf]["hmm"] + "," + str(SummaryDict[i][orf]["hmmBit"]) + "," + str(counter) + "\n")
+                        out.write(SummaryDict[i][orf]["category"] + "," + i + "," + orf + "," + SummaryDict[i][orf][
+                            "hmm"] + "," + str(SummaryDict[i][orf]["hmmBit"]) + "," + str(counter) + "\n")
 
-                    out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+                    out.write(
+                        "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
                     counter += 1
 out.close()
-
 
 # ************************** BLAST-BASED METHODS/LOOKING FOR UNMODELED MARKERS ********************************
 thermincola = "%s/iron_reduction/non-aligned/TherJR_SLCs.faa" % HMMdir
@@ -734,7 +764,8 @@ print("Looking for Thermincola S-layer cytochromes and Geobacter porin-cytochrom
 for i in binDirLS:
     if lastItem(i.split(".")) == args.bin_ext:
         os.system(
-            "makeblastdb -dbtype prot -in %s/%s-proteins.faa -out %s/%s-proteins.faa -logfile %s/makedbfile.txt" % (binDir, i, binDir, i, binDir))
+            "makeblastdb -dbtype prot -in %s/%s-proteins.faa -out %s/%s-proteins.faa -logfile %s/makedbfile.txt" % (
+            binDir, i, binDir, i, binDir))
         os.system("rm %s/makedbfile.txt" % binDir)
 
         os.system(
@@ -744,7 +775,6 @@ for i in binDirLS:
         os.system(
             "blastp -query %s -db %s/%s-proteins.faa -num_threads %s -outfmt 6 -out %s/%s-geobacter.blast -evalue 1E-10"
             % (geobacter, binDir, i, args.t, outDirectory, i))
-
 
 geoDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
 geo = open("%s/iron_reduction/non-aligned/geobacter_PCCs.faa" % HMMdir)
@@ -762,7 +792,6 @@ therm = fasta(therm)
 for i in therm.keys():
     id = i.split(" ")[0]
     thermDict[id]["header"] = i
-
 
 out = open(outDirectory + "/GeoThermin.csv", "w")
 for blastresult in os.listdir(args.out):
@@ -811,15 +840,18 @@ for blastresult in os.listdir(args.out):
 
         for i in operonDict2.keys():
             if "porin" in operonDict2[i]["types"] and (
-                    "pc" in operonDict2[i]["types"] or "omc" in operonDict2[i]["types"]):
+                            "pc" in operonDict2[i]["types"] or "omc" in operonDict2[i]["types"]):
                 genome = blastresult.split("-geobacter.blas")[0]
                 category = "iron_reduction"
                 for j in range(0, len(operonDict2[i]["types"])):
                     orf = (operonDict2[i]["orfs"][j])
                     evalue = blastDict[orf]["e"]
                     header = (operonDict2[i]["headers"][j])
-                    out.write(category + "," + genome + "," + orf + "," + replace(header, [","], ";") + "," + "evalue: " + str(evalue) + "," + str(counter) + "\n")
-                out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+                    out.write(category + "," + genome + "," + orf + "," + replace(header, [","],
+                                                                                  ";") + "," + "evalue: " + str(
+                        evalue) + "," + str(counter) + "\n")
+                out.write(
+                    "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
                 counter += 1
                 # print("\n\n")
 
@@ -861,11 +893,13 @@ for blastresult in os.listdir(args.out):
                     orf = (operonDict[i]["orfs"][j])
                     header = (operonDict[i]["headers"][j])
                     evalue = blastDict[orf]["e"]
-                    out.write(category + "," + genome + "," + orf + "," + replace(header, [","], ";") + "," + "evalue: " + str(evalue) + "," + str(counter) + "\n")
-                out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+                    out.write(category + "," + genome + "," + orf + "," + replace(header, [","],
+                                                                                  ";") + "," + "evalue: " + str(
+                        evalue) + "," + str(counter) + "\n")
+                out.write(
+                    "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
                 counter += 1
 out.close()
-
 
 summary = open("%s/FinalSummary-dereplicated-clustered.csv" % outDirectory)
 out = open("%s/FinalSummary-dereplicated-clustered-blast.csv" % outDirectory, "w")
@@ -885,14 +919,13 @@ for i in blastHits:
 
 out.close()
 
-
 # ****************************** FILTERING OUT LIKELY FALSE POSITIVES *************************************
 # print("Filtering out likely false positives")
 fleet = ["EetA.hmm", "EetB.hmm", "Ndh2.hmm", "FmnB.hmm", "FmnA.hmm", "DmkA.hmm", "DmkB.hmm", "PplA.hmm"]
-mam = ["MamA.hmm", "MamB.hmm", "MamE.hmm", "MamK.hmm", "MamP.hmm", "MamM.hmm", "MamP.hmm", "MamQ.hmm", "MamI.hmm", "MamL.hmm", "MamO.hmm"]
+mam = ["MamA.hmm", "MamB.hmm", "MamE.hmm", "MamK.hmm", "MamP.hmm", "MamM.hmm", "MamP.hmm", "MamQ.hmm", "MamI.hmm",
+       "MamL.hmm", "MamO.hmm"]
 foxabc = ["FoxA.hmm", "FoxB.hmm", "FoxC.hmm"]
 foxeyz = ["FoxE.hmm", "FoxY.hmm", "FoxZ.hmm"]
-
 
 clusterDict = defaultdict(lambda: defaultdict(list))
 summary = open("%s/FinalSummary-dereplicated-clustered-blast.csv" % outDirectory, "r")
@@ -902,7 +935,6 @@ for i in summary:
         clusterDict[ls[5]]["line"].append(ls)
         clusterDict[ls[5]]["gene"].append(ls[3])
         clusterDict[ls[5]]["category"].append(ls[0])
-
 
 out = open("%s/FinalSummary-dereplicated-clustered-blast-filtered.csv" % outDirectory, "w")
 for i in (clusterDict.keys()):
@@ -918,7 +950,8 @@ for i in (clusterDict.keys()):
                     if j[3] not in fleet:  # avoiding the fleet genes
                         out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
 
-                out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+                out.write(
+                    "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
 
         else:  # if there are 5 or more of the FLEET genes present within cluster
             for j in clusterDict[i]["line"]:
@@ -928,7 +961,8 @@ for i in (clusterDict.keys()):
 
     elif "MamA.hmm" in ls or "MamB.hmm" in ls or "MamE.hmm" in ls or "MamK.hmm" in ls or "MamM.hmm" in ls or "MamO.hmm" \
             in ls or "MamP.hmm" in ls or "MamQ.hmm" in ls or "MamI.hmm" in ls or "MamL.hmm" in ls:
-        mam = ["MamA.hmm", "MamB.hmm", "MamE.hmm", "MamK.hmm", "MamP.hmm", "MamM.hmm", "MamP.hmm", "MamQ.hmm", "MamI.hmm", "MamL.hmm", "MamO.hmm"]
+        mam = ["MamA.hmm", "MamB.hmm", "MamE.hmm", "MamK.hmm", "MamP.hmm", "MamM.hmm", "MamP.hmm", "MamQ.hmm",
+               "MamI.hmm", "MamL.hmm", "MamO.hmm"]
         if unique(ls, mam) < 5:
             if len(remove2(ls, mam)) < 1:
                 pass
@@ -937,7 +971,8 @@ for i in (clusterDict.keys()):
                     if j[3] not in mam:
                         out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
 
-                out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+                out.write(
+                    "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
 
         else:
             for j in clusterDict[i]["line"]:
@@ -999,7 +1034,8 @@ for i in (clusterDict.keys()):
                 for j in clusterDict[i]["line"]:
                     if j[3] not in foxeyz:
                         out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
-                out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+                out.write(
+                    "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
         else:
             for j in clusterDict[i]["line"]:
                 out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
@@ -1058,7 +1094,8 @@ for i in (clusterDict.keys()):
 
     elif "iron_aquisition-siderophore_synthesis" in clusterDict[i]["category"] or \
                     "iron_aquisition-siderophore_transport" in clusterDict[i]["category"] or \
-                    "iron_aquisition-iron_transport" in clusterDict[i]["category"] or "iron_aquisition-heme_transport" in clusterDict[i]["category"]:
+                    "iron_aquisition-iron_transport" in clusterDict[i][
+                "category"] or "iron_aquisition-heme_transport" in clusterDict[i]["category"]:
 
         if len(Unique(ls)) > 1:
             for j in clusterDict[i]["line"]:
@@ -1073,7 +1110,8 @@ for i in (clusterDict.keys()):
                 for j in clusterDict[i]["line"]:
                     out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
 
-                out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+                out.write(
+                    "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
 
             else:
                 pass
@@ -1088,6 +1126,7 @@ for i in (clusterDict.keys()):
 out.close()
 
 # ****************************** REMOVING SINGLETONS *************************************
+'''
 cluDict = defaultdict(list)
 cluDictIndex = defaultdict(list)
 summary = open("%s/FinalSummary-dereplicated-clustered-blast-filtered.csv" % outDirectory, "r")
@@ -1097,11 +1136,17 @@ for i in summary:
         cluDict[ls[5]].append(i.rstrip())
         cluDictIndex[ls[5]].append(ls)
 
-acceptableSingltons = ["sulfocyanin.hmm", "Cyc2_repCluster1.hmm", "Cyc2_repCluster2.hmm", "Cyc2_repCluster3.hmm", "Transferrin_TbpB_binding_protein_Haemophilus_influenzae_P44971.hmm",
-                       "PF13668_Ferritin_like_domain.hmm", "PF00210-Ferritin_like_domain.hmm", "Sid_YqjI_regulator_for_YqjH_P64588_Escherichia_coli_180606.hmm",
-                       "Sid_PvdS_regulator_Paeruginosa_PA2426_180620.hmm", "Sid_PchR_pyochelin_regulator_Pseudomonas_aeruginosa_PA4227_180623.hmm", "Sid_FpvI_regulator_PA2387_Paeruginosa_PAO1_180620.hmm",
-                       "PF09012_sub-FeoC_like_transcriptional_regulator.hmm", "PF04773_FecR.hmm", "PF02742-Iron_dependent_repressor-dtxR_family_metal_binding_domain.hmm",
-                       "PF01475-Iron_dependent_repressor-fur_family.hmm", "PF01325-Iron_dependent_repressor-dtxR_family_N.hmm"]
+acceptableSingltons = ["sulfocyanin.hmm", "Cyc2_repCluster1.hmm", "Cyc2_repCluster2.hmm", "Cyc2_repCluster3.hmm",
+                       "Transferrin_TbpB_binding_protein_Haemophilus_influenzae_P44971.hmm",
+                       "PF13668_Ferritin_like_domain.hmm", "PF00210-Ferritin_like_domain.hmm",
+                       "Sid_YqjI_regulator_for_YqjH_P64588_Escherichia_coli_180606.hmm",
+                       "Sid_PvdS_regulator_Paeruginosa_PA2426_180620.hmm",
+                       "Sid_PchR_pyochelin_regulator_Pseudomonas_aeruginosa_PA4227_180623.hmm",
+                       "Sid_FpvI_regulator_PA2387_Paeruginosa_PAO1_180620.hmm",
+                       "PF09012_sub-FeoC_like_transcriptional_regulator.hmm", "PF04773_FecR.hmm",
+                       "PF02742-Iron_dependent_repressor-dtxR_family_metal_binding_domain.hmm",
+                       "PF01475-Iron_dependent_repressor-fur_family.hmm",
+                       "PF01325-Iron_dependent_repressor-dtxR_family_N.hmm"]
 
 out = open("%s/FinalSummary-dereplicated-clustered-blast-filtered2.csv" % outDirectory, "w")
 for i in cluDict.keys():
@@ -1117,7 +1162,7 @@ for i in cluDict.keys():
         out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
 
 out.close()
-
+'''
 
 # REMOVING FILES
 os.system("rm %s/GeoThermin.csv" % args.out)
@@ -1126,9 +1171,8 @@ os.system("rm %s/FinalSummary-dereplicated-clustered-blast.csv" % args.out)
 os.system("rm %s/*blast" % args.out)
 os.system("rm %s/FinalSummary.csv" % args.out)
 os.system("rm %s/FinalSummary-dereplicated-clustered.csv" % args.out)
-os.system("rm %s/FinalSummary-dereplicated-clustered-blast-filtered.csv" % args.out)
-os.system("mv %s/FinalSummary-dereplicated-clustered-blast-filtered2.csv %s/FeGenie-summary.csv" % (args.out, args.out))
-
+# os.system("rm %s/FinalSummary-dereplicated-clustered-blast-filtered.csv" % args.out)
+os.system("mv %s/FinalSummary-dereplicated-clustered-blast-filtered.csv %s/FeGenie-summary.csv" % (args.out, args.out))
 
 # OPTIONAL CROSS-VALIDATION AGAINST REFERENCE DATABASE
 if args.ref != "NA":
@@ -1160,14 +1204,14 @@ if args.ref != "NA":
         dmndblastDict[cell][orf]["e"] = evalue
         dmndblastDict[cell][orf]["target"] = target
 
-
 summary = open("%s/FeGenie-summary.csv" % args.out, "r")
 out = open("%s/FeGenie-summary-blasthits.csv" % args.out, "w")
 if args.ref != "NA":
-    out.write("category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore" + "," + "bitscore_cutoff" + "," + "cluster" + "," + "heme_binding_motifs" + "," + "top_blast_hit" + "," + "blast_hit_evalue" + "," + "protein_sequence" + "\n")
+    out.write(
+        "category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore" + "," + "bitscore_cutoff" + "," + "cluster" + "," + "heme_binding_motifs" + "," + "top_blast_hit" + "," + "blast_hit_evalue" + "," + "protein_sequence" + "\n")
 else:
-    out.write("category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore" + "," + "bitscore_cutoff" + "," + "cluster" + "," + "heme_binding_motifs" + "," + "protein_sequence" + "\n")
-
+    out.write(
+        "category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore" + "," + "bitscore_cutoff" + "," + "cluster" + "," + "heme_binding_motifs" + "," + "protein_sequence" + "\n")
 
 # SUMMARIZING CROSS-REFERNCE RESULTS AND COUNTING HEME-BINDING MOTIFS
 counter = 1
@@ -1182,23 +1226,29 @@ for i in summary:
             blasthit = dmndblastDict[ls[1]][ls[2]]["target"]
             e = dmndblastDict[ls[1]][ls[2]]["e"]
             try:
-                out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + str(ls[4]) + "," + str(metaDict[ls[3].split(".")[0]]) + "," + str(counter) + "," + str(hemes) + "," + blasthit + "," + str(e) + "," + seq + "\n")
+                out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + str(ls[4]) + "," + str(
+                    metaDict[ls[3].split(".")[0]]) + "," + str(counter) + "," + str(hemes) + "," + blasthit + "," + str(
+                    e) + "," + seq + "\n")
             except TypeError:
-                out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + ls[4] + "," + str(counter) + "," + str(hemes) + "," + blasthit + "," + str(e) + "," + seq + "\n")
+                out.write(
+                    ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + ls[4] + "," + str(counter) + "," + str(
+                        hemes) + "," + blasthit + "," + str(e) + "," + seq + "\n")
 
         else:
             try:
-                out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + str(ls[4]) + "," + str(metaDict[ls[3].split(".")[0]]) + "," + str(counter) + "," + str(hemes) + "," + seq + "\n")
+                out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + str(ls[4]) + "," + str(
+                    metaDict[ls[3].split(".")[0]]) + "," + str(counter) + "," + str(hemes) + "," + seq + "\n")
 
             except TypeError:
-                out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + ls[4] + "," + str(counter) + "," + str(hemes) + "," + seq + "\n")
+                out.write(
+                    ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + ls[4] + "," + str(counter) + "," + str(
+                        hemes) + "," + seq + "\n")
 
     else:
         counter += 1
         out.write(i)
 
 out.close()
-
 
 # REMOVING FILES
 if args.ref != "NA":
@@ -1208,14 +1258,12 @@ if args.ref != "NA":
 os.system("rm %s/FeGenie-summary.csv" % args.out)
 os.system("mv %s/FeGenie-summary-blasthits.csv %s/FeGenie-summary.csv" % (args.out, args.out))
 
-
 # FILTERING OUT FALSE POSITIVES FOR SIDEROPHORE GENES
 MAP = open(HMMdir + "/FeGenie-map.txt", "r")
 mapDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
 for i in MAP:
     ls = i.rstrip().split("\t")
     mapDict[ls[0]] = ls[1]
-
 
 out = open(args.out + "/FeGenie-summary-fixed.csv", "w")
 geneToCatDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
@@ -1260,7 +1308,6 @@ for i in infile:
         else:
             out.write(i.rstrip())
 
-
 for i in clusterDict.keys():
     out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
     for j in clusterDict[i]:
@@ -1268,14 +1315,30 @@ for i in clusterDict.keys():
         dataset = j.split("|")[1]
         orf = j.split("|")[2]
         cat = memoryDict[dataset][orf]["cat"]
-        if cat in ["iron_aquisition-siderophore_transport", "iron_aquisition-siderophore_synthesis", "iron_aquisition-heme_transport"]:
+
+        if cat in ["iron_aquisition-siderophore_transport", "iron_aquisition-heme_transport"]:
             if len(Unique2(clusterDict[i])) < 3:
                 break
             elif check1(clusterDict[i]) < 3:
                 pass
             else:
 
-                out.write(memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + mapDict[hmm] + "," + memoryDict[dataset][orf]["bit"] + "," + memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," + memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["seq"] + "\n")
+                out.write(memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + mapDict[hmm] + "," +
+                          memoryDict[dataset][orf]["bit"] + "," + memoryDict[dataset][orf]["cutoff"] + "," +
+                          memoryDict[dataset][orf]["clu"] + "," + memoryDict[dataset][orf]["heme"] + "," +
+                          memoryDict[dataset][orf]["seq"] + "\n")
+
+        if cat in ["iron_aquisition-siderophore_synthesis"]:
+            if len(Unique2(clusterDict[i])) < 3:
+                break
+            elif check1(clusterDict[i]) < 3:
+                pass
+            else:
+
+                out.write(memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + mapDict[hmm] + "," +
+                          memoryDict[dataset][orf]["bit"] + "," + memoryDict[dataset][orf]["cutoff"] + "," +
+                          memoryDict[dataset][orf]["clu"] + "," + memoryDict[dataset][orf]["heme"] + "," +
+                          memoryDict[dataset][orf]["seq"] + "\n")
 
         elif cat in ["iron_aquisition-iron_transport", "iron_aquisition-heme_oxygenase"]:
             if len(Unique2(clusterDict[i])) < 2:
@@ -1283,24 +1346,29 @@ for i in clusterDict.keys():
             elif check2(clusterDict[i]) < 2:
                 pass
             else:
-                print(memoryDict[dataset][orf]["cat"])
-                print(dataset)
-                print(orf)
-                print(mapDict[hmm])
-                print(memoryDict[dataset][orf]["bit"])
-                print(memoryDict[dataset][orf]["cutoff"])
-                print(memoryDict[dataset][orf]["heme"])
-                print(memoryDict[dataset][orf]["seq"])
-                print("")
-                out.write(memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + mapDict[hmm] + "," + memoryDict[dataset][orf]["bit"] + "," + memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," + memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["seq"] + "\n")
+                # print(memoryDict[dataset][orf]["cat"])
+                # print(dataset)
+                # print(orf)
+                # print(mapDict[hmm])
+                # print(memoryDict[dataset][orf]["bit"])
+                # print(memoryDict[dataset][orf]["cutoff"])
+                # print(memoryDict[dataset][orf]["heme"])
+                # print(memoryDict[dataset][orf]["seq"])
+                # print("")
+                out.write(memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + mapDict[hmm] + "," +
+                          memoryDict[dataset][orf]["bit"] + "," + memoryDict[dataset][orf]["cutoff"] + "," +
+                          memoryDict[dataset][orf]["clu"] + "," + memoryDict[dataset][orf]["heme"] + "," +
+                          memoryDict[dataset][orf]["seq"] + "\n")
 
         elif cat == "iron_gene_regulation":
             if checkReg(clusterDict[i]) < 1:
                 pass
             else:
                 out.write(
-                    memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," + memoryDict[dataset][orf]["bit"] + "," +
-                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," + memoryDict[dataset][orf]["heme"] + "," +
+                    memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
+                    memoryDict[dataset][orf]["bit"] + "," +
+                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                    memoryDict[dataset][orf]["heme"] + "," +
                     memoryDict[dataset][orf]["seq"] + "\n")
 
         elif cat == "magnetosome_formation":
@@ -1308,19 +1376,33 @@ for i in clusterDict.keys():
                 pass
             else:
                 out.write(
-                    memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," + memoryDict[dataset][orf]["bit"] + "," +
-                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," + memoryDict[dataset][orf]["heme"] + "," +
+                    memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
+                    memoryDict[dataset][orf]["bit"] + "," +
+                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                    memoryDict[dataset][orf]["heme"] + "," +
                     memoryDict[dataset][orf]["seq"] + "\n")
+        elif cat == "iron-oxidation":
+            if hmm == "Cyc1":
+                if checkFe(clusterDict[i]) < 2:
+                    pass
+                else:
+                    out.write(
+                        memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
+                        memoryDict[dataset][orf]["bit"] + "," +
+                        memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                        memoryDict[dataset][orf]["heme"] + "," +
+                        memoryDict[dataset][orf]["seq"] + "\n")
 
         else:
             out.write(
-                memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," + memoryDict[dataset][orf]["bit"] + "," +
-                memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," + memoryDict[dataset][orf]["heme"] + "," +
+                memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
+                memoryDict[dataset][orf]["bit"] + "," +
+                memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                memoryDict[dataset][orf]["heme"] + "," +
                 memoryDict[dataset][orf]["seq"] + "\n")
 
 out.close()
 os.system("mv %s/FeGenie-summary-fixed.csv %s/FeGenie-summary.csv" % (args.out, args.out))
-
 
 # ****************************** PRE-FINAL ALTERATION OF THE OUTPUT FILE ***************************************
 clu = 0
@@ -1333,14 +1415,14 @@ for i in summary:
         ls = i.rstrip().split(",")
         summaryDict[clu].append(i.rstrip())
 
-
 out = open(args.out + "/FeGenie-summary-altered.csv", "w")
 for i in summaryDict.keys():
     if len(summaryDict[i]) > 0:
         for j in summaryDict[i]:
             out.write(j + "\n")
-        out.write("#####################################################################################################"
-                  "#####################################################################################################\n")
+        out.write(
+            "#####################################################################################################"
+            "#####################################################################################################\n")
 out.close()
 
 os.system("mv %s/FeGenie-summary-altered.csv %s/FeGenie-geneSummary-clusters.csv" % (args.out, args.out))
@@ -1355,9 +1437,9 @@ for i in summary:
 
 out.close()
 
-
 # ****************************** CREATING A HEATMAP-COMPATIBLE CSV FILE *************************************
-cats = ["iron_aquisition-iron_transport", "iron_aquisition-heme_transport", "iron_aquisition-heme_oxygenase", "iron_aquisition-siderophore_synthesis",
+cats = ["iron_aquisition-iron_transport", "iron_aquisition-heme_transport", "iron_aquisition-heme_oxygenase",
+        "iron_aquisition-siderophore_synthesis",
         "iron_aquisition-siderophore_transport", "iron_gene_regulation", "iron_oxidation", "iron_reduction",
         "iron_storage", "magnetosome_formation"]
 
@@ -1374,14 +1456,12 @@ for i in final:
                 gene = ls[3]
                 Dict[cell][process].append(gene)
 
-
 normDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
 for i in os.listdir(args.bin_dir):
     if lastItem(i.split(".")) == args.bin_ext:
         file = open("%s/%s-proteins.faa" % (args.bin_dir, i), "r")
         file = fasta(file)
         normDict[i] = len(file.keys())
-
 
 outHeat = open("%s/FeGenie-heatmap-data.csv" % args.out, "w")
 outHeat.write("X" + ',')
@@ -1397,7 +1477,6 @@ for i in cats:
     outHeat.write("\n")
 
 outHeat.close()
-
 
 # ******** RUNNING RSCRIPT TO GENERATE PLOTS **************
 if args.makeplots == "y":
@@ -1423,18 +1502,19 @@ if args.makeplots == "y":
             count += 1
 
     if count == 2:
-        print("Looks like Rscript has not performed succesfully. This, unfortunately, is a very finicky part of the pipeline. "
-          "The CSV files have, nonetheless, been successfully created, so you can take that data and plot if manually as you wish. "
-          "Also, feel free to start an Issue on FeGenie's GitHub page, by posting the error that was printed during the Rscript command.")
+        print(
+            "Looks like Rscript has not performed succesfully. This, unfortunately, is a very finicky part of the pipeline. "
+            "The CSV files have, nonetheless, been successfully created, so you can take that data and plot if manually as you wish. "
+            "Also, feel free to start an Issue on FeGenie's GitHub page, by posting the error that was printed during the Rscript command.")
 
     if count > 2 and count < 5:
-        print("Looks like at least one plot was generated by Rscript, but there was likely an error with one of the scripts. "
-              "The main CSV output should be present, however, so that you can plot the data as you wish on your own. "
-              "Also, feel free to start an Issue on FeGenie's GitHub page, by posting the error that was printed during the Rscript command.")
+        print(
+            "Looks like at least one plot was generated by Rscript, but there was likely an error with one of the scripts. "
+            "The main CSV output should be present, however, so that you can plot the data as you wish on your own. "
+            "Also, feel free to start an Issue on FeGenie's GitHub page, by posting the error that was printed during the Rscript command.")
 
     if count == 5:
         print("Looks like Rscript ran succesfully! Congrats on this. Hopefully, the resulting plots are of use to you.")
-
 
 print("")
 print("Pipeline finished without crashing!!! Thanks for using :)")
