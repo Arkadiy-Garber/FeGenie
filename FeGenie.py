@@ -48,6 +48,30 @@ def checkFe(ls):
     return count
 
 
+def checkDFE1(ls):
+    count = 0
+    uniqueLS = []
+    for i in ls:
+        hmm = i.split("|")[0]
+        if hmm not in uniqueLS:
+            uniqueLS.append(hmm)
+            if hmm in ["DFE_0461", "DFE_0462", "DFE_0463", "DFE_0464", "DFE_0465"]:
+                count += 1
+    return count
+
+
+def checkDFE2(ls):
+    count = 0
+    uniqueLS = []
+    for i in ls:
+        hmm = i.split("|")[0]
+        if hmm not in uniqueLS:
+            uniqueLS.append(hmm)
+            if hmm in ["DFE_0448", "DFE_0449", "DFE_0450", "DFE_0451"]:
+                count += 1
+    return count
+
+
 def check1(ls):
     count = 0
     uniqueLS = []
@@ -1381,7 +1405,8 @@ for i in clusterDict.keys():
                     memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
                     memoryDict[dataset][orf]["heme"] + "," +
                     memoryDict[dataset][orf]["seq"] + "\n")
-        elif cat == "iron-oxidation":
+
+        elif cat == "iron_oxidation":
             if hmm == "Cyc1":
                 if checkFe(clusterDict[i]) < 2:
                     pass
@@ -1392,6 +1417,30 @@ for i in clusterDict.keys():
                         memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
                         memoryDict[dataset][orf]["heme"] + "," +
                         memoryDict[dataset][orf]["seq"] + "\n")
+
+        elif cat == "iron_reduction":
+            if hmm in ["DFE_0465", "DFE_0464", "DFE_0463", "DFE_0462", "DFE_0461"]:
+                if checkDFE1(clusterDict[i]) < 3:
+                    pass
+                else:
+                    out.write(
+                        memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
+                        memoryDict[dataset][orf]["bit"] + "," +
+                        memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                        memoryDict[dataset][orf]["heme"] + "," +
+                        memoryDict[dataset][orf]["seq"] + "\n")
+
+            elif hmm in ["DFE_0451", "DFE_0450", "DFE_0449", "DFE_0448"]:
+                if checkDFE2(clusterDict[i]) < 3:
+                    pass
+                else:
+                    out.write(
+                        memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
+                        memoryDict[dataset][orf]["bit"] + "," +
+                        memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                        memoryDict[dataset][orf]["heme"] + "," +
+                        memoryDict[dataset][orf]["seq"] + "\n")
+
 
         else:
             out.write(
