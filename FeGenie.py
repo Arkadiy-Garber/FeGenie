@@ -1418,6 +1418,14 @@ for i in clusterDict.keys():
                         memoryDict[dataset][orf]["heme"] + "," +
                         memoryDict[dataset][orf]["seq"] + "\n")
 
+            else:
+                out.write(
+                    memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
+                    memoryDict[dataset][orf]["bit"] + "," +
+                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                    memoryDict[dataset][orf]["heme"] + "," +
+                    memoryDict[dataset][orf]["seq"] + "\n")
+
         elif cat == "iron_reduction":
             if hmm in ["DFE_0465", "DFE_0464", "DFE_0463", "DFE_0462", "DFE_0461"]:
                 if checkDFE1(clusterDict[i]) < 3:
@@ -1441,6 +1449,13 @@ for i in clusterDict.keys():
                         memoryDict[dataset][orf]["heme"] + "," +
                         memoryDict[dataset][orf]["seq"] + "\n")
 
+            else:
+                out.write(
+                    memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
+                    memoryDict[dataset][orf]["bit"] + "," +
+                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                    memoryDict[dataset][orf]["heme"] + "," +
+                    memoryDict[dataset][orf]["seq"] + "\n")
 
         else:
             out.write(
