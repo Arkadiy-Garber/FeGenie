@@ -84,6 +84,18 @@ def check1(ls):
     return count
 
 
+def check1_2(ls):
+    count = 0
+    uniqueLS = []
+    for i in ls:
+        hmm = i.split("|")[0]
+        if hmm not in uniqueLS:
+            uniqueLS.append(hmm)
+            if geneToCatDict[hmm] in ["iron_aquisition-siderophore_synthesis"]:
+                count += 1
+    return count
+
+
 def check2(ls):
     count = 0
     uniqueLS = []
@@ -1355,7 +1367,7 @@ for i in clusterDict.keys():
         if cat in ["iron_aquisition-siderophore_synthesis"]:
             if len(Unique2(clusterDict[i])) < 3:
                 break
-            elif check1(clusterDict[i]) < 3:
+            elif check1_2(clusterDict[i]) < 3:
                 pass
             else:
 
