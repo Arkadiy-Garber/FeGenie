@@ -1124,6 +1124,12 @@ for i in (clusterDict.keys()):
         if "Cyc2_repCluster3.hmm" not in ls and "Cyc2_repCluster2.hmm" not in ls and "Cyc2_repCluster1.hmm" not in ls:
             pass
 
+        else:
+            for j in clusterDict[i]["line"]:
+                out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
+
+            out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+
     elif "CymA.hmm" in ls:
         if "MtrB_TIGR03509.hmm" not in ls and "MtrA.hmm" not in ls and "MtoA.hmm" not in ls and "MtrC_TIGR03507.hmm" not in ls:
             pass
