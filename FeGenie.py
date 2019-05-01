@@ -1370,7 +1370,7 @@ for i in clusterDict.keys():
                           memoryDict[dataset][orf]["clu"] + "," + memoryDict[dataset][orf]["heme"] + "," +
                           memoryDict[dataset][orf]["seq"] + "\n")
 
-        if cat in ["iron_aquisition-siderophore_synthesis"]:
+        elif cat in ["iron_aquisition-siderophore_synthesis"]:
             if len(Unique2(clusterDict[i])) < 3:
                 break
             elif check1_2(clusterDict[i]) < 3:
@@ -1388,15 +1388,6 @@ for i in clusterDict.keys():
             elif check2(clusterDict[i]) < 2:
                 pass
             else:
-                # print(memoryDict[dataset][orf]["cat"])
-                # print(dataset)
-                # print(orf)
-                # print(mapDict[hmm])
-                # print(memoryDict[dataset][orf]["bit"])
-                # print(memoryDict[dataset][orf]["cutoff"])
-                # print(memoryDict[dataset][orf]["heme"])
-                # print(memoryDict[dataset][orf]["seq"])
-                # print("")
                 out.write(memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + mapDict[hmm] + "," +
                           memoryDict[dataset][orf]["bit"] + "," + memoryDict[dataset][orf]["cutoff"] + "," +
                           memoryDict[dataset][orf]["clu"] + "," + memoryDict[dataset][orf]["heme"] + "," +
