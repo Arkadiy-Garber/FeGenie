@@ -11,6 +11,14 @@ import sys
 # TODO: ADD COLUMN WITH ORF STRAND
 
 
+def Strip(ls):
+    outList = []
+    for i in ls:
+        gene = i.split("|")[0]
+        outList.append(gene)
+    return outList
+
+
 def unique(ls, ls2):
     unqlist = []
     for i in ls:
@@ -334,59 +342,17 @@ parser = argparse.ArgumentParser(
     University of Southern California, Earth Sciences
     Please send comments and inquiries to arkadiyg@usc.edu
 
-
-            )`-.--.  )\.---.     )\.-.    )\.---.   )\  )\  .'(   )\.---.  
+        )`-.--.  )\.---.     )\.-.    )\.---.   )\  )\  .'(   )\.---.  
         ) ,-._( (   ,-._(  ,' ,-,_)  (   ,-._( (  \, /  \  ) (   ,-._( 
         \ `-._   \  '-,   (  .   __   \  '-,    ) \ (   ) (   \  '-,   
          ) ,_(    ) ,-`    ) '._\ _)   ) ,-`   ( ( \ \  \  )   ) ,-`   
         (  \     (  ``-.  (  ,   (    (  ``-.   `.)/  )  ) \  (  ``-.  
-         ).'      )..-.(   )/'._.'     )..-.(      '.(    )/   )..-.(  
-
-
-
-                   .                *&@@@&/    .,,.                                        
-                .,***.         (&(#@#(((((@((@&...                                         
-                .,***,.      &((%&(((((((((&((((@                                          
-                  ...       &((%((((((((((((##(((@               .,*,.                     
-                          .%((%((((((((((((((@((((&              .,**.                     
-                          &((@(((((((((((((((&((((@                ..                      
-                         @@#(((%@(((((((#%%#%&((((&                                        
-                      %%((((((((((((((%%&&&@@@@@#/@                                        
-    .,,,.           &@%((@#(#&@%((((((((((&%///////&.                                      
-     ,,,.         %&&&* @(((((((%%(#&@@%//#@@@//////@,                                     
-                       (#(((((@@@ @///////@@@ @#//////@                    .,**,.           
-                      *@((((((#@@@&(///////&%**///////@                   .,**,.           
-                      @(((((((((((((((////////////////%*                    ...            
-                      @((((((((((((((((////////////////@                                   
-                      &(((((((((((((&%((&#/////////****&                                   
-                      &((((((((((((((((((////(((##(////&/%                                 
-                      @((((#%&@&#/*,,,,,,,,,,,,,,,#//#(//@                                 
-           ...        @(((#(,,,,,,,,,,,,,,,,,,,*&@@&/////@                                 
-            .         ##(((,,,> YOUR WISH IS | ,,@///////%                                  
-                      #(#@@@@&&,,,> MY COMMAND,,,%(((//&.                                   
-                      @((((((/%/,> ,,,,,,,,,,,,,,&(#&(,                                    
-                       @(((((((,,,,,,,,,,,,,,,,,#%@/(#             .,,,.                   
-                         @%%(,,,,,,,,(/,(,,,,,,,,,@//              .***,.                  
-     .                   ,%((,,,,,,,,,,,,,,,,,,,,,&.                ...                    
-   .,,,.                  .@&,,,,,,,,,,*/#&&@@&%@&                                         
-   .***,.                   @(##(((((((((((((%%                                            
-    ...                     %((((((((((////%.                                              
-                            @((((/////////%          ..                                    
-                           @((((/////////@          .,,,.                                  
-                          &((((//////////*           ..                                    
-                          %(((///////////%                                                 
-                          %((((///////////&                                                
-          .,,.            (%((((((//////////(&@@@@@@%#/*.                      .,,.        
-          .,,.              @((((((((//////////////////////**//(%@%*            ...        
-                              #&(((((((((///////////////////**////////(@                   
-                                      ,*******//******/#%%&@@@@&%(//////#                  
-                                                                   &/////.                 
-                                                                   *////%                  
-                                                  ..               @///#.                  
-                                .                 ,,.            (%**/%                    
-                              .,,.                             &/*(&                       
-                                                           (%,*@.                          
-                                                         #**&@.                             
+         ).'      )..-.(   )/'._.'     )..-.(      '.(    )/   )..-.(                                                                                    
+                              %(?/////////&//%                                                
+          .,,.                   (%((&@@@#/*.                      .,,.        
+          .,,.                     @(((/&@@@#///**                  ...        
+                                     #&((///////////////*/@                                
+                                                         #*@.                             
                                   ()                   * )//*
                                   <^^>             *     (/*   .
                                  .-""-.                  *)
@@ -400,7 +366,6 @@ parser = argparse.ArgumentParser(
                                 ."-....-".
                               .':.        `.
                               "-..______..-"
-
 
     Image design: Nancy Merino (2018);
     ASCII art: https://manytools.org/hacker-tools/convert-images-to-ascii-art/                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
@@ -547,16 +512,32 @@ for i in binDirLS:
     if lastItem(i.split(".")) == args.bin_ext:
         cell = i
         try:
-            testFile = open("%s%s-proteins.faa" % (binDir, i), "r")
+            testFile = open("%s/%s-proteins.faa" % (binDir, i), "r")
             print("ORFS for %s found. Skipping Prodigal, and going with %s-proteins.faa" % (i, i))
+            for line in testFile:
+                if re.match(r'>', line):
+                    if re.findall(r'\|]', line):
+                        print("Looks like one of your fasta files has a header containing the character: \|")
+                        print("Unfortunately, this is a problem for FeGenie because it uses that character as delimiter to store important information.")
+                        print("Please rename your FASTA file headers")
+                        raise SystemExit
 
         except FileNotFoundError:
+            binFile = open("%s/%s" % (binDir, i), "r")
+            for line in binFile:
+                if re.match(r'>', line):
+                    if re.findall(r'\|]', line):
+                        print("Looks like one of your fasta files has a header containing the character: \|")
+                        print("Unfortunately, this is a problem for FeGenie because it uses that character as delimiter to store important information.")
+                        print("Please rename your FASTA file headers")
+                        raise SystemExit
+
             print("Finding ORFs for " + cell)
             if args.contigs_source == "single":
                 os.system(
-                    "prodigal -i %s%s -a %s%s-proteins.faa -o %s%s-prodigal.out -q" % (binDir, i, binDir, i, binDir, i))
+                    "prodigal -i %s/%s -a %s/%s-proteins.faa -o %s/%s-prodigal.out -q" % (binDir, i, binDir, i, binDir, i))
             elif args.contigs_source == "meta":
-                os.system("prodigal -i %s%s -a %s%s-proteins.faa -o %s%s-prodigal.out -p meta -q" % (
+                os.system("prodigal -i %s/%s -a %s/%s-proteins.faa -o %s/%s-prodigal.out -p meta -q" % (
                 binDir, i, binDir, i, binDir, i))
             else:
                 print("WARNING: you did not specify whether the provided FASTA files are single genomes or "
@@ -1017,7 +998,7 @@ for i in (clusterDict.keys()):
             out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
 
     elif "MtoA.hmm" in ls or "MtrA.hmm" in ls or "MtrC_TIGR03507.hmm" in ls or "MtrB_TIGR03509.hmm" in ls:
-        if "MtoA.hmm" in ls and "MtrB_TIGR03509.hmm" in ls:
+        if "MtoA.hmm" in ls and "MtrB_TIGR03509.hmm" in ls and "MtrC_TIGR03507.hmm" not in ls:
             for j in clusterDict[i]["line"]:
                 if j[3] in ["MtrB_TIGR03509.hmm", "MtoA.hmm", "CymA.hmm"]:
                     out.write("iron_oxidation" + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
@@ -1359,9 +1340,9 @@ for i in clusterDict.keys():
         cat = memoryDict[dataset][orf]["cat"]
 
         if cat in ["iron_aquisition-siderophore_transport", "iron_aquisition-heme_transport"]:
-            if len(Unique2(clusterDict[i])) < 3:
+            if len(Unique2(clusterDict[i])) < 2:
                 break
-            elif check1(clusterDict[i]) < 3:
+            elif check1(clusterDict[i]) < 2:
                 pass
             else:
 
@@ -1427,6 +1408,61 @@ for i in clusterDict.keys():
                         memoryDict[dataset][orf]["heme"] + "," +
                         memoryDict[dataset][orf]["seq"] + "\n")
 
+            elif hmm in ["MtoA", "MtrA", "MtrB_TIGR03509", "MtrC_TIGR03507"]:
+                operon = clusterDict[i]
+                operon = Strip(operon)
+                # print("iron oxidation")
+                # print(operon)
+                # print(hmm)
+                # print("")
+                if "MtrB_TIGR03509" in operon and "MtrC_TIGR03507" in operon and "MtrA" in operon:
+                    out.write(
+                        "iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                        memoryDict[dataset][orf]["bit"] + "," +
+                        memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                        memoryDict[dataset][orf]["heme"] + "," +
+                        memoryDict[dataset][orf]["seq"] + "\n")
+                    # print("writing iron_reduction")
+
+                elif "MtoA" in operon and "MtrB_TIGR03509" in operon and "MtrC_TIGR03507" in operon:
+                    out.write(
+                        "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                        memoryDict[dataset][orf]["bit"] + "," +
+                        memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                        memoryDict[dataset][orf]["heme"] + "," +
+                        memoryDict[dataset][orf]["seq"] + "\n")
+                    # print("writing iron_reduction")
+
+                elif "MtrB_TIGR03509" in operon and "MtrA" in operon:
+                    out.write(
+                        "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                        memoryDict[dataset][orf]["bit"] + "," +
+                        memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                        memoryDict[dataset][orf]["heme"] + "," +
+                        memoryDict[dataset][orf]["seq"] + "\n")
+                    # print("writing iron_reduction_or_oxidation")
+
+                elif "MtoA" in operon and "MtrB_TIGR03509" in operon:
+                    out.write(
+                        "possible_iron_oxidation_and_possible_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                        memoryDict[dataset][orf]["bit"] + "," +
+                        memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                        memoryDict[dataset][orf]["heme"] + "," +
+                        memoryDict[dataset][orf]["seq"] + "\n")
+                    # print("writing iron_reduction_or_oxidation")
+
+                elif "MtrC_TIGR03507" in operon and "MtrB_TIGR03509" in operon:
+                    out.write(
+                        "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                        memoryDict[dataset][orf]["bit"] + "," +
+                        memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                        memoryDict[dataset][orf]["heme"] + "," +
+                        memoryDict[dataset][orf]["seq"] + "\n")
+                    # print("writing iron_reduction_or_oxidation")
+
+                else:
+                    pass
+
             else:
                 out.write(
                     memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
@@ -1457,6 +1493,62 @@ for i in clusterDict.keys():
                         memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
                         memoryDict[dataset][orf]["heme"] + "," +
                         memoryDict[dataset][orf]["seq"] + "\n")
+
+            elif hmm in ["MtrC_TIGR03507", "MtrA", "MtrB_TIGR03509", "MtoA"]:
+                operon = clusterDict[i]
+                # print("iron reduction")
+                # print(operon)
+                operon = Strip(operon)
+                # print(operon)
+                # print(hmm)
+                # print("")
+                if "MtrB_TIGR03509" in operon and "MtrC_TIGR03507" in operon and "MtrA" in operon:
+                    out.write(
+                        "iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                        memoryDict[dataset][orf]["bit"] + "," +
+                        memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                        memoryDict[dataset][orf]["heme"] + "," +
+                        memoryDict[dataset][orf]["seq"] + "\n")
+                    # print("writing iron_reduction")
+
+                elif "MtoA" in operon and "MtrB_TIGR03509" in operon and "MtrC_TIGR03507" in operon:
+                    out.write(
+                        "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                        memoryDict[dataset][orf]["bit"] + "," +
+                        memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                        memoryDict[dataset][orf]["heme"] + "," +
+                        memoryDict[dataset][orf]["seq"] + "\n")
+                    # print("writing iron_reduction")
+
+                elif "MtrB_TIGR03509" in operon and "MtrA" in operon:
+                    out.write(
+                        "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                        memoryDict[dataset][orf]["bit"] + "," +
+                        memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                        memoryDict[dataset][orf]["heme"] + "," +
+                        memoryDict[dataset][orf]["seq"] + "\n")
+                    # print("writing iron_reduction_or_oxidation")
+
+                elif "MtoA" in operon and "MtrB_TIGR03509" in operon:
+                    out.write(
+                        "possible_iron_oxidation_and_possible_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                        memoryDict[dataset][orf]["bit"] + "," +
+                        memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                        memoryDict[dataset][orf]["heme"] + "," +
+                        memoryDict[dataset][orf]["seq"] + "\n")
+                    # print("writing iron_reduction")
+
+                elif "MtrC_TIGR03507" in operon and "MtrB_TIGR03509" in operon:
+                    out.write(
+                        "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                        memoryDict[dataset][orf]["bit"] + "," +
+                        memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                        memoryDict[dataset][orf]["heme"] + "," +
+                        memoryDict[dataset][orf]["seq"] + "\n")
+                    # print("writing iron_reduction_or_oxidation")
+
+                else:
+                    pass
 
             else:
                 out.write(
@@ -1513,8 +1605,9 @@ out.close()
 # ****************************** CREATING A HEATMAP-COMPATIBLE CSV FILE *************************************
 cats = ["iron_aquisition-iron_transport", "iron_aquisition-heme_transport", "iron_aquisition-heme_oxygenase",
         "iron_aquisition-siderophore_synthesis",
-        "iron_aquisition-siderophore_transport", "iron_gene_regulation", "iron_oxidation", "iron_reduction",
-        "iron_storage", "magnetosome_formation"]
+        "iron_aquisition-siderophore_transport", "iron_gene_regulation", "iron_oxidation",
+        "possible_iron_oxidation_and_possible_iron_reduction", "probable_iron_reduction",
+        "iron_reduction", "iron_storage", "magnetosome_formation"]
 
 Dict = defaultdict(lambda: defaultdict(list))
 final = open("%s/FeGenie-geneSummary-clusters.csv" % args.out, "r")
