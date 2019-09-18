@@ -1444,7 +1444,7 @@ for i in clusterDict.keys():
 
                 elif "MtoA" in operon and "MtrB_TIGR03509" in operon:
                     out.write(
-                        "probable_iron_oxidation_and_possible_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                        "possible_iron_oxidation_and_possible_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
                         memoryDict[dataset][orf]["bit"] + "," +
                         memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
                         memoryDict[dataset][orf]["heme"] + "," +
