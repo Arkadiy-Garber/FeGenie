@@ -2,6 +2,22 @@
 
 Please see the Wiki page for introduction and tutorial on how to use this tool.
 
+## Easy Installation (if you have Conda installed)
+    git clone https://github.com/Arkadiy-Garber/FeGenie.git
+    cd FeGenie
+    ./setup.sh
+    conda activate fegenie
+    FeGenie.py -h
+
+## Easy Installation (if you don't have Conda)
+    git clone https://github.com/Arkadiy-Garber/FeGenie.git
+    cd FeGenie
+    ./setup_noconda.sh
+    ./FeGenie.py -h
+
+## Quick-start
+
+
 
 ## Citing FeGenie:
 FeGenie is developed by Arkadiy I. Garber Kenneth H. Nealson, Akihiro Okamoto, Sean M. McAllister, Clara S. Chan, Roman. A. Barco, and Nancy Merino
