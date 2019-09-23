@@ -16,11 +16,13 @@ Please see the Wiki page for introduction and tutorial on how to use this tool.
     ./FeGenie.py -h
 
 ### Quick-start (if you installed using the '-setup.sh' script)
-    FeGenie.py -bin_dir /directory/of/bins/ -bin_ext fasta -t 8 -out output_fegenie
+    FeGenie.py -bin_dir /directory/of/bins/ -bin_ext fasta -t 16 -out output_fegenie
 
 ### Quick-start (if you installed using the '-setup_noconda.sh' script)
-    ./FeGenie.py -hmm_lib HMM-lib/ -bin_dir /directory/of/bins/ -bin_ext fasta -t 8 -out output_fegenie
-(HMM-lib directory can be found within FeGenie's main repository)
+    ./FeGenie.py -hmm_lib HMM-lib/ -bin_dir /directory/of/bins/ -bin_ext fasta -t 16 -out output_fegenie
+    # HMM-lib directory can be found within FeGenie's main repository
+    # -t 8 means that 8 threads will be used for HMMER and BLAST. If you have less than 16 available on your system, set this number lower (default = 1)
+
 
 
 ## Citing FeGenie:
