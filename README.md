@@ -1,22 +1,26 @@
-# FeGenie
+## FeGenie
 
 Please see the Wiki page for introduction and tutorial on how to use this tool.
 
-## Easy Installation (if you have Conda installed)
+### Easy Installation (if you have Conda installed)
     git clone https://github.com/Arkadiy-Garber/FeGenie.git
     cd FeGenie
     ./setup.sh
     conda activate fegenie
     FeGenie.py -h
 
-## Easy Installation (if you don't have Conda)
+### Easy Installation (if you don't have Conda)
     git clone https://github.com/Arkadiy-Garber/FeGenie.git
     cd FeGenie
     ./setup_noconda.sh
     ./FeGenie.py -h
 
-## Quick-start
+### Quick-start (if you installed using the '-setup.sh' script)
+    FeGenie.py -bin_dir /directory/of/bins/ -bin_ext fasta -t 8 -out output_fegenie
 
+### Quick-start (if you installed using the '-setup_noconda.sh' script)
+    ./FeGenie.py -hmm_lib HMM-lib/ -bin_dir /directory/of/bins/ -bin_ext fasta -t 8 -out output_fegenie
+(HMM-lib directory can be found within FeGenie's main repository)
 
 
 ## Citing FeGenie:
