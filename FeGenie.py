@@ -391,6 +391,13 @@ parser.add_argument('-ref', type=str, help="path to a reference protein database
 parser.add_argument('-out', type=str, help="name of output file; please provide full path (default=fegenie_out)",
                     default="fegenie_out")
 
+
+parser.add_argument('-norm', type=str, help="Would you like the gene counts for each iron gene category normalized to "
+                                            "the number of predicted ORFs in eahc genome or metagenome? Without "
+                                            "normalization, FeGenie will create a heatmap-compatible "
+                                            "CSV output with raw gene counts. With normalization, FeGenie will create a "
+                                            "heatmap-compatible with \'normalized gene abundances\' (y/n, defaut=y)", default="y")
+
 parser.add_argument('-inflation', type=int, help="inflation factor for final gene category counts (default=1000)",
                     default=1000)
 
@@ -582,7 +589,7 @@ for FeCategory in HMMdirLS:
 
         HMMdict = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: "EMPTY")))
         for i in binDirLS:  # ITERATION THROUGH EACH BIN IN A GIVEN DIRECTORY OF BINS
-            if lastItem(i.split(".")) == args.bin_ext:  # FILTERING OUT ANY NON-BIN-RELATED FILES
+            if lastItem(i.split(".")) == args.bin_ext and not re.findall(r'proteins.faa', i):  # FILTERING OUT ANY NON-BIN-RELATED FILES
                 # print("analyzing: " + i)
                 FASTA = open(binDir + i + "-proteins.faa", "r")
                 FASTA = fasta(FASTA)
@@ -1639,7 +1646,10 @@ for i in cats:
     outHeat.write(i + ",")
     for j in sorted(Dict.keys()):
         if not re.match(r'#', j):
-            outHeat.write(str((len(Dict[j][i]) / int(normDict[j])) * float(args.inflation)) + ",")
+            if args.norm == "y":
+                outHeat.write(str((len(Dict[j][i]) / int(normDict[j])) * float(args.inflation)) + ",")
+            else:
+                outHeat.write(str(len(Dict[j][i])) + ",")
     outHeat.write("\n")
 
 outHeat.close()
@@ -1655,8 +1665,13 @@ if args.makeplots == "y":
             Rdir = (i.rstrip())
         os.system("rm r.txt")
 
-    os.system("Rscript --vanilla %s/DotPlot.R %s/FeGenie-heatmap-data.csv %s" % (Rdir, args.out, args.out))
-    os.system("Rscript --vanilla %s/dendro-heatmap.R %s/FeGenie-heatmap-data.csv %s" % (Rdir, args.out, args.out))
+    if args.norm == "y":
+        os.system("Rscript --vanilla %s/DotPlot.R %s/FeGenie-heatmap-data.csv %s" % (Rdir, args.out, args.out))
+        os.system("Rscript --vanilla %s/dendro-heatmap.R %s/FeGenie-heatmap-data.csv %s" % (Rdir, args.out, args.out))
+    else:
+        os.system("Rscript --vanilla %s/DotPlot-nonorm.R %s/FeGenie-heatmap-data.csv %s" % (Rdir, args.out, args.out))
+        os.system("Rscript --vanilla %s/dendro-heatmap.R %s/FeGenie-heatmap-data.csv %s" % (Rdir, args.out, args.out))
+
     print("\n\n\n")
     print("...")
 
