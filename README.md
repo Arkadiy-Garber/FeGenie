@@ -27,9 +27,9 @@ HMM-lib directory can be found within FeGenie's main repository
 
 
 ### Citing FeGenie:
-This project is involved in a publication currently in preparation: "Garber, A.I., Nealson, K.H., Okamoto, A., McAllister, S.M., Chan, C.S., Barco, B.A., and Merino, N. FeGenie: a new database and tool for identification of iron genes and iron gene neighborhoods in genomes and metagenome assemblies". 
+This project is involved in a publication currently in review: "Garber, A.I., Nealson, K.H., Okamoto, A., McAllister, S.M., Chan, C.S., Barco, B.A., and Merino, N. FeGenie: a comprehensive tool for the identification of iron genes and iron gene neighborhoods in genomes and metagenome assemblies".
 
-If it was useful for your work, you can cite it as: Garber, A.I., Nealson, K.H., Okamoto, A., McAllister, S.M., Chan, C.S., Barco, B.A., and Merino, N. 2018: FeGenie, GitHub repository: https://github.com/Arkadiy-Garber/FeGenie/.
+If it was useful for your work, you can cite the bioRxiv pre-print: https://www.biorxiv.org/content/10.1101/777656v1
 
 
 Please also cite various dependencies used by FeGenie.
