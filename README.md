@@ -17,6 +17,7 @@ Please see the Wiki page for introduction and tutorial on how to use this tool.
 
 ### Quick-start (if you installed using the 'setup.sh' script)
     FeGenie.py -bin_dir /directory/of/bins/ -bin_ext fasta -t 16 -out output_fegenie
+The argument for -bin_ext needs to represent the filename extension of the FASTA files in the selected directory that you would like analyzed (e.g. fa, fasta, fna, etc).
 
 ### Quick-start (if you installed using the 'setup_noconda.sh' script)
     ./FeGenie.py -hmm_lib HMM-lib/ -bin_dir /directory/of/bins/ -bin_ext fasta -t 16 -out output_fegenie
