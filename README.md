@@ -24,7 +24,11 @@ The argument for -bin_ext needs to represent the filename extension of the FASTA
 HMM-lib directory can be found within FeGenie's main repository
 -t 8 means that 8 threads will be used for HMMER and BLAST. If you have less than 16 available on your system, set this number lower (default = 1)
 
-
+### Wish List (may be in store for next version)
+1) Ability to accept previously-annotated genomes and gene-calls.
+2) Identification of iron-sulfur proteins.
+3) Inlcude Cytochrome 579.
+4) Improve dilineation between MtrA and MtoA for better resolution with respect to identification of iron reduction and iron oxidation, respectively.
 
 ### Citing FeGenie:
 This project is involved in a publication currently in review: "Garber, A.I., Nealson, K.H., Okamoto, A., McAllister, S.M., Chan, C.S., Barco, B.A., and Merino, N. FeGenie: a comprehensive tool for the identification of iron genes and iron gene neighborhoods in genomes and metagenome assemblies".
