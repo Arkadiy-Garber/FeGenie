@@ -26,9 +26,10 @@ HMM-lib directory can be found within FeGenie's main repository
 
 ### Upcoming Updates (we welcome more suggestions, which can be submitted as an Issue)
 1) Ability to accept previously-annotated genomes and gene-calls.
-2) Identification of iron-sulfur proteins.
-3) Inlcude Cytochrome 579.
-4) Improve dilineation between MtrA and MtoA for better resolution with respect to identification of iron reduction and iron oxidation, respectively.
+2) Inlcude Cytochrome 579.
+3) Improve dilineation between MtrA and MtoA for better resolution with respect to identification of iron reduction and iron oxidation, respectively.
+5) Option eport absolute values for gene counts (rather than normalized gene counts)
+5) Identification of iron-sulfur proteins.
 
 ### Citing FeGenie:
 This project is involved in a publication currently in review: "Garber, A.I., Nealson, K.H., Okamoto, A., McAllister, S.M., Chan, C.S., Barco, B.A., and Merino, N. FeGenie: a comprehensive tool for the identification of iron genes and iron gene neighborhoods in genomes and metagenome assemblies".
