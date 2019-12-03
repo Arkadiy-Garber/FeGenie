@@ -9,6 +9,9 @@ import sys
 
 # TODO: ADD CYTOCHROME 579 HMM
 # TODO: ADD COLUMN WITH ORF STRAND
+# TODO: FORGOT ABOUT REF LINES 1291-1572
+# TODO: CAPACITY TO TAKE ORFS/GBK/GFF FILES
+# TODO OPTION TO RELEASE ALL RESULTS, REGARDLESS OF WHETHER BIT SCORES CUT-OFFS WERE PASSED
 
 
 def Strip(ls):
@@ -643,7 +646,7 @@ for FeCategory in HMMdirLS:
                                             HMMdict[i][orf]["bit"] = bit
 
                 print("")
-                os.system("rm -rf " + binDir + "/" + i + "-HMM")
+                os.system("rmdir " + binDir + "/" + i + "-HMM")
 
         out = open(outDirectory + "/%s-summary.csv" % (FeCategory), "w")
         out.write("cell" + "," + "ORF" + "," + "HMM" + "," + "evalue" + "," + "bitscore" + "\n")
@@ -1503,12 +1506,7 @@ for i in clusterDict.keys():
 
             elif hmm in ["MtrC_TIGR03507", "MtrA", "MtrB_TIGR03509", "MtoA"]:
                 operon = clusterDict[i]
-                # print("iron reduction")
-                # print(operon)
                 operon = Strip(operon)
-                # print(operon)
-                # print(hmm)
-                # print("")
                 if "MtrB_TIGR03509" in operon and "MtrC_TIGR03507" in operon and "MtrA" in operon:
                     out.write(
                         "iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
@@ -1588,6 +1586,12 @@ for i in summary:
         summaryDict[clu].append(i.rstrip())
 
 out = open(args.out + "/FeGenie-summary-altered.csv", "w")
+if args.ref != "NA":
+    out.write(
+        "category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore" + "," + "bitscore_cutoff" + "," + "clusterID" + "," + "heme_binding_motifs" + "," + "top_blast_hit" + "," + "blast_hit_evalue" + "," + "protein_sequence" + "\n")
+else:
+    out.write(
+        "category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore" + "," + "bitscore_cutoff" + "," + "clusterID" + "," + "heme_binding_motifs" + "," + "protein_sequence" + "\n")
 for i in summaryDict.keys():
     if len(summaryDict[i]) > 0:
         for j in summaryDict[i]:
@@ -1603,6 +1607,12 @@ os.system("rm %s/FeGenie-summary.csv" % args.out)
 # ****************************** REMOVING #'S ***************************************
 summary = open("%s/FeGenie-geneSummary-clusters.csv" % args.out, "r")
 out = open("%s/FeGenie-geneSummary.csv" % args.out, "w")
+if args.ref != "NA":
+    out.write(
+        "category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore" + "," + "bitscore_cutoff" + "," + "clusterID" + "," + "heme_binding_motifs" + "," + "top_blast_hit" + "," + "blast_hit_evalue" + "," + "protein_sequence" + "\n")
+else:
+    out.write(
+        "category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore" + "," + "bitscore_cutoff" + "," + "clusterID" + "," + "heme_binding_motifs" + "," + "protein_sequence" + "\n")
 for i in summary:
     if not re.search(r'#', i):
         out.write(i.rstrip() + "\n")
