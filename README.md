@@ -2,7 +2,7 @@
 
 Please see the Wiki page for introduction and tutorial on how to use this tool.
 
-Special thanks for Michael Lee (https://github.com/AstrobioMike) for helping to put together the setup.sh script, which signficantly eases installation.
+Special thanks to Michael Lee (https://github.com/AstrobioMike) for helping to put together the setup.sh script, which signficantly eases installation.
 
 ### Easy Installation (if you have Conda installed)
     git clone https://github.com/Arkadiy-Garber/FeGenie.git
