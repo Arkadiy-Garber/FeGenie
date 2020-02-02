@@ -7,14 +7,14 @@ Special thanks to Michael Lee (https://github.com/AstrobioMike) for helping to p
 ### Easy Installation (if you have Conda installed)
     git clone https://github.com/Arkadiy-Garber/FeGenie.git
     cd FeGenie
-    ./setup.sh
+    bash setup.sh
     conda activate fegenie
     FeGenie.py -h
 
 ### Easy Installation (if you don't have Conda)
     git clone https://github.com/Arkadiy-Garber/FeGenie.git
     cd FeGenie
-    ./setup_noconda.sh
+    bash setup_noconda.sh
     ./FeGenie.py -h
 
 ### Quick-start (if you installed using the 'setup.sh' script)
