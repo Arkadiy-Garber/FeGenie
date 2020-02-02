@@ -35,9 +35,7 @@ HMM-lib directory can be found within FeGenie's main repository
 7) Identification of iron-sulfur proteins.
 
 ### Citing FeGenie:
-This project is involved in a publication currently in review: "Garber, A.I., Nealson, K.H., Okamoto, A., McAllister, S.M., Chan, C.S., Barco, B.A., and Merino, N. FeGenie: a comprehensive tool for the identification of iron genes and iron gene neighborhoods in genomes and metagenome assemblies".
 
-If it was useful for your work, you can cite the bioRxiv pre-print: https://www.biorxiv.org/content/10.1101/777656v1
-
+Garber AI, Nealson KH, Okamoto A, McAllister SM, Chan CS, Barco RA and Merino N (2020) FeGenie: A Comprehensive Tool for the Identification of Iron Genes and Iron Gene Neighborhoods in Genome and Metagenome Assemblies. Front. Microbiol. 11:37. doi: 10.3389/fmicb.2020.00037
 
 Please also cite various dependencies used by FeGenie.
