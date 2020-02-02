@@ -37,5 +37,3 @@ HMM-lib directory can be found within FeGenie's main repository
 ### Citing FeGenie:
 
 Garber AI, Nealson KH, Okamoto A, McAllister SM, Chan CS, Barco RA and Merino N (2020) FeGenie: A Comprehensive Tool for the Identification of Iron Genes and Iron Gene Neighborhoods in Genome and Metagenome Assemblies. Front. Microbiol. 11:37. doi: 10.3389/fmicb.2020.00037
-
-Please also cite various dependencies used by FeGenie.
