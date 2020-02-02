@@ -754,19 +754,14 @@ def main():
                             # print("performing HMMSEARCH")
                             if args.orfs:
                                 os.system(
-                                    "hmmsearch --cpu %d -T %d --tblout %s/%s-HMM/%s.tblout -o %s/%s-HMM/%s.txt %s/%s %s/%s"
-                                    % (int(args.t), float(bit), binDir, i, hmm, binDir, i, hmm, hmmDir, hmm, binDir, i)
+                                    "hmmsearch --cpu %d -T %d --tblout %s/%s-HMM/%s.tblout -o /dev/null %s/%s %s/%s"
+                                    % (int(args.t), float(bit), binDir, i, hmm, hmmDir, hmm, binDir, i)
                                 )
                             else:
                                 os.system(
-                                    "hmmsearch --cpu %d -T %d --tblout %s/%s-HMM/%s.tblout -o %s/%s-HMM/%s.txt %s/%s %s/%s-proteins.faa"
-                                    % (int(args.t), float(bit), binDir, i, hmm, binDir, i, hmm, hmmDir, hmm, binDir, i)
+                                    "hmmsearch --cpu %d -T %d --tblout %s/%s-HMM/%s.tblout -o /dev/null %s/%s %s/%s-proteins.faa"
+                                    % (int(args.t), float(bit), binDir, i, hmm, hmmDir, hmm, binDir, i)
                                 )
-
-                            # REMOVING THE STANDARD OUTPUT FILE
-                            os.system(
-                                "rm " + binDir + "/" + i + "-HMM/" + hmm + ".txt"
-                            )
 
                             # READING IN THE HMMSEARCH RESULTS (TBLOUT) OUT FILE
                             hmmout = open(binDir + i + "-HMM/" + hmm + ".tblout", "r")
@@ -940,9 +935,8 @@ def main():
         if lastItem(i.split(".")) == args.bin_ext:
             if args.orfs:
                 os.system(
-                    "makeblastdb -dbtype prot -in %s/%s -out %s/%s -logfile %s/makedbfile.txt" % (
-                        binDir, i, binDir, i, binDir))
-                os.system("rm %s/makedbfile.txt" % binDir)
+                    "makeblastdb -dbtype prot -in %s/%s -out %s/%s -logfile /dev/null" % (
+                        binDir, i, binDir, i))
 
                 os.system(
                     "blastp -query %s -db %s/%s -num_threads %s -outfmt 6 -out %s/%s-thermincola.blast -evalue 1E-10"
@@ -954,9 +948,8 @@ def main():
 
             else:
                 os.system(
-                    "makeblastdb -dbtype prot -in %s/%s -out %s/%s -logfile %s/makedbfile.txt" % (
-                    binDir, i, binDir, i, binDir))
-                os.system("rm %s/makedbfile.txt" % binDir)
+                    "makeblastdb -dbtype prot -in %s/%s -out %s/%s -logfile /dev/null" % (
+                    binDir, i, binDir, i))
 
                 os.system(
                     "blastp -query %s -db %s/%s -num_threads %s -outfmt 6 -out %s/%s-thermincola.blast -evalue 1E-10"
@@ -1865,6 +1858,9 @@ def main():
 
     outHeat.close()
 
+    print("Hello 1000")
+    print(args.makeplots)
+
     # ******** RUNNING RSCRIPT TO GENERATE PLOTS **************
     if args.makeplots:
         if conda == 0:
@@ -1876,10 +1872,13 @@ def main():
                 Rdir = (i.rstrip())
             os.system("rm r.txt")
 
+        print("Hello 0")
         if args.norm:
+            print("Hello 1")
             os.system("Rscript --vanilla %s/DotPlot.R %s/FeGenie-heatmap-data.csv %s" % (Rdir, args.out, args.out))
             os.system("Rscript --vanilla %s/dendro-heatmap.R %s/FeGenie-heatmap-data.csv %s" % (Rdir, args.out, args.out))
         else:
+            print("Hello 2")
             os.system("Rscript --vanilla %s/DotPlot-nonorm.R %s/FeGenie-heatmap-data.csv %s" % (Rdir, args.out, args.out))
             os.system("Rscript --vanilla %s/dendro-heatmap.R %s/FeGenie-heatmap-data.csv %s" % (Rdir, args.out, args.out))
 
