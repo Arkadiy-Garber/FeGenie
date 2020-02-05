@@ -5,10 +5,6 @@ GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m'
 
-gzip -d HMM-lib.tar.gz
-tar xf HMM-lib.tar
-rm HMM-lib.tar
-
 gzip -d test_dataset.tar.gz
 tar xf test_dataset.tar
 rm test_dataset.tar
@@ -37,7 +33,7 @@ export PATH=\"$(pwd):"'$PATH'\"" \
 
 export rscripts=\"$(pwd)/rscripts\"
 
-export HMM_dir=\"$(pwd)/HMM-lib\"" >> ${CONDA_PREFIX}/etc/conda/activate.d/env_vars.sh
+export iron_hmms=\"$(pwd)/hmms/iron\"" >> ${CONDA_PREFIX}/etc/conda/activate.d/env_vars.sh
 
 # re-activating environment so variable and PATH changes take effect
 source activate fegenie
