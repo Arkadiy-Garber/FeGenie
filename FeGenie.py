@@ -589,12 +589,12 @@ def main():
 
                         print("Finding ORFs for " + cell)
                         if args.meta:
-                            os.system("prodigal -i %s/%s -a %s/%s-proteins.faa -o %s/%s-prodigal.out -p meta -q" % (
-                            binDir, i, binDir, i, binDir, i))
+                            os.system("prodigal -i %s/%s -a %s/%s-proteins.faa -o %s/%s-prodigal.out -p meta -q -d %s/%s-proteins.ffn" % (
+                            binDir, i, binDir, i, binDir, i, binDir, i))
                         else:
                             os.system(
-                                "prodigal -i %s/%s -a %s/%s-proteins.faa -o %s/%s-prodigal.out -q" % (
-                                binDir, i, binDir, i, binDir, i))
+                                "prodigal -i %s/%s -a %s/%s-proteins.faa -o %s/%s-prodigal.out -q -d %s/%s-proteins.ffn" % (
+                                binDir, i, binDir, i, binDir, i, binDir, i))
             else:
                 os.system('gtt-genbank-to-AA-seqs -i %s/%s -o %s/%s.faa' % (binDir, i, binDir, i))
 
