@@ -1,7 +1,12 @@
 #/bin/bash
 # This file is supposed to be executed from docker container
 
-./FeGenie.py -bin_dir ci/my_test_dataset -bin_ext txt -out ci/fegenie_out -hmm_lib HMM-lib -t $(nproc) -R rscripts -makeplots y
+# Exit when any command fails:
+set -e
+
+echo "Running FeGenie..."
+./FeGenie.py -bin_dir ci/test_dataset -bin_ext txt -out ci/fegenie_out -hmm_lib HMM-lib -t $(nproc) -R rscripts -makeplots y
+echo "FeGenie completed successfully. Verifying results..."
 
 mkdir -p ci/actual_output
 
@@ -23,4 +28,5 @@ fi
 # to be able to use diff for diffing directories we need to remove tiff files in actual_output first
 find ci/actual_output -iname "fegenie*.tiff" -exec rm {} \;
 
+echo "Comparing actual_output with expected_output:"
 diff ci/actual_output ci/expected_output
