@@ -1858,9 +1858,6 @@ def main():
 
     outHeat.close()
 
-    print("Hello 1000")
-    print(args.makeplots)
-
     # ******** RUNNING RSCRIPT TO GENERATE PLOTS **************
     if args.makeplots:
         if conda == 0:
@@ -1872,13 +1869,10 @@ def main():
                 Rdir = (i.rstrip())
             os.system("rm r.txt")
 
-        print("Hello 0")
         if args.norm:
-            print("Hello 1")
             os.system("Rscript --vanilla %s/DotPlot.R %s/FeGenie-heatmap-data.csv %s" % (Rdir, args.out, args.out))
             os.system("Rscript --vanilla %s/dendro-heatmap.R %s/FeGenie-heatmap-data.csv %s" % (Rdir, args.out, args.out))
         else:
-            print("Hello 2")
             os.system("Rscript --vanilla %s/DotPlot-nonorm.R %s/FeGenie-heatmap-data.csv %s" % (Rdir, args.out, args.out))
             os.system("Rscript --vanilla %s/dendro-heatmap.R %s/FeGenie-heatmap-data.csv %s" % (Rdir, args.out, args.out))
 

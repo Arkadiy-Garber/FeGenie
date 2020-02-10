@@ -22,9 +22,21 @@ Special thanks to Michael Lee (https://github.com/AstrobioMike) for helping to p
 The argument for -bin_ext needs to represent the filename extension of the FASTA files in the selected directory that you would like analyzed (e.g. fa, fasta, fna, etc).
 
 ### Quick-start (if you installed using the 'setup_noconda.sh' script)
-    ./FeGenie.py -hmm_lib HMM-lib/ -bin_dir /directory/of/bins/ -bin_ext fasta -t 16 -out output_fegenie
-HMM-lib directory can be found within FeGenie's main repository
+    ./FeGenie.py -hmm_lib hmms/iron -bin_dir /directory/of/bins/ -bin_ext fasta -t 16 -out output_fegenie
+`hmms/iron` directory can be found within FeGenie's main repository
 -t 8 means that 8 threads will be used for HMMER and BLAST. If you have less than 16 available on your system, set this number lower (default = 1)
+
+### Running with docker
+
+In case of running `FeGenie` with docker the only dependency you need to have installed is docker itself ([installation guide](https://docs.docker.com/install/)).
+
+With docker installed you can run `FeGenie` in the following way:
+
+    docker run -it -v $(pwd):/data note/fegenie-deps ./FeGenie.py -bin_dir test_dataset -bin_ext txt -out fegenie_out -hmm_lib hmms/iron -t $(nproc)
+
+`./FeGenie.py ...` follows normal, non-dockerized flow of arguments.
+
+Beware that you need to mount directories which contain files `FeGenie` is supposed to read. If you are not familiar with docker then run `docker run` command from the directory into which you cloned `FeGenie` repository. If all the files you pass to `FeGenie` are in inside this directory and you use relative filepaths (like e.g. `hmms/iron`) everything will work just fine.
 
 ### Upcoming Updates (we welcome more suggestions, which can be submitted as an Issue)
 1) Ability to accept previously-annotated genomes and gene-calls.
