@@ -744,7 +744,7 @@ def main():
                                 )
                             else:
                                 os.system(
-                                    "hmmsearch --cpu %d -T %d --tblout %s/%s-HMM/%s.tblout -o %s/%s-HMM/%s.txt %s/%s %s/%s-proteins.faa"
+                                    "hmmsearch --cpu %d -T %d --tblout %s/%s-HMM/%s.tblout -o %s/%s-HMM/%s.txt %s/%s %s/ORF_calls/%s-proteins.faa"
                                     % (int(args.t), float(bit), outDirectory, i, hmm, outDirectory, i, hmm, hmmDir, hmm, outDirectory, i)
                                 )
 
