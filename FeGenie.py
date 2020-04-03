@@ -519,6 +519,7 @@ def main():
     except FileNotFoundError:
         print(".")
         os.system("mkdir %s" % args.out)
+        os.system("mkdir %s/ORF_calls" % args.out)
 
     if lastItem(args.out) == "/":
         outDirectory = "%s" % args.out[0:len(args.out)-1]
@@ -548,7 +549,6 @@ def main():
 
                 if args.orfs:
                     testFile = open("%s/%s" % (binDir, i), "r")
-                    print("ORFS for %s found. Skipping Prodigal, and going with %s" % (i, i))
                     for line in testFile:
                         if re.match(r'>', line):
                             if re.findall(r'\|]', line):
@@ -560,7 +560,7 @@ def main():
 
                 else:
                     try:
-                        testFile = open("%s/%s-proteins.faa" % (outDirectory, i), "r")
+                        testFile = open("%s/ORF_calls/%s-proteins.faa" % (outDirectory, i), "r")
                         print("ORFS for %s found. Skipping Prodigal, and going with %s-proteins.faa" % (i, i))
                         for line in testFile:
                             if re.match(r'>', line):
@@ -585,11 +585,11 @@ def main():
 
                         print("Finding ORFs for " + cell)
                         if args.meta:
-                            os.system("prodigal -i %s/%s -a %s/%s-proteins.faa -o %s/%s-prodigal.out -p meta -q" % (
+                            os.system("prodigal -i %s/%s -a %s/ORF_calls/%s-proteins.faa -o %s/ORF_calls/%s-prodigal.out -p meta -q" % (
                                 binDir, i, outDirectory, i, outDirectory, i))
                         else:
                             os.system(
-                                "prodigal -i %s/%s -a %s/%s-proteins.faa -o %s/%s-prodigal.out -q" % (
+                                "prodigal -i %s/%s -a %s/ORF_calls/%s-proteins.faa -o %s/ORF_calls/%s-prodigal.out -q" % (
                                     binDir, i, outDirectory, i, outDirectory, i))
             else:
                 os.system('gtt-genbank-to-AA-seqs -i %s/%s -o %s/%s.faa' % (binDir, i, outDirectory, i))
@@ -661,8 +661,8 @@ def main():
                             gbkDict[locus].append(altContigName)
                             counter = 0
 
-                idxOut = open("%s/%s-proteins.idx" % (outDirectory, i), "w")
-                faaOut = open("%s/%s-proteins.faa" % (outDirectory, i), "w")
+                idxOut = open("%s/ORF_calls/%s-proteins.idx" % (outDirectory, i), "w")
+                faaOut = open("%s/ORF_calls/%s-proteins.faa" % (outDirectory, i), "w")
 
                 for gbkkey1 in gbkDict.keys():
                     counter = 0
@@ -681,7 +681,7 @@ def main():
             if args.orfs:
                 file = open("%s/%s" % (binDir, i))
             else:
-                file = open("%s/%s-proteins.faa" % (outDirectory, i))
+                file = open("%s/ORF_calls/%s-proteins.faa" % (outDirectory, i))
             file = fasta(file)
             for j in file.keys():
                 orf = j.split(" # ")[0]
@@ -740,7 +740,7 @@ def main():
                             if args.orfs:
                                 os.system(
                                     "hmmsearch --cpu %d -T %d --tblout %s/%s-HMM/%s.tblout -o %s/%s-HMM/%s.txt %s/%s %s/%s"
-                                    % (int(args.t), float(bit), outDirectory, i, hmm, outDirectory, i, hmm, hmmDir, hmm, outDirectory, i)
+                                    % (int(args.t), float(bit), outDirectory, i, hmm, outDirectory, i, hmm, hmmDir, hmm, binDir, i)
                                 )
                             else:
                                 os.system(
@@ -910,20 +910,20 @@ def main():
 
             else:
                 os.system(
-                    "makeblastdb -dbtype prot -in %s/%s-proteins.faa -out %s/%s-proteins.faa -logfile %s/makedbfile.txt" % (
+                    "makeblastdb -dbtype prot -in %s/ORF_calls/%s-proteins.faa -out %s/ORF_calls/%s-proteins.faa -logfile %s/makedbfile.txt" % (
                         outDirectory, i, outDirectory, i, outDirectory))
                 os.system("rm %s/makedbfile.txt" % outDirectory)
 
                 os.system(
-                    "blastp -query %s -db %s/%s-proteins.faa -num_threads %s -outfmt 6 -out %s/%s-thermincola.blast -evalue 1E-10"
+                    "blastp -query %s -db %s/ORF_calls/%s-proteins.faa -num_threads %s -outfmt 6 -out %s/%s-thermincola.blast -evalue 1E-10"
                     % (thermincola, outDirectory, i, args.t, outDirectory, i))
 
                 os.system(
-                    "blastp -query %s -db %s/%s-proteins.faa -num_threads %s -outfmt 6 -out %s/%s-geobacter.blast -evalue 1E-10"
+                    "blastp -query %s -db %s/ORF_calls/%s-proteins.faa -num_threads %s -outfmt 6 -out %s/%s-geobacter.blast -evalue 1E-10"
                     % (geobacter, outDirectory, i, args.t, outDirectory, i))
-                os.system("rm %s/%s-proteins.faa.phr" % (outDirectory, i))
-                os.system("rm %s/%s-proteins.faa.psq" % (outDirectory, i))
-                os.system("rm %s/%s-proteins.faa.pin" % (outDirectory, i))
+                os.system("rm %s/ORF_calls/%s-proteins.faa.phr" % (outDirectory, i))
+                os.system("rm %s/ORF_calls/%s-proteins.faa.psq" % (outDirectory, i))
+                os.system("rm %s/ORF_calls/%s-proteins.faa.pin" % (outDirectory, i))
 
     geoDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
     geo = open("%s/iron_reduction/non-aligned/geobacter_PCCs.faa" % HMMdir)
@@ -1734,6 +1734,11 @@ def main():
 
     out.close()
 
+    os.system("mkdir %s/HMM_results" % outDirectory)
+    os.system("mv %s/*-HMM %s/HMM_results/" % (outDirectory, outDirectory))
+    os.system("rm %s/*-prodigal.out" % outDirectory)
+    os.system("rm %s/makedbfile.txt.perf" % outDirectory)
+
     # ****************************** CREATING A HEATMAP-COMPATIBLE CSV FILE *************************************
     print("Writing heatmap-formatted output file: %s/FeGenie-heatmap-data.csv\n" % outDirectory)
 
@@ -1765,7 +1770,7 @@ def main():
                 if args.orfs:
                     file = open("%s/%s" % (args.bin_dir, i), "r")
                 else:
-                    file = open("%s/%s-proteins.faa" % (outDirectory, i), "r")
+                    file = open("%s/ORF_calls/%s-proteins.faa" % (outDirectory, i), "r")
                 file = fasta(file)
                 normDict[i] = len(file.keys())
 
