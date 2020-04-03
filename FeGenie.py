@@ -1070,11 +1070,11 @@ def main():
 
     # ****************************** FILTERING OUT LIKELY FALSE POSITIVES *************************************
     print("Pre-processing of final outout file")
-    fleet = ["EetA.hmm", "EetB.hmm", "Ndh2.hmm", "FmnB.hmm", "FmnA.hmm", "DmkA.hmm", "DmkB.hmm", "PplA.hmm"]
-    mam = ["MamA.hmm", "MamB.hmm", "MamE.hmm", "MamK.hmm", "MamP.hmm", "MamM.hmm", "MamP.hmm", "MamQ.hmm", "MamI.hmm",
-           "MamL.hmm", "MamO.hmm"]
-    foxabc = ["FoxA.hmm", "FoxB.hmm", "FoxC.hmm"]
-    foxeyz = ["FoxE.hmm", "FoxY.hmm", "FoxZ.hmm"]
+    # fleet = ["EetA.hmm", "EetB.hmm", "Ndh2.hmm", "FmnB.hmm", "FmnA.hmm", "DmkA.hmm", "DmkB.hmm", "PplA.hmm"]
+    # mam = ["MamA.hmm", "MamB.hmm", "MamE.hmm", "MamK.hmm", "MamP.hmm", "MamM.hmm", "MamP.hmm", "MamQ.hmm", "MamI.hmm",
+    #        "MamL.hmm", "MamO.hmm"]
+    # foxabc = ["FoxA.hmm", "FoxB.hmm", "FoxC.hmm"]
+    # foxeyz = ["FoxE.hmm", "FoxY.hmm", "FoxZ.hmm"]
 
     clusterDict = defaultdict(lambda: defaultdict(list))
     summary = open("%s/FinalSummary-dereplicated-clustered-blast.csv" % outDirectory, "r")
@@ -1736,7 +1736,7 @@ def main():
 
     os.system("mkdir %s/HMM_results" % outDirectory)
     os.system("mv %s/*-HMM %s/HMM_results/" % (outDirectory, outDirectory))
-    os.system("rm %s/*-prodigal.out" % outDirectory)
+    os.system("rm %s/ORF_calls/*-prodigal.out" % outDirectory)
     os.system("rm %s/makedbfile.txt.perf" % outDirectory)
 
     # ****************************** CREATING A HEATMAP-COMPATIBLE CSV FILE *************************************
