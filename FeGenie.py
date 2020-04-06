@@ -903,7 +903,7 @@ def main():
 
                 os.system(
                     "blastp -query %s -db %s/%s -num_threads %s -outfmt 6 -out %s/%s-geobacter.blast -evalue 1E-10"
-                    % (geobacter, outDirectory, i, args.t, outDirectory, i))
+                    % (geobacter, binDir, i, args.t, outDirectory, i))
                 os.system("rm %s/%s.phr" % (binDir, i))
                 os.system("rm %s/%s.psq" % (binDir, i))
                 os.system("rm %s/%s.pin" % (binDir, i))
