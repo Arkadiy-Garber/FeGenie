@@ -458,7 +458,7 @@ def main():
         test = open(bits)
 
     except FileNotFoundError:
-        os.system("which MagicLamp.py > mainDir.txt")
+        os.system("which FeGenie.py > mainDir.txt")
 
         file = open("mainDir.txt")
         for i in file:
@@ -469,7 +469,6 @@ def main():
         bits = HMMdir + "/" + "HMM-bitcutoffs.txt"
         rscriptDir = location + "/rscripts/"
 
-        os.system("rm HMMlib.txt rscripts.txt mainDir.txt")
         try:
             test = open(bits)
         except FileNotFoundError:
@@ -477,6 +476,7 @@ def main():
                   "you have Conda installed. Otherwise, please run the setupe-noconda.sh script and put MagicLamp.py into your $PATH")
             raise SystemExit
 
+    os.system("rm HMMlib.txt rscripts.txt mainDir.txt")
     args = parser.parse_known_args()[0]
 
     # ************** Checking for the required arguments ******************* #
