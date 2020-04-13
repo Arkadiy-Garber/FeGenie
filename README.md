@@ -18,10 +18,10 @@ Special thanks to Michael Lee (https://github.com/AstrobioMike) for helping to p
     ./FeGenie.py -h
 
 ### Quick-start
-    FeGenie.py -bin_dir /directory/of/bins/ -bin_ext fasta -t 16 -out output_fegenie
+    FeGenie.py -bin_dir /directory/of/bins/ -bin_ext fasta -t 16
 The argument for -bin_ext needs to represent the filename extension of the FASTA files in the selected directory that you would like analyzed (e.g. fa, fasta, fna, etc).
 
-### Upcoming Updates (we welcome more suggestions, which can be submitted as an Issue)
+### Upcoming Updates (we welcome more suggestions, which can be submitted as an Issue or via email)
 1) Include Cytochrome 579 (and possible rusticyanin)
 2) Improve dilineation between MtrA and MtoA for better resolution with respect to identification of iron reduction and iron oxidation, respectively.
 3) Include option to release all results (regardless of whether rules for reporting were met)
