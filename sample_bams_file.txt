@@ -1,0 +1,5 @@
+assemblyA.fa	assemblyA.sorted.bam
+assemblyB.fa	assemblyB.sorted.bam
+assemblyC.fa	assemblyC.sorted.bam
+CoAssemblyABC	assemblyA.sorted.bam	assemblyB.sorted.bam	assemblyC.sorted.bam
+CoAssemblyAB	assemblyA.sorted.bam	assemblyB.sorted.bam
