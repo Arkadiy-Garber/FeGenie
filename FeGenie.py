@@ -512,6 +512,11 @@ def main():
         answer = input("Would you like FeGenie to proceed and potentially overwrite files in this directory? (y/n): ")
         if answer == "y":
             print("Ok, proceeding with analysis!")
+            try:
+                os.listdir(args.out + "/ORF_calls")
+            except FileNotFoundError:
+                os.system("mkdir %s/ORF_calls" % args.out)
+
         else:
             print("Exiting")
             raise SystemExit
@@ -1736,7 +1741,7 @@ def main():
 
     os.system("mkdir %s/HMM_results" % outDirectory)
     os.system("mv %s/*-HMM %s/HMM_results/" % (outDirectory, outDirectory))
-    os.system("rm %s/ORF_calls/*-prodigal.out" % outDirectory)
+    # os.system("rm %s/ORF_calls/*-prodigal.out" % outDirectory)
     os.system("rm %s/makedbfile.txt.perf" % outDirectory)
 
     # ****************************** CREATING A HEATMAP-COMPATIBLE CSV FILE *************************************
