@@ -12,7 +12,7 @@ DhbE-PchD-VibE-VabE-EntE-IroD-PvdQ-MbtA	467.8
 DhbF-PvdDIJL-VabF	1091.9
 EfeB	185.4
 EfeO-Iron_uptake	31.7
-FbpA-iron_binding_and_transport-rep	80.1
+FbpA-iron_binding_and_transport-rep	62
 FbpB-FutB-iron_permease_fam1-rep	118
 FbpB-iron_permease_fam2-rep	88.4
 FbpC-iron_uptake_ATPase-rep	300
