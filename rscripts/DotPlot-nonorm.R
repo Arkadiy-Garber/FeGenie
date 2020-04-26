@@ -3,7 +3,6 @@ library.path <- .libPaths()
 library("ggpubr", lib.loc = library.path)
 library("ggplot2", lib.loc = library.path)
 library("reshape", lib.loc = library.path)
-library("tidyverse", lib.loc = library.path)
 library("argparse", lib.loc = library.path)
 
 args <- commandArgs(trailingOnly = TRUE)
