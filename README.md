@@ -17,9 +17,10 @@ Special thanks to Michael Lee (https://github.com/AstrobioMike) for helping to p
     bash setup_noconda.sh
     ./FeGenie.py -h
 
-### Quick-start (if you installed using the 'setup.sh' script)
-    FeGenie.py -bin_dir /directory/of/bins/ -bin_ext fasta -t 16 -out output_fegenie
+### Quick-start
+    FeGenie.py -bin_dir /directory/of/bins/ -bin_ext fasta -t 16
 The argument for -bin_ext needs to represent the filename extension of the FASTA files in the selected directory that you would like analyzed (e.g. fa, fasta, fna, etc).
+
 
 ### Quick-start (if you installed using the 'setup_noconda.sh' script)
     ./FeGenie.py -hmm_lib hmms/iron -bin_dir /directory/of/bins/ -bin_ext fasta -t 16 -out output_fegenie
@@ -45,6 +46,7 @@ Beware that you need to mount directories which contain files `FeGenie` is suppo
 5) Option to report absolute values for gene counts (rather than normalized gene counts)
 6) Include option to release all results (regardless of whether rules for reporting were met)
 7) Identification of iron-sulfur proteins.
+
 
 ### Citing FeGenie:
 

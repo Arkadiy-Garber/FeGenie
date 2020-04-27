@@ -1,0 +1,11 @@
+Bin-1.fa	sampleA.sorted.bam
+Bin-2.fa	sampleA.sorted.bam
+Bin-3.fa	sampleB.sorted.bam
+Bin-4.fa	sampleB.sorted.bam
+Bin-5.fa	sampleB.sorted.bam
+Bin-6.fa	sampleC.sorted.bam
+Bin-7.fa	sampleC.sorted.bam
+Bin-8.fa	sampleA.sorted.bam	sampleB.sorted.bam
+Bin-9.fa	sampleA.sorted.bam	sampleB.sorted.bam
+Bin-10.fa	sampleA.sorted.bam	sampleC.sorted.bam
+Bin-11.fa	sampleA.sorted.bam	sampleB.sorted.bam	sampleC.sorted.bam

@@ -1,0 +1,84 @@
+>tr|L0R581|L0R581_9DELT Magnetosome protein MamI with additionnal 2 TM helixes OS=Desulfamplus magnetovallimortis OX=1246637 GN=MamI-3 PE=4 SV=1
+----------------------------MNDRTIWFIIGIVFLCLSIVLAVVYNRDKAKPDSPHAM--VAAGLTRIFQIQEWKPGMGKQPLVYHPAAATTPVWRPLPSSLFTAAGG-------------------------------
+>tr|A0A0M9E825|A0A0M9E825_9DELT Magnetosome protein MamI-3 OS=Candidatus Magnetomorum sp. HK-1 OX=1509431 GN=mamL PE=4 SV=1
+-------MGKNAGRDFREGVSMDEKKIALSNQTTWFLLGIVFICIVICVYVVFTHDKVKPDSPQSL--VATAFNQLFTIQEWKPGMGTKPFLYHPAAFNEPAWKPLPPGILNPTDPVPGTQLPSQQWQPLYNSNPNMIRK-------
+>tr|U5IHX6|U5IHX6_9DELT Magnetosome protein MamI-3 OS=delta proteobacterium ML-1 OX=947513 GN=mamI-3 PE=4 SV=1
+SNGEPVDEILLTEGCQTMDEAQEADDDLVSDRMVVFLTIVVMTLVVLMVTLVVKNALKKPPSP-----QAMIAAAIK---EWAPGQGPQPFMYHPAAQTQPQP--QPGNPVGPVTAAMTAGSPAPAWNPLPGAQPNLAAGQIPGGSG
+>tr|M1RA63|M1RA63_9BACT Magnetosome protein MamI-3 OS=bacterium FH-1 OX=1297054 PE=4 SV=1
+------MSGWLRLLTRERCVMPKRMFAFITDSNVYVWILGVFAVLVLIVVVVLSNAKKKPQSPQALVAAALTLPIVAPGLEWKPGMGPQPLIYHPAALTQPSWQP-LPGQTSTVREQPAAPFREQGWQPLPGGAAGLAAGNQGIRAY
+>tr|L0R5A2|L0R5A2_9DELT Putative membrane protein, magnetosome protein MamI. Homolog to mamI of MV-1 OS=Desulfamplus magnetovallimortis OX=1246637 GN=mamI-5 PE=4 SV=1
+---------------------------------MTTIFQIMIGIIL----------------------LALGVYGIL---VHWWALVDLASVVIPVCL-------VFFGVLSVLTGISTIRENRQE---------------------
+>tr|L0R543|L0R543_9DELT Magnetosome protein MamI. Homology with gene DMR_41140 of RS-1 OS=Desulfamplus magnetovallimortis OX=1246637 GN=mamI-2 PE=4 SV=1
+IRKAHVIGGVVVFSTGLFLAYLNSAMVVEFIKGIIQPITILLGLTALMSALLGKKKYRTINSIVAGLLLVIGAYGIY---DEYYAVLDFFYGFLPLFL-------VSSGVISVTYGITRLKER------------------------
+>tr|G8IQU6|G8IQU6_9DELT Magnetosome protein OS=Desulfamplus magnetovallimortis BW-1 OX=1073250 GN=mamI PE=4 SV=1
+IRKAHVIGGVVVFSTGLFLAYLNSAMVVEFIKGIIQPITILLGLTALMSALLGKKKYRTINSIVAGLLLVIGAYGIY---DEYYAVLDFFYGFLPLFL-------VSSGVISVTYGITRLKER------------------------
+>tr|A0A0N0D744|A0A0N0D744_9DELT Magnetosome protein MamI-2 OS=Candidatus Magnetomorum sp. HK-1 OX=1509431 GN=MHK_000733 PE=4 SV=1
+MRKEHIIGGLVTFGIGLFLAYAYSVYVVEFIKGAIQPVTIILGLLALAAAIFHNNAFRKINYGVAAIFLIVGFYGLY---DEYYAVMDLLYGIFPIAL-------FAGGITAVVHGIQSVK--------------------------
+>tr|U5IIN8|U5IIN8_9DELT Magnetosome protein MamI-2 OS=delta proteobacterium ML-1 OX=947513 GN=mamI-2 PE=4 SV=1
+MRYHHILGGALAFGVGLFLAYLWSPMVVMTLKGVIQLGITVVGLLALLSVVFDKTRHKIINLTVAVALLSVSAYGAFTGSDEYIALVDLIFGAGPIFL-------VVFGLVAVVHGIRRMT--------------------------
+>tr|M1RA55|M1RA55_9BACT Magnetosome protein MamI-2 OS=bacterium FH-1 OX=1297054 PE=4 SV=1
+MRFGHLLSGLAVFGLGLFFTYYYSPLVVGVFKGSLQPIMIIIGMLALLSVVFDKTRYKKINLLVAVVMLAVGGYGWY---DEYIATMDFLYGVLPIAL-------VLFGVISVAHGVRTLK--------------------------
+>tr|K7YKW5|K7YKW5_9GAMM Magnetosome protein OS=gamma proteobacterium SS-5 OX=947516 GN=mamI PE=4 SV=1
+------------------------------------MAQIILGLLA----------------------VTLGLWGLS---AWWFSVEELLRGLLPILL-------ILFGAAALMAGVSRPSPAERERSDQELVDQMRERD-------
+>tr|A0A1S7LF82|A0A1S7LF82_9BACT Magnetosome protein MamI OS=magneto-ovoid bacterium MO-1 OX=451514 GN=mamI PE=4 SV=1
+------------------------------------MPSIIFGLIA----------------------ISLGLWGLS---AWWWSVVEFLRGFVPIGL-------VFLGFIALGAGVTRLREVEEQIVDSEPAVAEPVQESTRE---
+>tr|W0LJC2|W0LJC2_9PROT Putative Magnetosome protein MamI OS=Magnetofaba australis IT-1 OX=1434232 GN=mamI PE=4 SV=1
+------------------------------------MPSIIFGLIA----------------------ISLGLWGLS---VWWWSVVELLRGLTPLFL-------IGLGFVALGAGVTRLRAHEAAPESMDADIGLREDASSKAGDV
+>tr|A0A191UMT7|A0A191UMT7_9BACT Magnetosome protein MamI OS=uncultured bacterium OX=77133 PE=4 SV=1
+-----------------------------------------MGWWH----------------------LRWVYGALS---VWWWSXVEILRGIVPIGL-------ILLGLVALGAGVTKMRDKEHDDSADYNGPGEL-QDEAISLDK
+>tr|A0A191UMU6|A0A191UMU6_9BACT Magnetosome protein MamI OS=uncultured bacterium OX=77133 PE=4 SV=1
+-------------------------------------------MVA----------------------LRWVCWGVS---VWWWSIVELLRGLVPIVL-------ILLGLVALGAGVTRMREKGSS----YSEPEEL-QDDIVSVEE
+>tr|A0A191UMU4|A0A191UMU4_9BACT Magnetosome protein MamI OS=uncultured bacterium OX=77133 PE=4 SV=1
+------------------------------------MANIIFGLIS----------------------LALGLWGVS---VWWWSIVEVLRGVVPVLL-------ILLGFVALGAGVTRMR------------DQNIVPNDSDELSE
+>tr|A0A191UMT8|A0A191UMT8_9BACT Magnetosome protein MamI OS=uncultured bacterium OX=77133 PE=4 SV=1
+------------------------------------MANIIFGLVA----------------------LALGLWGVS---VWWWSIVEILRGIVPXAL-------ILLGLVALGAGVTRMRERRFR---------------------
+>tr|A0A191UMT6|A0A191UMT6_9BACT Magnetosome protein MamI OS=uncultured bacterium OX=77133 PE=4 SV=1
+------------------------------------MANIIFGLVA----------------------LALGLWGVS---VWWWSIVEILRGIIPIAL-------ILLGLVALGAGVTKXRDXEHDDGADYNGPGEL-QDDAISLEK
+>tr|W6K7B3|W6K7B3_9PROT Magnetosome protein MamI OS=Magnetospira sp. QH-2 OX=1288970 GN=mamI PE=4 SV=1
+------------------------------------MPSIITGLLA----------------------LALGLWSLT---IWWWSVVEFLRGFVPLAL-------IVLGLVALAAGVSAVRQAKDVNDEDLLGVED-----------
+>tr|A0A0U5FST6|A0A0U5FST6_9PROT Magnetosome protein MamI OS=Magnetospirillum sp. XM-1 OX=1663591 GN=mamI PE=4 SV=1
+------------------------------------MPSVIFGLLA----------------------LALGLLGVT---AWWWSVTEFLRGAVPVAL-------LILGLVALASGVQSVRLP----------RSNKGTASDPDIDG
+>tr|A0A0C2UG22|A0A0C2UG22_MAGMG Magnetosome protein MamI OS=Magnetospirillum magnetotacticum MS-1 OX=272627 GN=CCC_02522 PE=4 SV=1
+------------------------------------MPSVIFGLLA----------------------LALGLLGVT---AWWWSVTEFLRGAVPVAL-------LILGLVALASGVQSVRLP----------RSNKGTASDPDIDG
+>tr|Q6NE62|Q6NE62_9PROT Magnetosome protein MamI OS=Magnetospirillum gryphiswaldense OX=55518 GN=mamI PE=4 SV=1
+----------------------------MYQDWRTFMPSVIFGLLA----------------------LAIGLLGLT---AWWWSVTEFLRGAVPVAL-------IIFGLVALAAGVQSVRVP----------PAGKRANSDPNIDG
+>tr|V6F240|V6F240_9PROT Magnetosome protein MamI OS=Magnetospirillum gryphiswaldense MSR-1 v2 OX=1430440 GN=mamI PE=4 SV=1
+------------------------------------MPSVIFGLLA----------------------LAIGLLGLT---AWWWSVTEFLRGAVPVAL-------IIFGLVALAAGVQSVRVP----------PAGKRANSDPNIDG
+>tr|C5JAJ1|C5JAJ1_9BACT Similar to MamI protein (Magnetosome protein MamI) OS=uncultured bacterium OX=77133 GN=mamI PE=4 SV=1
+------------------------------------MPVIIFGLLA----------------------ISFGLWGMT---VWWWSVAEFLRGVTPIVL-------LVIGLMALASGVSKVRDEKNVKDEDILGDKE-----------
+>tr|C4RAH4|C4RAH4_9PROT Magnetosome protein MamI OS=Magnetovibrio blakemorei OX=28181 GN=mamI PE=4 SV=1
+------------------------------------MNVVIFGLLA----------------------ISLGLWGMS---VWWWSVAELLRGLIPIIL-------VFLGVVSLAAGVSKMRQE------NGPKDEDLIEDEG-----
+>tr|A0A221SKU2|A0A221SKU2_9VIBR MamI OS=Vibrio sp. MV-1 OX=632142 GN=mamI PE=4 SV=1
+------------------------------------MNVVIFGLLA----------------------ISLGLWGMS---VWWWSVAELLRGLIPIIL-------VFLGVVSLAAGVSKMRQE------NGPKDEDLIEDEG-----
+>tr|A0A1C3RFV9|A0A1C3RFV9_9RHIZ Magnetosome protein MamI OS=Candidatus Terasakiella magnetica OX=1867952 GN=mamI PE=4 SV=1
+------------------------------------MPVVIFGLVA----------------------ISLGLWGMA---AWWWSVTELMRGLMPIIL-------VTLGIVAVAAGLSKVRD-----------DQSIKDEDLLDGEG
+>tr|L0R496|L0R496_9DELT Putative membrane protein, magnetosome protein MamI OS=Desulfamplus magnetovallimortis OX=1246637 GN=mamI-4 PE=4 SV=1
+------------------------------------MKHIIVGLVA----------------------ITLGIWGIV---LNWYQFLDLLWVLVPMAA-------VICGVIALLAGISNFSKSSDT--DAGRSVEERLAEESFNE--
+>tr|K7Y7I8|K7Y7I8_9DELT Magnetosome protein OS=Desulfamplus magnetovallimortis BW-1 OX=1073250 GN=mamI-4 PE=4 SV=1
+------------------------------------MKHIIVGLVA----------------------ITLGIWGIV---LNWYQFLDLLWVLVPMAA-------VICGVIALLAGISNFSKSSDT--DAGRSVEERLAEESFNE--
+>tr|A0A0M9EAQ5|A0A0M9EAQ5_9DELT Magnetosome protein MamI-4, greigite-specific OS=Candidatus Magnetomorum sp. HK-1 OX=1509431 GN=MHK_001787 PE=4 SV=1
+------------------------------------MKHIIIGLIA----------------------ITLGLWGIV---VNWYQFVDLLWVLIPMLV-------LIGGIVALLAGISNFSESPSKKVNVAKGMEASIETAE-----
+>tr|A0A142BTX4|A0A142BTX4_9BACT Magnetosome protein MamI OS=uncultured Nitrospirae bacterium OX=170969 PE=4 SV=1
+------------------------------------MLSIVFGLIA----------------------ICLGLWGLS---NYWWYIVDVFVGILPLFL-------IFGGFIAVLAGIRNTGLTAKMKDSNVNKTDDHETNETNT---
+>tr|A0A088F8Q3|A0A088F8Q3_9BACT Magnetosome protein MamI OS=Candidatus Magnetobacterium casensis OX=1455061 GN=Mcas_0721 PE=4 SV=1
+------------------------------------MLSIVFGLIA----------------------ICLGLWGLS---NYWWYIVDVFVGILPLFL-------IFGGFIAVLAGIRNTGLTAKMKDNNVNKTEAHEADEADETNT
+>tr|A0A142BU18|A0A142BU18_9BACT Magnetosome protein MamI OS=uncultured Nitrospirae bacterium OX=170969 PE=4 SV=1
+------------------------------------MLSIVFGLIA----------------------ICLGLWGLS---NYWWYIVDVFVGILPLFL-------IFGGFIAVLAGIRNTGLTAKMKDNNVNKTEAHEADEADETNT
+>tr|A0A0F3GLG6|A0A0F3GLG6_9BACT Magnetosome protein MamI OS=Candidatus Magnetobacterium bavaricum OX=29290 GN=MBAV_002967 PE=4 SV=1
+------------------------------------MLSIVFGLIA----------------------ICLGLWGLS---NYWWYIVDVFVGILPLFL-------IFGGFIAVLAGIRNTGLTAKMKDSNVNKTEARQADEADEVGT
+>tr|A0A142BU54|A0A142BU54_9BACT Magnetosome protein MamI OS=uncultured Nitrospirae bacterium OX=170969 PE=4 SV=1
+------------------------------------MLSIVFGLIA----------------------ICLGLWGLS---NYWWYIVDVFVGILPLFL-------IFGGFIAVLAGIRNTGLTAKMKDNNVNKTEARQADEADEVGT
+>tr|A0A109CX48|A0A109CX48_9BACT Magnetosome protein MamI OS=Nitrospirae bacterium HCH-1 OX=1748249 GN=mamI PE=4 SV=1
+------------------------------------MLSIVFGLIA----------------------MCLGLWGMV---TYWWYVVDVFLAVLPVAL-------LFGGFVALVAGIRNTGLKAKVKNFNGKMPQDETASERDR---
+>tr|A0A142BTV5|A0A142BTV5_9BACT Magnetosome protein MamI OS=uncultured Nitrospirae bacterium OX=170969 PE=4 SV=1
+------------------------------------MSSIVFGLIA----------------------MCIGLWGMV---AYWWYVVDVFLAILPVIL-------LFGGFIALMAGIKKTGIRTKL----TNGSKKTVEDDTITEKR
+>tr|U5IHX0|U5IHX0_9DELT Magnetosome protein MamI-1 OS=delta proteobacterium ML-1 OX=947513 GN=mamI-1 PE=4 SV=1
+---------------------------------------------M----------------------VALGVWGLF---EEYYFVIDFLKGFGPIVL-------IAGGLLATLAGCV---------------PPKSEEGEAHGEN-
+>tr|K7Y7H0|K7Y7H0_9DELT Magnetosome protein OS=delta proteobacterium ML-1 OX=947513 GN=mamI PE=4 SV=1
+-------------MFFENCSKTFYLNDFSAVDKEYAVAHIFVGLFM----------------------VALGVWGLF---EEYYFVIDFLKGFGPIVL-------IAGGLLATLAGCV---------------PPKSEEGEAHGEN-
+>tr|M1RGA4|M1RGA4_9BACT Magnetosome protein MamI-1 OS=bacterium FH-1 OX=1297054 PE=4 SV=1
+------------------------------------MTPIVLGLLC----------------------IALGLWGIY---DMYYYVMDVVKGGLPLLC-------MIGGLLAALAGCV---------------PQKSVSDDEEDVHG
+>tr|L0R3U9|L0R3U9_9DELT Magnetosome protein MamI OS=Desulfamplus magnetovallimortis OX=1246637 GN=mamI-1 PE=4 SV=1
+------------------------------------MLHIIVGLFF----------------------IASGIWGIY---DEYYYVADLVKGGLPILL-------MLAGLVATLAGFI---------------PPKKNEEFENGQG-
+>tr|A0A0N0D743|A0A0N0D743_9DELT Magnetosome protein MamI-1 OS=Candidatus Magnetomorum sp. HK-1 OX=1509431 GN=MHK_000730 PE=4 SV=1
+------------------------------------MLHIITGLFL----------------------IALGIWGGY---DMYYYVADIVKGGFPIVL-------ILFGLLATLAGFI---------------PPEK-REEC-----
