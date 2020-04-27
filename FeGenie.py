@@ -744,6 +744,7 @@ def main():
 
                             if args.orfs:
                                 os.system(
+
                                     "hmmsearch --cpu %d -T %d --tblout %s/%s-HMM/%s.tblout -o %s/%s-HMM/%s.txt %s/%s %s/%s"
                                     % (int(args.t), float(bit), outDirectory, i, hmm, outDirectory, i, hmm, hmmDir, hmm, binDir, i)
                                 )
@@ -898,9 +899,8 @@ def main():
         if lastItem(i.split(".")) == args.bin_ext:
             if args.orfs:
                 os.system(
-                    "makeblastdb -dbtype prot -in %s/%s -out %s/%s -logfile %s/makedbfile.txt" % (
-                        binDir, i, binDir, i, binDir))
-                os.system("rm %s/makedbfile.txt" % binDir)
+                    "makeblastdb -dbtype prot -in %s/%s -out %s/%s -logfile /dev/null" % (
+                        binDir, i, binDir, i))
 
                 os.system(
                     "blastp -query %s -db %s/%s -num_threads %s -outfmt 6 -out %s/%s-thermincola.blast -evalue 1E-10"
@@ -915,6 +915,7 @@ def main():
 
             else:
                 os.system(
+
                     "makeblastdb -dbtype prot -in %s/ORF_calls/%s-proteins.faa -out %s/ORF_calls/%s-proteins.faa -logfile %s/makedbfile.txt" % (
                         outDirectory, i, outDirectory, i, outDirectory))
                 os.system("rm %s/makedbfile.txt" % outDirectory)
