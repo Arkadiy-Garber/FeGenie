@@ -1411,10 +1411,12 @@ def main():
                     memoryDict[dataset][orf]["cutoff"] = ls[5]
                     memoryDict[dataset][orf]["clu"] = clu
                     memoryDict[dataset][orf]["heme"] = ls[7]
-                    memoryDict[dataset][orf]["seq"] = ls[10]
+                    memoryDict[dataset][orf]["seq"] = ls[8]
                     if args.ref != "NA":
                         memoryDict[dataset][orf]["blastHit"] = ls[8]
                         memoryDict[dataset][orf]["blastEval"] = ls[9]
+                        memoryDict[dataset][orf]["seq"] = ls[10]
+
                 else:
                     cat = ls[0]
                     dataset = ls[1]
@@ -1427,10 +1429,11 @@ def main():
                     memoryDict[dataset][orf]["cutoff"] = "evalue-cutoff: 1E-10"
                     memoryDict[dataset][orf]["clu"] = ls[6]
                     memoryDict[dataset][orf]["heme"] = ls[7]
-                    memoryDict[dataset][orf]["seq"] = ls[10]
+                    memoryDict[dataset][orf]["seq"] = ls[8]
                     if args.ref != "NA":
                         memoryDict[dataset][orf]["blastHit"] = ls[8]
                         memoryDict[dataset][orf]["blastEval"] = ls[9]
+                        memoryDict[dataset][orf]["seq"] = ls[10]
 
                     geneToCatDict[hmm] = cat
                     clusterDict[ls[7]].append(hmm + "|" + dataset + "|" + orf)
