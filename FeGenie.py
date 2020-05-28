@@ -833,6 +833,7 @@ def main():
                             SummaryDict[cell][orf]["category"] = category
 
     # ****************************** CLUSTERING OF ORFS BASED ON GENOMIC PROXIMITY *************************************
+    # if not args.orfs:
     print("Identifying genomic proximities and putative operons")
     CoordDict = defaultdict(lambda: defaultdict(list))
     for i in SummaryDict.keys():
@@ -855,8 +856,6 @@ def main():
                 if len(RemoveDuplicates(k)) == 1:
                     orf = j + "_" + str(k[0])
 
-
-
                     out.write(SummaryDict[i][orf]["category"] + "," + i + "," + orf + "," + SummaryDict[i][orf]["hmm"] +
                               "," + str(SummaryDict[i][orf]["hmmBit"]) + "," + str(counter) + "\n")
 
@@ -874,6 +873,21 @@ def main():
                         "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
                     counter += 1
     out.close()
+
+    # else:
+    #     counter = 0
+    #     for i in SummaryDict.keys():
+    #         if i != "category":
+    #             for j in SummaryDict[i]:
+    #
+    #                 out.write(SummaryDict[i][j]["category"] + "," + i + "," + j + "," + SummaryDict[i][j][
+    #                     "hmm"] + "," + str(SummaryDict[i][j]["hmmBit"]) + "," + str(counter) + "\n")
+    #
+    #                 out.write(
+    #                     "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+    #
+    #                 counter += 1
+
 
     # ************************** BLAST-BASED METHODS/LOOKING FOR UNMODELED MARKERS ********************************
     thermincola = "%s/iron_reduction/non-aligned/TherJR_SLCs.faa" % HMMdir
@@ -1061,315 +1075,342 @@ def main():
     out.close()
 
     # ****************************** FILTERING OUT LIKELY FALSE POSITIVES *************************************
-    print("Pre-processing of final outout file")
-    # fleet = ["EetA.hmm", "EetB.hmm", "Ndh2.hmm", "FmnB.hmm", "FmnA.hmm", "DmkA.hmm", "DmkB.hmm", "PplA.hmm"]
-    # mam = ["MamA.hmm", "MamB.hmm", "MamE.hmm", "MamK.hmm", "MamP.hmm", "MamM.hmm", "MamP.hmm", "MamQ.hmm", "MamI.hmm",
-    #        "MamL.hmm", "MamO.hmm"]
-    # foxabc = ["FoxA.hmm", "FoxB.hmm", "FoxC.hmm"]
-    # foxeyz = ["FoxE.hmm", "FoxY.hmm", "FoxZ.hmm"]
 
-    clusterDict = defaultdict(lambda: defaultdict(list))
-    summary = open("%s/FinalSummary-dereplicated-clustered-blast.csv" % outDirectory, "r")
-    for i in summary:
-        if not re.match(r'#', i):
-            ls = i.rstrip().split(",")
-            clusterDict[ls[5]]["line"].append(ls)
-            clusterDict[ls[5]]["gene"].append(ls[3])
-            clusterDict[ls[5]]["category"].append(ls[0])
+    if not args.all_results:
 
-    out = open("%s/FinalSummary-dereplicated-clustered-blast-filtered.csv" % outDirectory, "w")
-    for i in (clusterDict.keys()):
-        ls = (clusterDict[i]["gene"])
-        if "EetA.hmm" in ls or "EetB.hmm" in ls or "Ndh2.hmm" in ls or "FmnB.hmm" in ls or "FmnA.hmm" in ls or "DmkA.hmm" in ls or "DmkB.hmm" in ls or "PplA.hmm" in ls:
-            fleet = ["EetA.hmm", "EetB.hmm", "Ndh2.hmm", "FmnB.hmm", "FmnA.hmm", "DmkA.hmm", "DmkB.hmm", "PplA.hmm"]
+        print("Pre-processing of final outout file")
+        # fleet = ["EetA.hmm", "EetB.hmm", "Ndh2.hmm", "FmnB.hmm", "FmnA.hmm", "DmkA.hmm", "DmkB.hmm", "PplA.hmm"]
+        # mam = ["MamA.hmm", "MamB.hmm", "MamE.hmm", "MamK.hmm", "MamP.hmm", "MamM.hmm", "MamP.hmm", "MamQ.hmm", "MamI.hmm",
+        #        "MamL.hmm", "MamO.hmm"]
+        # foxabc = ["FoxA.hmm", "FoxB.hmm", "FoxC.hmm"]
+        # foxeyz = ["FoxE.hmm", "FoxY.hmm", "FoxZ.hmm"]
 
-            if unique(ls, fleet) < 5:  # If there are less than 5 FLEET genes in the cluster
-                if len(remove2(ls, fleet)) < 1:  # If FLEET genes are the only ones in the cluster
-                    pass
-                else:  # If there are other genes in the cluster that are not FLEET
-                    for j in clusterDict[i]["line"]:
-                        if j[3] not in fleet:  # avoiding the fleet genes
-                            out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
-
-                    out.write(
-                        "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
-
-            else:  # if there are 5 or more of the FLEET genes present within cluster
-                for j in clusterDict[i]["line"]:
-                    out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
-
-                out.write(
-                    "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
-
-        elif "MamA.hmm" in ls or "MamB.hmm" in ls or "MamE.hmm" in ls or "MamK.hmm" in ls or "MamM.hmm" in ls or "MamO.hmm" \
-                in ls or "MamP.hmm" in ls or "MamQ.hmm" in ls or "MamI.hmm" in ls or "MamL.hmm" in ls:
-            mam = ["MamA.hmm", "MamB.hmm", "MamE.hmm", "MamK.hmm", "MamP.hmm", "MamM.hmm", "MamP.hmm", "MamQ.hmm",
-                   "MamI.hmm", "MamL.hmm", "MamO.hmm"]
-            if unique(ls, mam) < 5:
-                if len(remove2(ls, mam)) < 1:
-                    pass
-                else:
-                    for j in clusterDict[i]["line"]:
-                        if j[3] not in mam:
-                            out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
-
-                    out.write(
-                        "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
-
-            else:
-                for j in clusterDict[i]["line"]:
-                    out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
-
-                out.write(
-                    "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
-
-        elif "MtoA.hmm" in ls or "MtrA.hmm" in ls or "MtrC_TIGR03507.hmm" in ls or "MtrB_TIGR03509.hmm" in ls:
-            if "MtoA.hmm" in ls and "MtrB_TIGR03509.hmm" in ls and "MtrC_TIGR03507.hmm" not in ls:
-                for j in clusterDict[i]["line"]:
-                    if j[3] in ["MtrB_TIGR03509.hmm", "MtoA.hmm", "CymA.hmm"]:
-                        out.write(
-                            "iron_oxidation" + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
-
-                    else:
-                        out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
-
-                out.write(
-                    "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
-
-            if "MtrA.hmm" in ls and "MtrB_TIGR03509.hmm" in ls:
-                for j in clusterDict[i]["line"]:
-                    if j[3] in ["MtrA.hmm", "MtrB_TIGR03509.hmm"]:
-                        out.write(
-                            "iron_reduction" + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
-
-                    else:
-                        out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
-
-                out.write(
-                    "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
-
-            elif "MtrB_TIGR03509.hmm" not in ls:
-                pass
-
-        elif "FoxA.hmm" in ls or "FoxB.hmm" in ls or "FoxC.hmm" in ls:
-            foxabc = ["FoxA.hmm", "FoxB.hmm", "FoxC.hmm"]
-            if unique(ls, foxabc) < 2:
-                if len(remove2(ls, foxabc)) < 1:
-                    pass
-
-                else:
-                    for j in clusterDict[i]["line"]:
-                        if j[3] not in foxabc:
-                            out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
-
-                    out.write(
-                        "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
-            else:
-
-                for j in clusterDict[i]["line"]:
-                    out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
-
-                out.write(
-                    "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
-
-        elif "FoxE.hmm" in ls or "FoxY.hmm" in ls or "FoxZ.hmm" in ls:
-            foxeyz = ["FoxE.hmm", "FoxY.hmm", "FoxZ.hmm"]
-            if "FoxE.hmm" not in ls:
-                if len(remove2(ls, foxeyz)) < 1:
-                    pass
-
-                else:
-                    for j in clusterDict[i]["line"]:
-                        if j[3] not in foxeyz:
-                            out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
-                    out.write(
-                        "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
-            else:
-                for j in clusterDict[i]["line"]:
-                    out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
-
-                out.write(
-                    "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
-
-        elif "DFE_0448.hmm" in ls or "DFE_0449.hmm" in ls or "DFE_0450.hmm" in ls or "DFE_0451.hmm" in ls:
-            DFE1 = ["DFE_0448.hmm", "DFE_0449.hmm", "DFE_0450.hmm", "DFE_0451.hmm"]
-
-            if unique(ls, DFE1) < 3:
-                if len(remove2(ls, DFE1)) < 1:
-                    pass
-
-                else:
-                    for j in clusterDict[i]["line"]:
-                        if j[3] not in DFE1:
-                            out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
-
-                    out.write(
-                        "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
-            else:
-
-                for j in clusterDict[i]["line"]:
-                    out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
-
-                out.write(
-                    "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
-
-        elif "DFE_0461.hmm" in ls or "DFE_0462.hmm" in ls or "DFE_0463.hmm" in ls or "DFE_0464.hmm" in ls or "DFE_0465.hmm" in ls:
-            DFE2 = ["DFE_0461.hmm", "DFE_0462.hmm", "DFE_0463.hmm", "DFE_0464.hmm", "DFE_0465"]
-
-            if unique(ls, DFE2) < 3:
-                if len(remove2(ls, DFE2)) < 1:
-                    pass
-
-                else:
-                    for j in clusterDict[i]["line"]:
-                        if j[3] not in DFE2:
-                            out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
-
-                    out.write(
-                        "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
-            else:
-
-                for j in clusterDict[i]["line"]:
-                    out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
-
-                out.write(
-                    "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
-
-        elif "Cyc1.hmm" in ls:
-            if "Cyc2_repCluster3.hmm" not in ls and "Cyc2_repCluster2.hmm" not in ls and "Cyc2_repCluster1.hmm" not in ls:
-                pass
-
-            else:
-                for j in clusterDict[i]["line"]:
-                    out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
-
-                out.write(
-                    "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
-
-        elif "CymA.hmm" in ls:
-            if "MtrB_TIGR03509.hmm" not in ls and "MtrA.hmm" not in ls and "MtoA.hmm" not in ls and "MtrC_TIGR03507.hmm" not in ls:
-                pass
-
-        elif "iron_aquisition-siderophore_synthesis" in clusterDict[i]["category"] or \
-                        "iron_aquisition-siderophore_transport" in clusterDict[i]["category"] or \
-                        "iron_aquisition-iron_transport" in clusterDict[i][
-                    "category"] or "iron_aquisition-heme_transport" in clusterDict[i]["category"]:
-
-            if len(Unique(ls)) > 1:
-                for j in clusterDict[i]["line"]:
-                    out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
-
-                out.write(
-                    "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
-
-            else:
-                if "FutA1-iron_ABC_transporter_iron-binding-rep.hmm" in ls or "FutA2-iron_ABC_transporter_iron-binding-rep.hmm" in ls \
-                        or "FutC-iron_ABC_transporter_ATPase-rep.hmm" in ls or "LbtU-LvtA-PiuA-PirA-RhtA.hmm" in ls or "LbtU-LbtB-legiobactin_receptor.hmm" in ls \
-                        or "LbtU_LbtB-legiobactin_receptor_2.hmm" in ls or "IroC-salmochelin_transport-rep.hmm" in ls or "LbtU-LbtB-legiobactin_receptor.hmm" in ls:
-                    for j in clusterDict[i]["line"]:
-                        out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
-
-                    out.write(
-                        "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
-
-                else:
-                    pass
-
-        else:
-            linels = (clusterDict[i]["line"])
-            for j in linels:
-                out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
-
-            out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
-
-    out.close()
-
-    # REMOVING FILES
-    os.system("rm %s/GeoThermin.csv" % outDirectory)
-    os.system("rm %s/*summary*" % outDirectory)
-    os.system("rm %s/FinalSummary-dereplicated-clustered-blast.csv" % outDirectory)
-    os.system("rm %s/*blast" % outDirectory)
-    os.system("rm %s/FinalSummary.csv" % outDirectory)
-    os.system("rm %s/FinalSummary-dereplicated-clustered.csv" % outDirectory)
-    os.system("mv %s/FinalSummary-dereplicated-clustered-blast-filtered.csv %s/FeGenie-summary.csv" % (outDirectory, outDirectory))
-
-    # OPTIONAL CROSS-VALIDATION AGAINST REFERENCE DATABASE
-    if args.ref != "NA":
-        print("")
-        print("Performing Diamond BLASTx search of putative iron genes against reference database")
-        summary = open("%s/FeGenie-summary.csv" % outDirectory, "r")
-        out = open("%s/FeGenie-summary.fasta" % outDirectory, "w")
+        clusterDict = defaultdict(lambda: defaultdict(list))
+        summary = open("%s/FinalSummary-dereplicated-clustered-blast.csv" % outDirectory, "r")
         for i in summary:
             if not re.match(r'#', i):
-                ls = (i.rstrip().split(","))
-                seq = (BinDict[ls[1]][ls[2]])
-                header = (">" + ls[1] + "|" + ls[2])
-                out.write(header + "\n")
-                out.write(seq + "\n")
-        out.close()
+                ls = i.rstrip().split(",")
+                clusterDict[ls[5]]["line"].append(ls)
+                clusterDict[ls[5]]["gene"].append(ls[3])
+                clusterDict[ls[5]]["category"].append(ls[0])
 
-        os.system("diamond blastp --db %s.dmnd --out "
-                  "%s/FeGenie-summary.dmndout --max-target-seqs 1 --outfmt 6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore stitle "
-                  "--threads %s --query %s/FeGenie-summary.fasta --quiet" % (args.ref, outDirectory, str(args.t), outDirectory))
+        out = open("%s/FinalSummary-dereplicated-clustered-blast-filtered.csv" % outDirectory, "w")
+        for i in (clusterDict.keys()):
+            ls = (clusterDict[i]["gene"])
+            if "EetA.hmm" in ls or "EetB.hmm" in ls or "Ndh2.hmm" in ls or "FmnB.hmm" in ls or "FmnA.hmm" in ls or "DmkA.hmm" in ls or "DmkB.hmm" in ls or "PplA.hmm" in ls:
+                fleet = ["EetA.hmm", "EetB.hmm", "Ndh2.hmm", "FmnB.hmm", "FmnA.hmm", "DmkA.hmm", "DmkB.hmm", "PplA.hmm"]
 
-        dmndblast = open("%s/FeGenie-summary.dmndout" % outDirectory)
-        dmndblastDict = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 'No_Hits')))
-        for hit in dmndblast:
-            lst = hit.rstrip().split("\t")
-            evalue = lst[10]
-            cell = lst[0].split("|")[0]
-            orf = lst[0].split("|")[1]
-            target = lst[12]
-            target = replace(target, [","], ";")
-            dmndblastDict[cell][orf]["e"] = evalue
-            dmndblastDict[cell][orf]["target"] = target
+                if unique(ls, fleet) < 5:  # If there are less than 5 FLEET genes in the cluster
+                    if len(remove2(ls, fleet)) < 1:  # If FLEET genes are the only ones in the cluster
+                        pass
+                    else:  # If there are other genes in the cluster that are not FLEET
+                        for j in clusterDict[i]["line"]:
+                            if j[3] not in fleet:  # avoiding the fleet genes
+                                out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
 
-    summary = open("%s/FeGenie-summary.csv" % outDirectory, "r")
-    out = open("%s/FeGenie-summary-blasthits.csv" % outDirectory, "w")
-    if args.ref != "NA":
-        out.write(
-            "category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore" + "," + "bitscore_cutoff" + "," + "cluster" + "," + "heme_binding_motifs" + "," + "top_blast_hit" + "," + "blast_hit_evalue" + "," + "protein_sequence" + "\n")
-    else:
-        out.write(
-            "category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore" + "," + "bitscore_cutoff" + "," + "cluster" + "," + "heme_binding_motifs" + "," + "protein_sequence" + "\n")
+                        out.write(
+                            "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
 
-    # SUMMARIZING CROSS-REFERENCE RESULTS AND COUNTING HEME-BINDING MOTIFS
-    print("Counting heme-binding motifs")
-    counter = 1
-    for i in summary:
-        if not re.match(r'#', i):
-            ls = i.rstrip().split(",")
-            seq = BinDict[ls[1]][ls[2]]
-            hemes = len(re.findall(r'C(..)CH', seq)) + len(re.findall(r'C(...)CH', seq)) \
-                    + len(re.findall(r'C(....)CH', seq)) + len(re.findall(r'C(..............)CH', seq)) \
-                    + len(re.findall(r'C(...............)CH', seq))
+                else:  # if there are 5 or more of the FLEET genes present within cluster
+                    for j in clusterDict[i]["line"]:
+                        out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
 
-            if args.ref != "NA":
-                blasthit = dmndblastDict[ls[1]][ls[2]]["target"]
-                e = dmndblastDict[ls[1]][ls[2]]["e"]
-                try:
-                    out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + str(ls[4]) + "," + str(
-                        metaDict[ls[3].split(".")[0]]) + "," + str(counter) + "," + str(
-                        hemes) + "," + blasthit + "," + str(
-                        e) + "," + seq + "\n")
-                except TypeError:
-                    out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + ls[4] + "," + str(counter) + "," + str(
-                            hemes) + "," + blasthit + "," + str(e) + "," + seq + "\n")
+                    out.write(
+                        "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+
+            elif "MamA.hmm" in ls or "MamB.hmm" in ls or "MamE.hmm" in ls or "MamK.hmm" in ls or "MamM.hmm" in ls or "MamO.hmm" \
+                    in ls or "MamP.hmm" in ls or "MamQ.hmm" in ls or "MamI.hmm" in ls or "MamL.hmm" in ls:
+                mam = ["MamA.hmm", "MamB.hmm", "MamE.hmm", "MamK.hmm", "MamP.hmm", "MamM.hmm", "MamP.hmm", "MamQ.hmm",
+                       "MamI.hmm", "MamL.hmm", "MamO.hmm"]
+                if unique(ls, mam) < 5:
+                    if len(remove2(ls, mam)) < 1:
+                        pass
+                    else:
+                        for j in clusterDict[i]["line"]:
+                            if j[3] not in mam:
+                                out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
+
+                        out.write(
+                            "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+
+                else:
+                    for j in clusterDict[i]["line"]:
+                        out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
+
+                    out.write(
+                        "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+
+            elif "MtoA.hmm" in ls or "MtrA.hmm" in ls or "MtrC_TIGR03507.hmm" in ls or "MtrB_TIGR03509.hmm" in ls:
+                if "MtoA.hmm" in ls and "MtrB_TIGR03509.hmm" in ls and "MtrC_TIGR03507.hmm" not in ls:
+                    for j in clusterDict[i]["line"]:
+                        if j[3] in ["MtrB_TIGR03509.hmm", "MtoA.hmm", "CymA.hmm"]:
+                            out.write(
+                                "iron_oxidation" + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
+
+                        else:
+                            out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
+
+                    out.write(
+                        "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+
+                elif "MtrA.hmm" in ls and "MtrB_TIGR03509.hmm" in ls:
+                    for j in clusterDict[i]["line"]:
+                        if j[3] in ["MtrA.hmm", "MtrB_TIGR03509.hmm"]:
+                            out.write(
+                                "iron_reduction" + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
+
+                        else:
+                            out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
+
+                    out.write(
+                        "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+
+                elif "MtrC_TIGR03507.hmm" in ls:
+                    for j in clusterDict[i]["line"]:
+                        if j[3] in ["MtrA.hmm", "MtrB_TIGR03509.hmm"]:
+                            out.write(
+                                "iron_reduction" + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
+
+                        else:
+                            out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
+
+                    out.write(
+                        "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+
+
+                # elif "MtrB_TIGR03509.hmm" not in ls:
+                #     pass
+
+            elif "FoxA.hmm" in ls or "FoxB.hmm" in ls or "FoxC.hmm" in ls:
+                foxabc = ["FoxA.hmm", "FoxB.hmm", "FoxC.hmm"]
+                if unique(ls, foxabc) < 2:
+                    if len(remove2(ls, foxabc)) < 1:
+                        pass
+
+                    else:
+                        for j in clusterDict[i]["line"]:
+                            if j[3] not in foxabc:
+                                out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
+
+                        out.write(
+                            "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+                else:
+
+                    for j in clusterDict[i]["line"]:
+                        out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
+
+                    out.write(
+                        "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+
+            elif "FoxE.hmm" in ls or "FoxY.hmm" in ls or "FoxZ.hmm" in ls:
+                foxeyz = ["FoxE.hmm", "FoxY.hmm", "FoxZ.hmm"]
+                if "FoxE.hmm" not in ls:
+                    if len(remove2(ls, foxeyz)) < 1:
+                        pass
+
+                    else:
+                        for j in clusterDict[i]["line"]:
+                            if j[3] not in foxeyz:
+                                out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
+                        out.write(
+                            "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+                else:
+                    for j in clusterDict[i]["line"]:
+                        out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
+
+                    out.write(
+                        "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+
+            elif "DFE_0448.hmm" in ls or "DFE_0449.hmm" in ls or "DFE_0450.hmm" in ls or "DFE_0451.hmm" in ls:
+                DFE1 = ["DFE_0448.hmm", "DFE_0449.hmm", "DFE_0450.hmm", "DFE_0451.hmm"]
+
+                if unique(ls, DFE1) < 3:
+                    if len(remove2(ls, DFE1)) < 1:
+                        pass
+
+                    else:
+                        for j in clusterDict[i]["line"]:
+                            if j[3] not in DFE1:
+                                out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
+
+                        out.write(
+                            "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+                else:
+
+                    for j in clusterDict[i]["line"]:
+                        out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
+
+                    out.write(
+                        "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+
+            elif "DFE_0461.hmm" in ls or "DFE_0462.hmm" in ls or "DFE_0463.hmm" in ls or "DFE_0464.hmm" in ls or "DFE_0465.hmm" in ls:
+                DFE2 = ["DFE_0461.hmm", "DFE_0462.hmm", "DFE_0463.hmm", "DFE_0464.hmm", "DFE_0465"]
+
+                if unique(ls, DFE2) < 3:
+                    if len(remove2(ls, DFE2)) < 1:
+                        pass
+
+                    else:
+                        for j in clusterDict[i]["line"]:
+                            if j[3] not in DFE2:
+                                out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
+
+                        out.write(
+                            "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+                else:
+
+                    for j in clusterDict[i]["line"]:
+                        out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
+
+                    out.write(
+                        "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+
+            elif "Cyc1.hmm" in ls:
+                if "Cyc2_repCluster3.hmm" not in ls and "Cyc2_repCluster2.hmm" not in ls and "Cyc2_repCluster1.hmm" not in ls:
+                    pass
+
+                else:
+                    for j in clusterDict[i]["line"]:
+                        out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
+
+                    out.write(
+                        "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+
+            elif "CymA.hmm" in ls:
+                if "MtrB_TIGR03509.hmm" not in ls and "MtrA.hmm" not in ls and "MtoA.hmm" not in ls and "MtrC_TIGR03507.hmm" not in ls:
+                    pass
+
+            elif "iron_aquisition-siderophore_synthesis" in clusterDict[i]["category"] or \
+                            "iron_aquisition-siderophore_transport" in clusterDict[i]["category"] or \
+                            "iron_aquisition-iron_transport" in clusterDict[i][
+                        "category"] or "iron_aquisition-heme_transport" in clusterDict[i]["category"]:
+
+                if len(Unique(ls)) > 1:
+                    for j in clusterDict[i]["line"]:
+                        out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
+
+                    out.write(
+                        "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+
+                else:
+                    if "FutA1-iron_ABC_transporter_iron-binding-rep.hmm" in ls or "FutA2-iron_ABC_transporter_iron-binding-rep.hmm" in ls \
+                            or "FutC-iron_ABC_transporter_ATPase-rep.hmm" in ls or "LbtU-LvtA-PiuA-PirA-RhtA.hmm" in ls or "LbtU-LbtB-legiobactin_receptor.hmm" in ls \
+                            or "LbtU_LbtB-legiobactin_receptor_2.hmm" in ls or "IroC-salmochelin_transport-rep.hmm" in ls or "LbtU-LbtB-legiobactin_receptor.hmm" in ls:
+                        for j in clusterDict[i]["line"]:
+                            out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
+
+                        out.write(
+                            "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+
+                    else:
+                        pass
 
             else:
-                try:
-                    out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + str(ls[4]) + "," + str(
-                        metaDict[ls[3].split(".")[0]]) + "," + str(counter) + "," + str(hemes) + "," + seq + "\n")
+                linels = (clusterDict[i]["line"])
+                for j in linels:
+                    out.write(j[0] + "," + j[1] + "," + j[2] + "," + j[3] + "," + j[4] + "," + j[5] + "\n")
 
-                except TypeError:
-                    out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + ls[4] + "," + str(counter) + "," + str(
-                            hemes) + "," + seq + "\n")
+                out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
 
+        out.close()
+
+        # REMOVING FILES
+        os.system("rm %s/GeoThermin.csv" % outDirectory)
+        os.system("rm %s/*summary*" % outDirectory)
+        os.system("rm %s/FinalSummary-dereplicated-clustered-blast.csv" % outDirectory)
+        os.system("rm %s/*blast" % outDirectory)
+        os.system("rm %s/FinalSummary.csv" % outDirectory)
+        os.system("rm %s/FinalSummary-dereplicated-clustered.csv" % outDirectory)
+        os.system("mv %s/FinalSummary-dereplicated-clustered-blast-filtered.csv %s/FeGenie-summary.csv" % (outDirectory, outDirectory))
+
+        # OPTIONAL CROSS-VALIDATION AGAINST REFERENCE DATABASE
+        if args.ref != "NA":
+            print("")
+            print("Performing Diamond BLASTx search of putative iron genes against reference database")
+            summary = open("%s/FeGenie-summary.csv" % outDirectory, "r")
+            out = open("%s/FeGenie-summary.fasta" % outDirectory, "w")
+            for i in summary:
+                if not re.match(r'#', i):
+                    ls = (i.rstrip().split(","))
+                    seq = (BinDict[ls[1]][ls[2]])
+                    header = (">" + ls[1] + "|" + ls[2])
+                    out.write(header + "\n")
+                    out.write(seq + "\n")
+            out.close()
+
+            os.system("diamond blastp --db %s.dmnd --out "
+                      "%s/FeGenie-summary.dmndout --max-target-seqs 1 --outfmt 6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore stitle "
+                      "--threads %s --query %s/FeGenie-summary.fasta --quiet" % (args.ref, outDirectory, str(args.t), outDirectory))
+
+            dmndblast = open("%s/FeGenie-summary.dmndout" % outDirectory)
+            dmndblastDict = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 'No_Hits')))
+            for hit in dmndblast:
+                lst = hit.rstrip().split("\t")
+                evalue = lst[10]
+                cell = lst[0].split("|")[0]
+                orf = lst[0].split("|")[1]
+                target = lst[12]
+                target = replace(target, [","], ";")
+                dmndblastDict[cell][orf]["e"] = evalue
+                dmndblastDict[cell][orf]["target"] = target
+
+        summary = open("%s/FeGenie-summary.csv" % outDirectory, "r")
+        out = open("%s/FeGenie-summary-blasthits.csv" % outDirectory, "w")
+        if args.ref != "NA":
+            out.write(
+                "category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore" + "," + "bitscore_cutoff" + "," + "cluster" + "," + "heme_binding_motifs" + "," + "top_blast_hit" + "," + "blast_hit_evalue" + "," + "protein_sequence" + "\n")
         else:
-            counter += 1
-            out.write(i)
+            out.write(
+                "category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore" + "," + "bitscore_cutoff" + "," + "cluster" + "," + "heme_binding_motifs" + "," + "protein_sequence" + "\n")
 
-    out.close()
+        # SUMMARIZING CROSS-REFERENCE RESULTS AND COUNTING HEME-BINDING MOTIFS
+        print("Counting heme-binding motifs")
+        counter = 1
+        for i in summary:
+            if not re.match(r'#', i):
+                ls = i.rstrip().split(",")
+                seq = BinDict[ls[1]][ls[2]]
+                hemes = len(re.findall(r'C(..)CH', seq)) + len(re.findall(r'C(...)CH', seq)) \
+                        + len(re.findall(r'C(....)CH', seq)) + len(re.findall(r'C(..............)CH', seq)) \
+                        + len(re.findall(r'C(...............)CH', seq))
+
+                if args.ref != "NA":
+                    blasthit = dmndblastDict[ls[1]][ls[2]]["target"]
+                    e = dmndblastDict[ls[1]][ls[2]]["e"]
+                    try:
+                        out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + str(ls[4]) + "," + str(
+                            metaDict[ls[3].split(".")[0]]) + "," + str(counter) + "," + str(
+                            hemes) + "," + blasthit + "," + str(
+                            e) + "," + seq + "\n")
+                    except TypeError:
+                        out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + ls[4] + "," + str(counter) + "," + str(
+                                hemes) + "," + blasthit + "," + str(e) + "," + seq + "\n")
+
+                else:
+                    try:
+                        out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + str(ls[4]) + "," + str(
+                            metaDict[ls[3].split(".")[0]]) + "," + str(counter) + "," + str(hemes) + "," + seq + "\n")
+
+                    except TypeError:
+                        out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + ls[4] + "," + str(counter) + "," + str(
+                                hemes) + "," + seq + "\n")
+
+            else:
+                counter += 1
+                out.write(i)
+
+        out.close()
+
+    else:
+        print("Pre-processing of final outout file")
+
+        summary = open("%s/FinalSummary-dereplicated-clustered-blast.csv" % outDirectory, "r")
+        out = open("%s/FinalSummary-dereplicated-clustered-blast-filtered.csv" % outDirectory, "w")
+        for i in summary:
+            out.write(i.rstrip() + "\n")
+
+        out.close()
+
 
     # REMOVING FILES
     if args.ref != "NA":
@@ -1380,172 +1421,152 @@ def main():
     os.system("mv %s/FeGenie-summary-blasthits.csv %s/FeGenie-summary.csv" % (outDirectory, outDirectory))
 
     # FILTERING OUT FALSE POSITIVES FOR SIDEROPHORE GENES
-    print("Final processing of output\n")
-    MAP = open(HMMdir + "/FeGenie-map.txt", "r")
-    mapDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
-    for i in MAP:
-        ls = i.rstrip().split("\t")
-        mapDict[ls[0]] = ls[1]
 
-    out = open(outDirectory + "/FeGenie-summary-fixed.csv", "w")
-    geneToCatDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
-    memoryDict = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 'EMPTY')))
-    clusterDict = defaultdict(list)
-    infile = open(outDirectory + "/FeGenie-summary.csv")
-    for i in infile:
-        if not re.match(r'#', i):
-            ls = i.rstrip().split(",")
-            if ls[6] != "cluster":
-                if not re.findall(r'defaultdict', ls[5]):
-                    clu = ls[6]
-                    cat = ls[0]
-                    dataset = ls[1]
-                    orf = ls[2]
-                    hmm = allButTheLast(ls[3], ".")
-                    clusterDict[clu].append(hmm + "|" + dataset + "|" + orf)
-                    geneToCatDict[hmm] = cat
-                    hmm = allButTheLast(ls[3], ".")
-                    memoryDict[dataset][orf]["cat"] = ls[0]
-                    memoryDict[dataset][orf]["gene"] = ls[3]
-                    memoryDict[dataset][orf]["bit"] = ls[4]
-                    memoryDict[dataset][orf]["cutoff"] = ls[5]
-                    memoryDict[dataset][orf]["clu"] = clu
-                    memoryDict[dataset][orf]["heme"] = ls[7]
-                    memoryDict[dataset][orf]["seq"] = ls[8]
-                    if args.ref != "NA":
-                        memoryDict[dataset][orf]["blastHit"] = ls[8]
-                        memoryDict[dataset][orf]["blastEval"] = ls[9]
+    if not args.all_results:
+
+        print("Final processing of output\n")
+        MAP = open(HMMdir + "/FeGenie-map.txt", "r")
+        mapDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
+        for i in MAP:
+            ls = i.rstrip().split("\t")
+            mapDict[ls[0]] = ls[1]
+
+        out = open(outDirectory + "/FeGenie-summary-fixed.csv", "w")
+        geneToCatDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
+        memoryDict = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 'EMPTY')))
+        clusterDict = defaultdict(list)
+        infile = open(outDirectory + "/FeGenie-summary.csv")
+        for i in infile:
+            if not re.match(r'#', i):
+                ls = i.rstrip().split(",")
+                if ls[6] != "cluster":
+                    if not re.findall(r'defaultdict', ls[5]):
+                        clu = ls[6]
+                        cat = ls[0]
+                        dataset = ls[1]
+                        orf = ls[2]
+                        hmm = allButTheLast(ls[3], ".")
+                        clusterDict[clu].append(hmm + "|" + dataset + "|" + orf)
+                        geneToCatDict[hmm] = cat
+                        hmm = allButTheLast(ls[3], ".")
+                        memoryDict[dataset][orf]["cat"] = ls[0]
+                        memoryDict[dataset][orf]["gene"] = ls[3]
+                        memoryDict[dataset][orf]["bit"] = ls[4]
+                        memoryDict[dataset][orf]["cutoff"] = ls[5]
+                        memoryDict[dataset][orf]["clu"] = clu
+                        memoryDict[dataset][orf]["heme"] = ls[7]
                         memoryDict[dataset][orf]["seq"] = ls[10]
-
-                else:
-                    cat = ls[0]
-                    dataset = ls[1]
-                    orf = ls[2]
-                    clu = ls[7]
-                    hmm = ls[3]
-                    memoryDict[dataset][orf]["cat"] = ls[0]
-                    memoryDict[dataset][orf]["gene"] = ls[3]
-                    memoryDict[dataset][orf]["bit"] = ls[4]
-                    memoryDict[dataset][orf]["cutoff"] = "evalue-cutoff: 1E-10"
-                    memoryDict[dataset][orf]["clu"] = ls[6]
-                    memoryDict[dataset][orf]["heme"] = ls[7]
-                    memoryDict[dataset][orf]["seq"] = ls[8]
-                    if args.ref != "NA":
-                        memoryDict[dataset][orf]["blastHit"] = ls[8]
-                        memoryDict[dataset][orf]["blastEval"] = ls[9]
+                        if args.ref != "NA":
+                            memoryDict[dataset][orf]["blastHit"] = ls[8]
+                            memoryDict[dataset][orf]["blastEval"] = ls[9]
+                    else:
+                        cat = ls[0]
+                        dataset = ls[1]
+                        orf = ls[2]
+                        clu = ls[7]
+                        hmm = ls[3]
+                        memoryDict[dataset][orf]["cat"] = ls[0]
+                        memoryDict[dataset][orf]["gene"] = ls[3]
+                        memoryDict[dataset][orf]["bit"] = ls[4]
+                        memoryDict[dataset][orf]["cutoff"] = "evalue-cutoff: 1E-10"
+                        memoryDict[dataset][orf]["clu"] = ls[6]
+                        memoryDict[dataset][orf]["heme"] = ls[7]
                         memoryDict[dataset][orf]["seq"] = ls[10]
+                        if args.ref != "NA":
+                            memoryDict[dataset][orf]["blastHit"] = ls[8]
+                            memoryDict[dataset][orf]["blastEval"] = ls[9]
 
-                    geneToCatDict[hmm] = cat
-                    clusterDict[ls[7]].append(hmm + "|" + dataset + "|" + orf)
-            else:
-                out.write(i.rstrip())
-
-    for i in clusterDict.keys():
-        out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
-        for j in clusterDict[i]:
-            hmm = j.split("|")[0]
-            dataset = j.split("|")[1]
-            orf = j.split("|")[2]
-            cat = memoryDict[dataset][orf]["cat"]
-
-            if cat in ["iron_aquisition-siderophore_transport", "iron_aquisition-heme_transport"]:
-                if len(Unique2(clusterDict[i])) < 2:
-                    break
-                elif check1(clusterDict[i]) < 2:
-                    pass
+                        geneToCatDict[hmm] = cat
+                        clusterDict[ls[7]].append(hmm + "|" + dataset + "|" + orf)
                 else:
-                    if args.ref != "NA":
-                        out.write(
-                            memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + mapDict[hmm] + "," +
-                            memoryDict[dataset][orf]["bit"] + "," + memoryDict[dataset][orf]["cutoff"] + "," +
-                            memoryDict[dataset][orf]["clu"] + "," + memoryDict[dataset][orf]["heme"] + "," +
-                            memoryDict[dataset][orf]["blastHit"] + "," + memoryDict[dataset][orf]["blastEval"] + "," +
-                            memoryDict[dataset][orf]["seq"] + "\n")
+                    out.write(i.rstrip())
+
+        for i in clusterDict.keys():
+            out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+            for j in clusterDict[i]:
+                hmm = j.split("|")[0]
+                dataset = j.split("|")[1]
+                orf = j.split("|")[2]
+                cat = memoryDict[dataset][orf]["cat"]
+
+                if cat in ["iron_aquisition-siderophore_transport", "iron_aquisition-heme_transport"]:
+                    if len(Unique2(clusterDict[i])) < 2:
+                        break
+                    elif check1(clusterDict[i]) < 2:
+                        pass
                     else:
-                        out.write(memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + mapDict[hmm] + "," +
-                                  memoryDict[dataset][orf]["bit"] + "," + memoryDict[dataset][orf]["cutoff"] + "," +
-                                  memoryDict[dataset][orf]["clu"] + "," + memoryDict[dataset][orf]["heme"] + "," +
-                                  memoryDict[dataset][orf]["seq"] + "\n")
+                        if args.ref != "NA":
+                            out.write(
+                                memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + mapDict[hmm] + "," +
+                                memoryDict[dataset][orf]["bit"] + "," + memoryDict[dataset][orf]["cutoff"] + "," +
+                                memoryDict[dataset][orf]["clu"] + "," + memoryDict[dataset][orf]["heme"] + "," +
+                                memoryDict[dataset][orf]["blastHit"] + "," + memoryDict[dataset][orf]["blastEval"] + "," +
+                                memoryDict[dataset][orf]["seq"] + "\n")
+                        else:
+                            out.write(memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + mapDict[hmm] + "," +
+                                      memoryDict[dataset][orf]["bit"] + "," + memoryDict[dataset][orf]["cutoff"] + "," +
+                                      memoryDict[dataset][orf]["clu"] + "," + memoryDict[dataset][orf]["heme"] + "," +
+                                      memoryDict[dataset][orf]["seq"] + "\n")
 
-            elif cat in ["iron_aquisition-siderophore_synthesis"]:
-                if len(Unique2(clusterDict[i])) < 3:
-                    break
-                elif check1_2(clusterDict[i]) < 3:
-                    pass
-                else:
-                    if args.ref != "NA":
-                        out.write(
-                            memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + mapDict[hmm] + "," +
-                            memoryDict[dataset][orf]["bit"] + "," + memoryDict[dataset][orf]["cutoff"] + "," +
-                            memoryDict[dataset][orf]["clu"] + "," + memoryDict[dataset][orf]["heme"] + "," +
-                            memoryDict[dataset][orf]["blastHit"] + "," + memoryDict[dataset][orf]["blastEval"] + "," +
-                            memoryDict[dataset][orf]["seq"] + "\n")
+                elif cat in ["iron_aquisition-siderophore_synthesis"]:
+                    if len(Unique2(clusterDict[i])) < 3:
+                        break
+                    elif check1_2(clusterDict[i]) < 3:
+                        pass
                     else:
+                        if args.ref != "NA":
+                            out.write(
+                                memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + mapDict[hmm] + "," +
+                                memoryDict[dataset][orf]["bit"] + "," + memoryDict[dataset][orf]["cutoff"] + "," +
+                                memoryDict[dataset][orf]["clu"] + "," + memoryDict[dataset][orf]["heme"] + "," +
+                                memoryDict[dataset][orf]["blastHit"] + "," + memoryDict[dataset][orf]["blastEval"] + "," +
+                                memoryDict[dataset][orf]["seq"] + "\n")
+                        else:
 
-                        out.write(memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + mapDict[hmm] + "," +
-                                  memoryDict[dataset][orf]["bit"] + "," + memoryDict[dataset][orf]["cutoff"] + "," +
-                                  memoryDict[dataset][orf]["clu"] + "," + memoryDict[dataset][orf]["heme"] + "," +
-                                  memoryDict[dataset][orf]["seq"] + "\n")
+                            out.write(memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + mapDict[hmm] + "," +
+                                      memoryDict[dataset][orf]["bit"] + "," + memoryDict[dataset][orf]["cutoff"] + "," +
+                                      memoryDict[dataset][orf]["clu"] + "," + memoryDict[dataset][orf]["heme"] + "," +
+                                      memoryDict[dataset][orf]["seq"] + "\n")
 
-            elif cat in ["iron_aquisition-iron_transport", "iron_aquisition-heme_oxygenase"]:
-                if len(Unique2(clusterDict[i])) < 2:
-                    break
-                elif check2(clusterDict[i]) < 2:
-                    pass
-                else:
-                    if args.ref != "NA":
-                        out.write(
-                            memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + mapDict[hmm] + "," +
-                            memoryDict[dataset][orf]["bit"] + "," + memoryDict[dataset][orf]["cutoff"] + "," +
-                            memoryDict[dataset][orf]["clu"] + "," + memoryDict[dataset][orf]["heme"] + "," +
-                            memoryDict[dataset][orf]["blastHit"] + "," + memoryDict[dataset][orf]["blastEval"] + "," +
-                            memoryDict[dataset][orf]["seq"] + "\n")
+                elif cat in ["iron_aquisition-iron_transport", "iron_aquisition-heme_oxygenase"]:
+                    if len(Unique2(clusterDict[i])) < 2:
+                        break
+                    elif check2(clusterDict[i]) < 2:
+                        pass
                     else:
-                        out.write(memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + mapDict[hmm] + "," +
-                                  memoryDict[dataset][orf]["bit"] + "," + memoryDict[dataset][orf]["cutoff"] + "," +
-                                  memoryDict[dataset][orf]["clu"] + "," + memoryDict[dataset][orf]["heme"] + "," +
-                                  memoryDict[dataset][orf]["seq"] + "\n")
+                        if args.ref != "NA":
+                            out.write(
+                                memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + mapDict[hmm] + "," +
+                                memoryDict[dataset][orf]["bit"] + "," + memoryDict[dataset][orf]["cutoff"] + "," +
+                                memoryDict[dataset][orf]["clu"] + "," + memoryDict[dataset][orf]["heme"] + "," +
+                                memoryDict[dataset][orf]["blastHit"] + "," + memoryDict[dataset][orf]["blastEval"] + "," +
+                                memoryDict[dataset][orf]["seq"] + "\n")
+                        else:
+                            out.write(memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + mapDict[hmm] + "," +
+                                      memoryDict[dataset][orf]["bit"] + "," + memoryDict[dataset][orf]["cutoff"] + "," +
+                                      memoryDict[dataset][orf]["clu"] + "," + memoryDict[dataset][orf]["heme"] + "," +
+                                      memoryDict[dataset][orf]["seq"] + "\n")
 
-            elif cat == "iron_gene_regulation":
-                if checkReg(clusterDict[i]) < 1:
-                    pass
-                else:
-                    if args.ref != "NA":
-                        out.write(
-                            memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
-                            memoryDict[dataset][orf]["bit"] + "," +
-                            memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
-                            memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] + "," +
-                            memoryDict[dataset][orf]["blastEval"] + "," + memoryDict[dataset][orf]["seq"] + "\n")
+                elif cat == "iron_gene_regulation":
+                    if checkReg(clusterDict[i]) < 1:
+                        pass
                     else:
-                        out.write(
-                            memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
-                            memoryDict[dataset][orf]["bit"] + "," +
-                            memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
-                            memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["seq"] + "\n")
+                        if args.ref != "NA":
+                            out.write(
+                                memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
+                                memoryDict[dataset][orf]["bit"] + "," +
+                                memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] + "," +
+                                memoryDict[dataset][orf]["blastEval"] + "," + memoryDict[dataset][orf]["seq"] + "\n")
+                        else:
+                            out.write(
+                                memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
+                                memoryDict[dataset][orf]["bit"] + "," +
+                                memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["seq"] + "\n")
 
-            elif cat == "magnetosome_formation":
-                if checkMam(clusterDict[i]) < 5:
-                    pass
-                else:
-                    if args.ref != "NA":
-                        out.write(
-                            memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
-                            memoryDict[dataset][orf]["bit"] + "," +
-                            memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
-                            memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] + "," +
-                            memoryDict[dataset][orf]["blastEval"] + "," + memoryDict[dataset][orf]["seq"] + "\n")
-                    else:
-                        out.write(
-                            memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
-                            memoryDict[dataset][orf]["bit"] + "," +
-                            memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
-                            memoryDict[dataset][orf]["heme"] + "," +
-                            memoryDict[dataset][orf]["seq"] + "\n")
-
-            elif cat == "iron_oxidation":
-                if hmm == "Cyc1":
-                    if checkFe(clusterDict[i]) < 2:
+                elif cat == "magnetosome_formation":
+                    if checkMam(clusterDict[i]) < 5:
                         pass
                     else:
                         if args.ref != "NA":
@@ -1563,96 +1584,302 @@ def main():
                                 memoryDict[dataset][orf]["heme"] + "," +
                                 memoryDict[dataset][orf]["seq"] + "\n")
 
-                elif hmm in ["MtoA", "MtrA", "MtrB_TIGR03509", "MtrC_TIGR03507"]:
-                    operon = clusterDict[i]
-                    operon = Strip(operon)
-                    if "MtrB_TIGR03509" in operon and "MtrC_TIGR03507" in operon and "MtrA" in operon:
-                        if args.ref != "NA":
-                            out.write(
-                                "iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
-                                memoryDict[dataset][orf]["bit"] + "," +
-                                memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
-                                memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] +
-                                memoryDict[dataset][orf]["blastEval"] + "," +
-                                memoryDict[dataset][orf]["seq"] + "\n")
+                elif cat == "iron_oxidation":
+                    if hmm == "Cyc1":
+                        if checkFe(clusterDict[i]) < 2:
+                            pass
                         else:
-                            out.write(
-                                "iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
-                                memoryDict[dataset][orf]["bit"] + "," +
-                                memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
-                                memoryDict[dataset][orf]["heme"] + "," +
-                                memoryDict[dataset][orf]["seq"] + "\n")
+                            if args.ref != "NA":
+                                out.write(
+                                    memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
+                                    memoryDict[dataset][orf]["bit"] + "," +
+                                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                    memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] + "," +
+                                    memoryDict[dataset][orf]["blastEval"] + "," + memoryDict[dataset][orf]["seq"] + "\n")
+                            else:
+                                out.write(
+                                    memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
+                                    memoryDict[dataset][orf]["bit"] + "," +
+                                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                    memoryDict[dataset][orf]["heme"] + "," +
+                                    memoryDict[dataset][orf]["seq"] + "\n")
 
-                    elif "MtoA" in operon and "MtrB_TIGR03509" in operon and "MtrC_TIGR03507" in operon:
-                        if args.ref != "NA":
-                            out.write(
-                                "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
-                                memoryDict[dataset][orf]["bit"] + "," +
-                                memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
-                                memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] +
-                                memoryDict[dataset][orf]["blastEval"] + "," +
-                                memoryDict[dataset][orf]["seq"] + "\n")
-                        else:
-                            out.write(
-                                "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
-                                memoryDict[dataset][orf]["bit"] + "," +
-                                memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
-                                memoryDict[dataset][orf]["heme"] + "," +
-                                memoryDict[dataset][orf]["seq"] + "\n")
+                    elif hmm in ["MtoA", "MtrA", "MtrB_TIGR03509", "MtrC_TIGR03507"]:
+                        operon = clusterDict[i]
+                        operon = Strip(operon)
+                        if "MtrB_TIGR03509" in operon and "MtrC_TIGR03507" in operon and "MtrA" in operon:
+                            if args.ref != "NA":
+                                out.write(
+                                    "iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                                    memoryDict[dataset][orf]["bit"] + "," +
+                                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                    memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] +
+                                    memoryDict[dataset][orf]["blastEval"] + "," +
+                                    memoryDict[dataset][orf]["seq"] + "\n")
+                            else:
+                                out.write(
+                                    "iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                                    memoryDict[dataset][orf]["bit"] + "," +
+                                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                    memoryDict[dataset][orf]["heme"] + "," +
+                                    memoryDict[dataset][orf]["seq"] + "\n")
 
-                    elif "MtrB_TIGR03509" in operon and "MtrA" in operon:
-                        if args.ref != "NA":
-                            out.write(
-                                "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
-                                memoryDict[dataset][orf]["bit"] + "," +
-                                memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
-                                memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] +
-                                memoryDict[dataset][orf]["blastEval"] + "," +
-                                memoryDict[dataset][orf]["seq"] + "\n")
-                        else:
-                            out.write(
-                                "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
-                                memoryDict[dataset][orf]["bit"] + "," +
-                                memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
-                                memoryDict[dataset][orf]["heme"] + "," +
-                                memoryDict[dataset][orf]["seq"] + "\n")
+                        elif "MtoA" in operon and "MtrB_TIGR03509" in operon and "MtrC_TIGR03507" in operon:
+                            if args.ref != "NA":
+                                out.write(
+                                    "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                                    memoryDict[dataset][orf]["bit"] + "," +
+                                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                    memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] +
+                                    memoryDict[dataset][orf]["blastEval"] + "," +
+                                    memoryDict[dataset][orf]["seq"] + "\n")
+                            else:
+                                out.write(
+                                    "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                                    memoryDict[dataset][orf]["bit"] + "," +
+                                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                    memoryDict[dataset][orf]["heme"] + "," +
+                                    memoryDict[dataset][orf]["seq"] + "\n")
 
-                    elif "MtoA" in operon and "MtrB_TIGR03509" in operon:
-                        if args.ref != "NA":
-                            out.write(
-                                "possible_iron_oxidation_and_possible_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
-                                memoryDict[dataset][orf]["bit"] + "," +
-                                memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
-                                memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] +
-                                memoryDict[dataset][orf]["blastEval"] + "," +
-                                memoryDict[dataset][orf]["seq"] + "\n")
-                        else:
-                            out.write(
-                                "possible_iron_oxidation_and_possible_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
-                                memoryDict[dataset][orf]["bit"] + "," +
-                                memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
-                                memoryDict[dataset][orf]["heme"] + "," +
-                                memoryDict[dataset][orf]["seq"] + "\n")
+                        elif "MtrB_TIGR03509" in operon and "MtrA" in operon:
+                            if args.ref != "NA":
+                                out.write(
+                                    "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                                    memoryDict[dataset][orf]["bit"] + "," +
+                                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                    memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] +
+                                    memoryDict[dataset][orf]["blastEval"] + "," +
+                                    memoryDict[dataset][orf]["seq"] + "\n")
+                            else:
+                                out.write(
+                                    "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                                    memoryDict[dataset][orf]["bit"] + "," +
+                                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                    memoryDict[dataset][orf]["heme"] + "," +
+                                    memoryDict[dataset][orf]["seq"] + "\n")
 
-                    elif "MtrC_TIGR03507" in operon and "MtrB_TIGR03509" in operon:
-                        if args.ref != "NA":
-                            out.write(
-                                "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
-                                memoryDict[dataset][orf]["bit"] + "," +
-                                memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
-                                memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] +
-                                memoryDict[dataset][orf]["blastEval"] + "," +
-                                memoryDict[dataset][orf]["seq"] + "\n")
+                        elif "MtoA" in operon and "MtrB_TIGR03509" in operon:
+                            if args.ref != "NA":
+                                out.write(
+                                    "possible_iron_oxidation_and_possible_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                                    memoryDict[dataset][orf]["bit"] + "," +
+                                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                    memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] +
+                                    memoryDict[dataset][orf]["blastEval"] + "," +
+                                    memoryDict[dataset][orf]["seq"] + "\n")
+                            else:
+                                out.write(
+                                    "possible_iron_oxidation_and_possible_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                                    memoryDict[dataset][orf]["bit"] + "," +
+                                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                    memoryDict[dataset][orf]["heme"] + "," +
+                                    memoryDict[dataset][orf]["seq"] + "\n")
+
+                        elif "MtrC_TIGR03507" in operon and "MtrB_TIGR03509" in operon:
+                            if args.ref != "NA":
+                                out.write(
+                                    "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                                    memoryDict[dataset][orf]["bit"] + "," +
+                                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                    memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] +
+                                    memoryDict[dataset][orf]["blastEval"] + "," +
+                                    memoryDict[dataset][orf]["seq"] + "\n")
+                            else:
+                                out.write(
+                                    "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                                    memoryDict[dataset][orf]["bit"] + "," +
+                                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                    memoryDict[dataset][orf]["heme"] + "," +
+                                    memoryDict[dataset][orf]["seq"] + "\n")
+
+                        elif "MtrC_TIGR03507" in operon:
+                            if args.ref != "NA":
+                                out.write(
+                                    "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                                    memoryDict[dataset][orf]["bit"] + "," +
+                                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                    memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] +
+                                    memoryDict[dataset][orf]["blastEval"] + "," +
+                                    memoryDict[dataset][orf]["seq"] + "\n")
+                            else:
+                                out.write(
+                                    "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                                    memoryDict[dataset][orf]["bit"] + "," +
+                                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                    memoryDict[dataset][orf]["heme"] + "," +
+                                    memoryDict[dataset][orf]["seq"] + "\n")
+
                         else:
-                            out.write(
-                                "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
-                                memoryDict[dataset][orf]["bit"] + "," +
-                                memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
-                                memoryDict[dataset][orf]["heme"] + "," +
-                                memoryDict[dataset][orf]["seq"] + "\n")
+                            pass
 
                     else:
-                        pass
+                        if args.ref != "NA":
+                            out.write(
+                                memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
+                                memoryDict[dataset][orf]["bit"] + "," +
+                                memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] +
+                                memoryDict[dataset][orf]["blastEval"] + "," +
+                                memoryDict[dataset][orf]["seq"] + "\n")
+                        else:
+                            out.write(
+                                memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
+                                memoryDict[dataset][orf]["bit"] + "," +
+                                memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                memoryDict[dataset][orf]["heme"] + "," +
+                                memoryDict[dataset][orf]["seq"] + "\n")
+
+                elif cat == "iron_reduction":
+                    if hmm in ["DFE_0465", "DFE_0464", "DFE_0463", "DFE_0462", "DFE_0461"]:
+                        if checkDFE1(clusterDict[i]) < 3:
+                            pass
+                        else:
+                            if args.ref != "NA":
+                                out.write(
+                                    memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
+                                    memoryDict[dataset][orf]["bit"] + "," +
+                                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                    memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] +
+                                    memoryDict[dataset][orf]["blastEval"] + "," +
+                                    memoryDict[dataset][orf]["seq"] + "\n")
+                            else:
+                                out.write(
+                                    memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
+                                    memoryDict[dataset][orf]["bit"] + "," +
+                                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                    memoryDict[dataset][orf]["heme"] + "," +
+                                    memoryDict[dataset][orf]["seq"] + "\n")
+
+                    elif hmm in ["DFE_0451", "DFE_0450", "DFE_0449", "DFE_0448"]:
+                        if checkDFE2(clusterDict[i]) < 3:
+                            pass
+                        else:
+                            if args.ref != "NA":
+                                out.write(
+                                    memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
+                                    memoryDict[dataset][orf]["bit"] + "," +
+                                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                    memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] +
+                                    memoryDict[dataset][orf]["blastEval"] + "," +
+                                    memoryDict[dataset][orf]["seq"] + "\n")
+                            else:
+                                out.write(
+                                    memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
+                                    memoryDict[dataset][orf]["bit"] + "," +
+                                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                    memoryDict[dataset][orf]["heme"] + "," +
+                                    memoryDict[dataset][orf]["seq"] + "\n")
+
+                    elif hmm in ["MtrC_TIGR03507", "MtrA", "MtrB_TIGR03509", "MtoA"]:
+                        operon = clusterDict[i]
+                        operon = Strip(operon)
+                        if "MtrB_TIGR03509" in operon and "MtrC_TIGR03507" in operon and "MtrA" in operon:
+                            if args.ref != "NA":
+                                out.write(
+                                    "iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                                    memoryDict[dataset][orf]["bit"] + "," +
+                                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                    memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] +
+                                    memoryDict[dataset][orf]["blastEval"] + "," +
+                                    memoryDict[dataset][orf]["seq"] + "\n")
+                            else:
+                                out.write(
+                                    "iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                                    memoryDict[dataset][orf]["bit"] + "," +
+                                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                    memoryDict[dataset][orf]["heme"] + "," +
+                                    memoryDict[dataset][orf]["seq"] + "\n")
+
+                        elif "MtoA" in operon and "MtrB_TIGR03509" in operon and "MtrC_TIGR03507" in operon:
+                            if args.ref != "NA":
+                                out.write(
+                                    "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                                    memoryDict[dataset][orf]["bit"] + "," +
+                                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                    memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] +
+                                    memoryDict[dataset][orf]["blastEval"] + "," +
+                                    memoryDict[dataset][orf]["seq"] + "\n")
+                            else:
+                                out.write(
+                                    "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                                    memoryDict[dataset][orf]["bit"] + "," +
+                                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                    memoryDict[dataset][orf]["heme"] + "," +
+                                    memoryDict[dataset][orf]["seq"] + "\n")
+
+                        elif "MtrB_TIGR03509" in operon and "MtrA" in operon:
+                            if args.ref != "NA":
+                                out.write(
+                                    "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                                    memoryDict[dataset][orf]["bit"] + "," +
+                                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                    memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] +
+                                    memoryDict[dataset][orf]["blastEval"] + "," +
+                                    memoryDict[dataset][orf]["seq"] + "\n")
+                            else:
+
+                                out.write(
+                                    "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                                    memoryDict[dataset][orf]["bit"] + "," +
+                                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                    memoryDict[dataset][orf]["heme"] + "," +
+                                    memoryDict[dataset][orf]["seq"] + "\n")
+                                # print("writing iron_reduction_or_oxidation")
+
+                        elif "MtoA" in operon and "MtrB_TIGR03509" in operon:
+                            if args.ref != "NA":
+                                out.write(
+                                    "possible_iron_oxidation_and_possible_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                                    memoryDict[dataset][orf]["bit"] + "," +
+                                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                    memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] +
+                                    memoryDict[dataset][orf]["blastEval"] + "," +
+                                    memoryDict[dataset][orf]["seq"] + "\n")
+                            else:
+                                out.write(
+                                    "possible_iron_oxidation_and_possible_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                                    memoryDict[dataset][orf]["bit"] + "," +
+                                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                    memoryDict[dataset][orf]["heme"] + "," +
+                                    memoryDict[dataset][orf]["seq"] + "\n")
+
+                        elif "MtrC_TIGR03507" in operon and "MtrB_TIGR03509" in operon:
+                            if args.ref != "NA":
+                                out.write(
+                                    "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                                    memoryDict[dataset][orf]["bit"] + "," +
+                                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                    memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] +
+                                    memoryDict[dataset][orf]["blastEval"] + "," +
+                                    memoryDict[dataset][orf]["seq"] + "\n")
+                            else:
+                                out.write(
+                                    "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                                    memoryDict[dataset][orf]["bit"] + "," +
+                                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                    memoryDict[dataset][orf]["heme"] + "," +
+                                    memoryDict[dataset][orf]["seq"] + "\n")
+
+
+                        else:
+                            pass
+
+                    else:
+                        if args.ref != "NA":
+                            out.write(
+                                memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
+                                memoryDict[dataset][orf]["bit"] + "," +
+                                memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] +
+                                memoryDict[dataset][orf]["blastEval"] + "," +
+                                memoryDict[dataset][orf]["seq"] + "\n")
+                        else:
+                            out.write(
+                                memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
+                                memoryDict[dataset][orf]["bit"] + "," +
+                                memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                memoryDict[dataset][orf]["heme"] + "," +
+                                memoryDict[dataset][orf]["seq"] + "\n")
 
                 else:
                     if args.ref != "NA":
@@ -1671,159 +1898,76 @@ def main():
                             memoryDict[dataset][orf]["heme"] + "," +
                             memoryDict[dataset][orf]["seq"] + "\n")
 
-            elif cat == "iron_reduction":
-                if hmm in ["DFE_0465", "DFE_0464", "DFE_0463", "DFE_0462", "DFE_0461"]:
-                    if checkDFE1(clusterDict[i]) < 3:
-                        pass
+        out.close()
+        os.system("mv %s/FeGenie-summary-fixed.csv %s/FeGenie-summary.csv" % (outDirectory, outDirectory))
+    else:
+        print("Final processing of output\n")
+        MAP = open(HMMdir + "/FeGenie-map.txt", "r")
+        mapDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
+        for i in MAP:
+            ls = i.rstrip().split("\t")
+            mapDict[ls[0]] = ls[1]
+
+        out = open(outDirectory + "/FeGenie-summary-fixed.csv", "w")
+        geneToCatDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
+        memoryDict = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 'EMPTY')))
+        clusterDict = defaultdict(list)
+        infile = open(outDirectory + "/FeGenie-summary.csv")
+        for i in infile:
+            if not re.match(r'#', i):
+                ls = i.rstrip().split(",")
+                if ls[6] != "cluster":
+
+                    if not re.findall(r'defaultdict', ls[5]):
+                        clu = ls[6]
+                        cat = ls[0]
+                        dataset = ls[1]
+                        orf = ls[2]
+                        hmm = allButTheLast(ls[3], ".")
+                        clusterDict[clu].append(hmm + "|" + dataset + "|" + orf)
+                        geneToCatDict[hmm] = cat
+                        hmm = allButTheLast(ls[3], ".")
+                        memoryDict[dataset][orf]["cat"] = ls[0]
+                        memoryDict[dataset][orf]["gene"] = ls[3]
+                        memoryDict[dataset][orf]["bit"] = ls[4]
+                        memoryDict[dataset][orf]["cutoff"] = ls[5]
+                        memoryDict[dataset][orf]["clu"] = clu
+                        memoryDict[dataset][orf]["heme"] = ls[7]
+                        memoryDict[dataset][orf]["seq"] = ls[10]
+                        if args.ref != "NA":
+                            memoryDict[dataset][orf]["blastHit"] = ls[8]
+                            memoryDict[dataset][orf]["blastEval"] = ls[9]
                     else:
+                        cat = ls[0]
+                        dataset = ls[1]
+                        orf = ls[2]
+                        clu = ls[7]
+                        hmm = ls[3]
+                        memoryDict[dataset][orf]["cat"] = ls[0]
+                        memoryDict[dataset][orf]["gene"] = ls[3]
+                        memoryDict[dataset][orf]["bit"] = ls[4]
+                        memoryDict[dataset][orf]["cutoff"] = "evalue-cutoff: 1E-10"
+                        memoryDict[dataset][orf]["clu"] = ls[6]
+                        memoryDict[dataset][orf]["heme"] = ls[7]
+                        memoryDict[dataset][orf]["seq"] = ls[10]
                         if args.ref != "NA":
-                            out.write(
-                                memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
-                                memoryDict[dataset][orf]["bit"] + "," +
-                                memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
-                                memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] +
-                                memoryDict[dataset][orf]["blastEval"] + "," +
-                                memoryDict[dataset][orf]["seq"] + "\n")
-                        else:
-                            out.write(
-                                memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
-                                memoryDict[dataset][orf]["bit"] + "," +
-                                memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
-                                memoryDict[dataset][orf]["heme"] + "," +
-                                memoryDict[dataset][orf]["seq"] + "\n")
+                            memoryDict[dataset][orf]["blastHit"] = ls[8]
+                            memoryDict[dataset][orf]["blastEval"] = ls[9]
 
-                elif hmm in ["DFE_0451", "DFE_0450", "DFE_0449", "DFE_0448"]:
-                    if checkDFE2(clusterDict[i]) < 3:
-                        pass
-                    else:
-                        if args.ref != "NA":
-                            out.write(
-                                memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
-                                memoryDict[dataset][orf]["bit"] + "," +
-                                memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
-                                memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] +
-                                memoryDict[dataset][orf]["blastEval"] + "," +
-                                memoryDict[dataset][orf]["seq"] + "\n")
-                        else:
-                            out.write(
-                                memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
-                                memoryDict[dataset][orf]["bit"] + "," +
-                                memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
-                                memoryDict[dataset][orf]["heme"] + "," +
-                                memoryDict[dataset][orf]["seq"] + "\n")
-
-                elif hmm in ["MtrC_TIGR03507", "MtrA", "MtrB_TIGR03509", "MtoA"]:
-                    operon = clusterDict[i]
-                    operon = Strip(operon)
-                    if "MtrB_TIGR03509" in operon and "MtrC_TIGR03507" in operon and "MtrA" in operon:
-                        if args.ref != "NA":
-                            out.write(
-                                "iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
-                                memoryDict[dataset][orf]["bit"] + "," +
-                                memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
-                                memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] +
-                                memoryDict[dataset][orf]["blastEval"] + "," +
-                                memoryDict[dataset][orf]["seq"] + "\n")
-                        else:
-                            out.write(
-                                "iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
-                                memoryDict[dataset][orf]["bit"] + "," +
-                                memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
-                                memoryDict[dataset][orf]["heme"] + "," +
-                                memoryDict[dataset][orf]["seq"] + "\n")
-
-                    elif "MtoA" in operon and "MtrB_TIGR03509" in operon and "MtrC_TIGR03507" in operon:
-                        if args.ref != "NA":
-                            out.write(
-                                "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
-                                memoryDict[dataset][orf]["bit"] + "," +
-                                memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
-                                memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] +
-                                memoryDict[dataset][orf]["blastEval"] + "," +
-                                memoryDict[dataset][orf]["seq"] + "\n")
-                        else:
-                            out.write(
-                                "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
-                                memoryDict[dataset][orf]["bit"] + "," +
-                                memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
-                                memoryDict[dataset][orf]["heme"] + "," +
-                                memoryDict[dataset][orf]["seq"] + "\n")
-
-                    elif "MtrB_TIGR03509" in operon and "MtrA" in operon:
-                        if args.ref != "NA":
-                            out.write(
-                                "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
-                                memoryDict[dataset][orf]["bit"] + "," +
-                                memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
-                                memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] +
-                                memoryDict[dataset][orf]["blastEval"] + "," +
-                                memoryDict[dataset][orf]["seq"] + "\n")
-                        else:
-
-                            out.write(
-                                "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
-                                memoryDict[dataset][orf]["bit"] + "," +
-                                memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
-                                memoryDict[dataset][orf]["heme"] + "," +
-                                memoryDict[dataset][orf]["seq"] + "\n")
-                            # print("writing iron_reduction_or_oxidation")
-
-                    elif "MtoA" in operon and "MtrB_TIGR03509" in operon:
-                        if args.ref != "NA":
-                            out.write(
-                                "possible_iron_oxidation_and_possible_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
-                                memoryDict[dataset][orf]["bit"] + "," +
-                                memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
-                                memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] +
-                                memoryDict[dataset][orf]["blastEval"] + "," +
-                                memoryDict[dataset][orf]["seq"] + "\n")
-                        else:
-                            out.write(
-                                "possible_iron_oxidation_and_possible_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
-                                memoryDict[dataset][orf]["bit"] + "," +
-                                memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
-                                memoryDict[dataset][orf]["heme"] + "," +
-                                memoryDict[dataset][orf]["seq"] + "\n")
-
-                    elif "MtrC_TIGR03507" in operon and "MtrB_TIGR03509" in operon:
-                        if args.ref != "NA":
-                            out.write(
-                                "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
-                                memoryDict[dataset][orf]["bit"] + "," +
-                                memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
-                                memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] +
-                                memoryDict[dataset][orf]["blastEval"] + "," +
-                                memoryDict[dataset][orf]["seq"] + "\n")
-                        else:
-                            out.write(
-                                "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
-                                memoryDict[dataset][orf]["bit"] + "," +
-                                memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
-                                memoryDict[dataset][orf]["heme"] + "," +
-                                memoryDict[dataset][orf]["seq"] + "\n")
-
-
-                    else:
-                        pass
-
+                        geneToCatDict[hmm] = cat
+                        clusterDict[ls[7]].append(hmm + "|" + dataset + "|" + orf)
                 else:
-                    if args.ref != "NA":
-                        out.write(
-                            memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
-                            memoryDict[dataset][orf]["bit"] + "," +
-                            memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
-                            memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] +
-                            memoryDict[dataset][orf]["blastEval"] + "," +
-                            memoryDict[dataset][orf]["seq"] + "\n")
-                    else:
-                        out.write(
-                            memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
-                            memoryDict[dataset][orf]["bit"] + "," +
-                            memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
-                            memoryDict[dataset][orf]["heme"] + "," +
-                            memoryDict[dataset][orf]["seq"] + "\n")
+                    out.write(i.rstrip())
 
-            else:
+        for i in clusterDict.keys():
+            out.write(
+                "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+            for j in clusterDict[i]:
+                hmm = j.split("|")[0]
+                dataset = j.split("|")[1]
+                orf = j.split("|")[2]
+                cat = memoryDict[dataset][orf]["cat"]
+
                 if args.ref != "NA":
                     out.write(
                         memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
@@ -1840,8 +1984,8 @@ def main():
                         memoryDict[dataset][orf]["heme"] + "," +
                         memoryDict[dataset][orf]["seq"] + "\n")
 
-    out.close()
-    os.system("mv %s/FeGenie-summary-fixed.csv %s/FeGenie-summary.csv" % (outDirectory, outDirectory))
+        out.close()
+        os.system("mv %s/FeGenie-summary-fixed.csv %s/FeGenie-summary.csv" % (outDirectory, outDirectory))
 
     # ****************************** PRE-FINAL ALTERATION OF THE OUTPUT FILE ***************************************
     clu = 0
