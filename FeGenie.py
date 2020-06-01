@@ -415,6 +415,8 @@ def main():
                                                "corresponding to different genomes that you are providing, please use the \'-bams\' "
                                                "argument to provide a tab-delimited file that denotes which BAM file (or files) belongs "
                                                "with which genome", default="NA")
+    parser.add_argument('-delim', type=str, help="delimiter that separates contig names from ORF names (provide this flag if you are "
+                             "providing your own ORFs. Default delimiter for Prodigal-predicted ORFs is \'_\'", default="_")
 
     parser.add_argument('--gbk', type=str, help="include this flag if your bins are in Genbank format", const=True,
                         nargs="?")
@@ -434,6 +436,9 @@ def main():
                              "normalization, FeGenie will create a heatmap-compatible "
                              "CSV output with raw gene counts. With normalization, FeGenie will create a "
                              "heatmap-compatible with \'normalized gene abundances\'", const=True, nargs="?")
+
+    parser.add_argument('--all_results', type=str,
+                        help="report all results, regardless of clustering patterns and operon structure", const=True, nargs="?")
 
     parser.add_argument('--makeplots', type=str,
                         help="include this flag if you would like FeGenie to make some figures from your data?. "
@@ -839,8 +844,8 @@ def main():
     for i in SummaryDict.keys():
         if i != "category":
             for j in SummaryDict[i]:
-                contig = allButTheLast(j, "_")
-                numOrf = lastItem(j.split("_"))
+                contig = allButTheLast(j, args.delim)
+                numOrf = lastItem(j.split(args.delim))
                 CoordDict[i][contig].append(int(numOrf))
 
     counter = 0
@@ -854,7 +859,7 @@ def main():
             clusters = (cluster(LS, args.d))
             for k in clusters:
                 if len(RemoveDuplicates(k)) == 1:
-                    orf = j + "_" + str(k[0])
+                    orf = j + args.delim + str(k[0])
 
                     out.write(SummaryDict[i][orf]["category"] + "," + i + "," + orf + "," + SummaryDict[i][orf]["hmm"] +
                               "," + str(SummaryDict[i][orf]["hmmBit"]) + "," + str(counter) + "\n")
@@ -864,7 +869,7 @@ def main():
 
                 else:
                     for l in RemoveDuplicates(k):
-                        orf = j + "_" + str(l)
+                        orf = j + args.delim + str(l)
 
                         out.write(SummaryDict[i][orf]["category"] + "," + i + "," + orf + "," + SummaryDict[i][orf][
                             "hmm"] + "," + str(SummaryDict[i][orf]["hmmBit"]) + "," + str(counter) + "\n")
@@ -873,6 +878,7 @@ def main():
                         "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
                     counter += 1
     out.close()
+
 
     # else:
     #     counter = 0
@@ -1411,6 +1417,97 @@ def main():
 
         out.close()
 
+        # REMOVING FILES
+        os.system("rm %s/GeoThermin.csv" % outDirectory)
+        os.system("rm %s/*summary*" % outDirectory)
+        os.system("rm %s/FinalSummary-dereplicated-clustered-blast.csv" % outDirectory)
+        os.system("rm %s/*blast" % outDirectory)
+        os.system("rm %s/FinalSummary.csv" % outDirectory)
+        os.system("rm %s/FinalSummary-dereplicated-clustered.csv" % outDirectory)
+        os.system("mv %s/FinalSummary-dereplicated-clustered-blast-filtered.csv %s/FeGenie-summary.csv" % (
+        outDirectory, outDirectory))
+
+        # OPTIONAL CROSS-VALIDATION AGAINST REFERENCE DATABASE
+        if args.ref != "NA":
+            print("")
+            print("Performing Diamond BLASTx search of putative iron genes against reference database")
+            summary = open("%s/FeGenie-summary.csv" % outDirectory, "r")
+            out = open("%s/FeGenie-summary.fasta" % outDirectory, "w")
+            for i in summary:
+                if not re.match(r'#', i):
+                    ls = (i.rstrip().split(","))
+                    seq = (BinDict[ls[1]][ls[2]])
+                    header = (">" + ls[1] + "|" + ls[2])
+                    out.write(header + "\n")
+                    out.write(seq + "\n")
+            out.close()
+
+            os.system("diamond blastp --db %s.dmnd --out "
+                      "%s/FeGenie-summary.dmndout --max-target-seqs 1 --outfmt 6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore stitle "
+                      "--threads %s --query %s/FeGenie-summary.fasta --quiet" % (
+                      args.ref, outDirectory, str(args.t), outDirectory))
+
+            dmndblast = open("%s/FeGenie-summary.dmndout" % outDirectory)
+            dmndblastDict = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 'No_Hits')))
+            for hit in dmndblast:
+                lst = hit.rstrip().split("\t")
+                evalue = lst[10]
+                cell = lst[0].split("|")[0]
+                orf = lst[0].split("|")[1]
+                target = lst[12]
+                target = replace(target, [","], ";")
+                dmndblastDict[cell][orf]["e"] = evalue
+                dmndblastDict[cell][orf]["target"] = target
+
+        summary = open("%s/FeGenie-summary.csv" % outDirectory, "r")
+        out = open("%s/FeGenie-summary-blasthits.csv" % outDirectory, "w")
+        if args.ref != "NA":
+            out.write(
+                "category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore" + "," + "bitscore_cutoff" + "," + "cluster" + "," + "heme_binding_motifs" + "," + "top_blast_hit" + "," + "blast_hit_evalue" + "," + "protein_sequence" + "\n")
+        else:
+            out.write(
+                "category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore" + "," + "bitscore_cutoff" + "," + "cluster" + "," + "heme_binding_motifs" + "," + "protein_sequence" + "\n")
+
+        # SUMMARIZING CROSS-REFERENCE RESULTS AND COUNTING HEME-BINDING MOTIFS
+        print("Counting heme-binding motifs")
+        counter = 1
+        for i in summary:
+            if not re.match(r'#', i):
+                ls = i.rstrip().split(",")
+                seq = BinDict[ls[1]][ls[2]]
+                hemes = len(re.findall(r'C(..)CH', seq)) + len(re.findall(r'C(...)CH', seq)) \
+                        + len(re.findall(r'C(....)CH', seq)) + len(re.findall(r'C(..............)CH', seq)) \
+                        + len(re.findall(r'C(...............)CH', seq))
+
+                if args.ref != "NA":
+                    blasthit = dmndblastDict[ls[1]][ls[2]]["target"]
+                    e = dmndblastDict[ls[1]][ls[2]]["e"]
+                    try:
+                        out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + str(ls[4]) + "," + str(
+                            metaDict[ls[3].split(".")[0]]) + "," + str(counter) + "," + str(
+                            hemes) + "," + blasthit + "," + str(
+                            e) + "," + seq + "\n")
+                    except TypeError:
+                        out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + ls[4] + "," + str(
+                            counter) + "," + str(
+                            hemes) + "," + blasthit + "," + str(e) + "," + seq + "\n")
+
+                else:
+                    try:
+                        out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + str(ls[4]) + "," + str(
+                            metaDict[ls[3].split(".")[0]]) + "," + str(counter) + "," + str(hemes) + "," + seq + "\n")
+
+                    except TypeError:
+                        out.write(ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + ls[4] + "," + str(
+                            counter) + "," + str(
+                            hemes) + "," + seq + "\n")
+
+            else:
+                counter += 1
+                out.write(i)
+
+        out.close()
+
 
     # REMOVING FILES
     if args.ref != "NA":
@@ -1455,10 +1552,11 @@ def main():
                         memoryDict[dataset][orf]["cutoff"] = ls[5]
                         memoryDict[dataset][orf]["clu"] = clu
                         memoryDict[dataset][orf]["heme"] = ls[7]
-                        memoryDict[dataset][orf]["seq"] = ls[10]
+                        memoryDict[dataset][orf]["seq"] = ls[8]
                         if args.ref != "NA":
                             memoryDict[dataset][orf]["blastHit"] = ls[8]
                             memoryDict[dataset][orf]["blastEval"] = ls[9]
+                            memoryDict[dataset][orf]["seq"] = ls[10]
                     else:
                         cat = ls[0]
                         dataset = ls[1]
@@ -1471,10 +1569,11 @@ def main():
                         memoryDict[dataset][orf]["cutoff"] = "evalue-cutoff: 1E-10"
                         memoryDict[dataset][orf]["clu"] = ls[6]
                         memoryDict[dataset][orf]["heme"] = ls[7]
-                        memoryDict[dataset][orf]["seq"] = ls[10]
+                        memoryDict[dataset][orf]["seq"] = ls[8]
                         if args.ref != "NA":
                             memoryDict[dataset][orf]["blastHit"] = ls[8]
                             memoryDict[dataset][orf]["blastEval"] = ls[9]
+                            memoryDict[dataset][orf]["seq"] = ls[10]
 
                         geneToCatDict[hmm] = cat
                         clusterDict[ls[7]].append(hmm + "|" + dataset + "|" + orf)
@@ -1933,10 +2032,11 @@ def main():
                         memoryDict[dataset][orf]["cutoff"] = ls[5]
                         memoryDict[dataset][orf]["clu"] = clu
                         memoryDict[dataset][orf]["heme"] = ls[7]
-                        memoryDict[dataset][orf]["seq"] = ls[10]
+                        memoryDict[dataset][orf]["seq"] = ls[8]
                         if args.ref != "NA":
                             memoryDict[dataset][orf]["blastHit"] = ls[8]
                             memoryDict[dataset][orf]["blastEval"] = ls[9]
+                            memoryDict[dataset][orf]["seq"] = ls[10]
                     else:
                         cat = ls[0]
                         dataset = ls[1]
@@ -1949,10 +2049,12 @@ def main():
                         memoryDict[dataset][orf]["cutoff"] = "evalue-cutoff: 1E-10"
                         memoryDict[dataset][orf]["clu"] = ls[6]
                         memoryDict[dataset][orf]["heme"] = ls[7]
-                        memoryDict[dataset][orf]["seq"] = ls[10]
+                        memoryDict[dataset][orf]["seq"] = ls[8]
                         if args.ref != "NA":
                             memoryDict[dataset][orf]["blastHit"] = ls[8]
                             memoryDict[dataset][orf]["blastEval"] = ls[9]
+                            memoryDict[dataset][orf]["seq"] = ls[10]
+
 
                         geneToCatDict[hmm] = cat
                         clusterDict[ls[7]].append(hmm + "|" + dataset + "|" + orf)
