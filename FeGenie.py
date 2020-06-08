@@ -18,6 +18,17 @@ def main():
             count += float(i)
         return count
 
+    def firstNum(string):
+        outputNum = []
+        for i in string:
+            try:
+                int(i)
+                outputNum.append(i)
+            except ValueError:
+                break
+        Num = "".join(outputNum)
+        return Num
+
     def Strip(ls):
         outList = []
         for i in ls:
@@ -417,6 +428,10 @@ def main():
                                                "with which genome", default="NA")
     parser.add_argument('-delim', type=str, help="delimiter that separates contig names from ORF names (provide this flag if you are "
                              "providing your own ORFs. Default delimiter for Prodigal-predicted ORFs is \'_\'", default="_")
+
+    parser.add_argument('-contig_names', type=str, help="contig names in your provided FASTA files. Use this option"
+                                                        "if you are providing gene calls in amino acid format (don't forget"
+                                                        "to add the \'--orfs\' flag)", default="NA")
 
     parser.add_argument('--gbk', type=str, help="include this flag if your bins are in Genbank format", const=True,
                         nargs="?")
@@ -841,12 +856,23 @@ def main():
     # if not args.orfs:
     print("Identifying genomic proximities and putative operons")
     CoordDict = defaultdict(lambda: defaultdict(list))
-    for i in SummaryDict.keys():
-        if i != "category":
-            for j in SummaryDict[i]:
-                contig = allButTheLast(j, args.delim)
-                numOrf = lastItem(j.split(args.delim))
-                CoordDict[i][contig].append(int(numOrf))
+    orfNameDict = defaultdict(lambda: defaultdict(list))
+    if args.contig_names != "NA":
+        for i in SummaryDict.keys():
+            if i != "category":
+                for j in SummaryDict[i]:
+                    contigLS = contig.split(args.contig_names + args.delim)
+                    numOrf = firstNum(contigLS[1])
+                    contig = args.contig_names
+                    CoordDict[i][contig].append(int(numOrf))
+                    orfNameDict[contig + args.delim + numOrf] = j
+    else:
+        for i in SummaryDict.keys():
+            if i != "category":
+                for j in SummaryDict[i]:
+                    contig = allButTheLast(j, args.delim)
+                    numOrf = lastItem(j.split(args.delim))
+                    CoordDict[i][contig].append(int(numOrf))
 
     counter = 0
     print("Clustering ORFs...")
@@ -859,7 +885,11 @@ def main():
             clusters = (cluster(LS, args.d))
             for k in clusters:
                 if len(RemoveDuplicates(k)) == 1:
+
                     orf = j + args.delim + str(k[0])
+
+                    if args.contig_names != "NA":
+                        orf = orfNameDict[orf]
 
                     out.write(SummaryDict[i][orf]["category"] + "," + i + "," + orf + "," + SummaryDict[i][orf]["hmm"] +
                               "," + str(SummaryDict[i][orf]["hmmBit"]) + "," + str(counter) + "\n")
@@ -869,7 +899,11 @@ def main():
 
                 else:
                     for l in RemoveDuplicates(k):
+
                         orf = j + args.delim + str(l)
+
+                        if args.contig_names != "NA":
+                            orf = orfNameDict[orf]
 
                         out.write(SummaryDict[i][orf]["category"] + "," + i + "," + orf + "," + SummaryDict[i][orf][
                             "hmm"] + "," + str(SummaryDict[i][orf]["hmmBit"]) + "," + str(counter) + "\n")
