@@ -98,7 +98,7 @@ def main():
             hmm = i.split("|")[0]
             if hmm not in uniqueLS:
                 uniqueLS.append(hmm)
-                if geneToCatDict[hmm] in ["iron_aquisition-siderophore_transport", "iron_aquisition-heme_transport"]:
+                if geneToCatDict[hmm] in ["iron_aquisition-siderophore_transport_potential", "iron_aquisition-heme_transport"]:
                     count += 1
         return count
 
@@ -139,7 +139,7 @@ def main():
         count = 0
         for i in ls:
             hmm = i.split("|")[0]
-            if re.findall(r'aquisition', geneToCatDict[hmm]):
+            if re.findall(r'regulation', geneToCatDict[hmm]):
                 count += 1
         return count
 
@@ -767,7 +767,12 @@ def main():
                             )
 
                             # READING IN THE HMMSEARCH RESULTS (TBLOUT) OUT FILE
-                            hmmout = open(outDirectory + "/" + i + "-HMM/" + hmm + ".tblout", "r")
+                            try:
+                                hmmout = open(outDirectory + "/" + i + "-HMM/" + hmm + ".tblout", "r")
+                            except FileNotFoundError:
+                                print("FeGenie cannot find the correct hmmsearch output files. "
+                                      "If you provided gene or ORF-call sequences, "
+                                      "please be sure to specify this in the command using the \'--orfs\' flag")
 
                             # COLLECTING SIGNIFICANT HMM HITS IN THE FILE
                             for line in hmmout:
@@ -902,8 +907,7 @@ def main():
 
                         orf = j + args.delim + str(l)
 
-                        if args.contig_names != "NA":
-                            orf = orfNameDict[orf]
+
 
                         out.write(SummaryDict[i][orf]["category"] + "," + i + "," + orf + "," + SummaryDict[i][orf][
                             "hmm"] + "," + str(SummaryDict[i][orf]["hmmBit"]) + "," + str(counter) + "\n")
@@ -1321,7 +1325,7 @@ def main():
                     pass
 
             elif "iron_aquisition-siderophore_synthesis" in clusterDict[i]["category"] or \
-                            "iron_aquisition-siderophore_transport" in clusterDict[i]["category"] or \
+                            "iron_aquisition-siderophore_transport_potential" in clusterDict[i]["category"] or \
                             "iron_aquisition-iron_transport" in clusterDict[i][
                         "category"] or "iron_aquisition-heme_transport" in clusterDict[i]["category"]:
 
@@ -1622,7 +1626,7 @@ def main():
                 orf = j.split("|")[2]
                 cat = memoryDict[dataset][orf]["cat"]
 
-                if cat in ["iron_aquisition-siderophore_transport", "iron_aquisition-heme_transport"]:
+                if cat in ["iron_aquisition-siderophore_transport_potential", "iron_aquisition-heme_transport"]:
                     if len(Unique2(clusterDict[i])) < 2:
                         break
                     elif check1(clusterDict[i]) < 2:
@@ -2221,7 +2225,7 @@ def main():
     if args.bam == "NA" and args.bams == "NA":
         cats = ["iron_aquisition-iron_transport", "iron_aquisition-heme_transport", "iron_aquisition-heme_oxygenase",
                 "iron_aquisition-siderophore_synthesis",
-                "iron_aquisition-siderophore_transport", "iron_gene_regulation", "iron_oxidation",
+                "iron_aquisition-siderophore_transport_potential", "iron_gene_regulation", "iron_oxidation",
                 "possible_iron_oxidation_and_possible_iron_reduction", "probable_iron_reduction",
                 "iron_reduction", "iron_storage", "magnetosome_formation"]
 
@@ -2272,7 +2276,7 @@ def main():
 
         cats = ["iron_aquisition-iron_transport", "iron_aquisition-heme_transport", "iron_aquisition-heme_oxygenase",
                 "iron_aquisition-siderophore_synthesis",
-                "iron_aquisition-siderophore_transport", "iron_gene_regulation", "iron_oxidation",
+                "iron_aquisition-siderophore_transport_potential", "iron_gene_regulation", "iron_oxidation",
                 "possible_iron_oxidation_and_possible_iron_reduction", "probable_iron_reduction",
                 "iron_reduction", "iron_storage", "magnetosome_formation"]
 
@@ -2346,7 +2350,7 @@ def main():
 
         cats = ["iron_aquisition-iron_transport", "iron_aquisition-heme_transport", "iron_aquisition-heme_oxygenase",
                 "iron_aquisition-siderophore_synthesis",
-                "iron_aquisition-siderophore_transport", "iron_gene_regulation", "iron_oxidation",
+                "iron_aquisition-siderophore_transport_potential", "iron_gene_regulation", "iron_oxidation",
                 "possible_iron_oxidation_and_possible_iron_reduction", "probable_iron_reduction",
                 "iron_reduction", "iron_storage", "magnetosome_formation"]
 
