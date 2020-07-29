@@ -499,6 +499,10 @@ def main():
 
     os.system("rm -f HMMlib.txt rscripts.txt mainDir.txt")
 
+    if len(sys.argv) == 1:
+        parser.print_help(sys.stderr)
+        sys.exit(0)
+
     args = parser.parse_known_args()[0]
 
     # ************** Checking for the required arguments ******************* #
