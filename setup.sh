@@ -17,7 +17,7 @@ conda config --add channels bioconda 2> /dev/null
 conda config --add channels conda-forge 2> /dev/null
 conda config --add channels au-eoed 2> /dev/null
 
-## creating GToTree environment and installing dependencies
+## creating FeGenie environment and installing dependencies
 conda create -n fegenie python=3.7 hmmer diamond prodigal blast --yes
 
 ## activating environment
