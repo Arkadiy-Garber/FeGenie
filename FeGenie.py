@@ -441,6 +441,12 @@ def main():
                         const=True,
                         nargs="?")
 
+    parser.add_argument('--skip', type=str,
+                        help="skip the main part of the algorithm (ORF prediction and HMM searching) "
+                             "and re-summarize previously produced results (for example, if you want to re-run using "
+                             "the --norm flag, or providing a BAM file). All other flags/arguments need to "
+                             "be provided (e.g. -bin_dir, -bin_ext, -out, etc.)", const=True, nargs="?")
+
     parser.add_argument('--meta', type=str,
                         help="include this flag if the provided contigs are from metagenomic/metatranscriptomic assemblies",
                         const=True, nargs="?")
