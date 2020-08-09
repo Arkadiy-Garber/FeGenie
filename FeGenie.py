@@ -2295,9 +2295,9 @@ def main():
             BAMmapDict = defaultdict(lambda: defaultdict(lambda: "EMPTY"))
             normDict = defaultdict(lambda: defaultdict(lambda: "EMPTY"))
             BAMmap = open(args.bams)
-            for i in BAMmap:
+            for bamLine in BAMmap:
                 string = ''
-                ls = i.rstrip().split("\t")
+                ls = bamLine.rstrip().split("\t")
                 cell = ls[0]
                 for j in ls[1:]:
                     string += " "
