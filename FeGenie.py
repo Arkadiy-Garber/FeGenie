@@ -469,6 +469,9 @@ def main():
                              "If you see error or warning messages associated with Rscript, you can still expect to "
                              "see the main output (CSV files) from FeGenie.", const=True, nargs="?")
 
+    parser.add_argument('--debug', type=str, help="Generate more info on the source of error (should generate a debug.issue#.txt file)", const=True,
+                        nargs="?")
+
     # CHECKING FOR CONDA INSTALL
     os.system("echo ${iron_hmms} > HMMlib.txt")
     os.system("echo ${rscripts} > rscripts.txt")
@@ -733,6 +736,9 @@ def main():
         metaDict[ls[0]] = ls[1]
 
     # ******************* BEGINNING MAIN ALGORITHM **********************************))))
+    if args.debug:
+        DEBUG = open(args.out + "/debug.issue19.txt", "w")
+
     if not args.skip:
         print("starting main pipeline...")
         HMMdirLS = os.listdir(HMMdir)
@@ -2310,6 +2316,10 @@ def main():
                     for k in depth:
                         LS = k.rstrip().split("\t")
                         if LS[0] != "contigName":
+                            if args.debug:
+                                DEBUG.write(cell)
+                                DEBUG.write(LS[0])
+                                DEBUG.write("")
                             depthDict[cell][LS[0]] = LS[2]
                             total += float(LS[2])
                     normDict[cell] = total
@@ -2325,7 +2335,8 @@ def main():
                             depthDict[cell][LS[0]] = LS[2]
                             total += float(LS[2])
                     normDict[cell] = total
-
+            if args.debug:
+                DEBUG.write("\n\n#######################################################################\n\n")
             Dict = defaultdict(lambda: defaultdict(list))
             final = open("%s/FeGenie-geneSummary-clusters.csv" % outDirectory, "r")
             for i in final:
@@ -2338,6 +2349,10 @@ def main():
                             orf = ls[2]
                             contig = allButTheLast(orf, "_")
                             gene = ls[3]
+                            if args.debug:
+                                DEBUG.write(cell)
+                                DEBUG.write(contig)
+                                DEBUG.write("")
                             Dict[cell][process].append(float(depthDict[cell][contig]))
 
             outHeat = open("%s/FeGenie-heatmap-data.csv" % outDirectory, "w")
