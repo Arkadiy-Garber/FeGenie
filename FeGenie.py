@@ -2326,32 +2326,32 @@ def main():
                             total += float(LS[2])
                     normDict[cell] = total
 
-                Dict = defaultdict(lambda: defaultdict(list))
-                final = open("%s/FeGenie-geneSummary-clusters.csv" % outDirectory, "r")
-                for i in final:
-                    ls = (i.rstrip().split(","))
-                    if not re.search(r'#', i):
-                        if ls[0] != "" and ls[1] != "assembly" and ls[1] != "genome" and ls[1] != "genome/assembly":
-                            if not re.match(r'#', i):
-                                process = ls[0]
-                                cell = ls[1]
-                                orf = ls[2]
-                                contig = allButTheLast(orf, "_")
-                                gene = ls[3]
-                                Dict[cell][process].append(float(depthDict[cell][contig]))
+            Dict = defaultdict(lambda: defaultdict(list))
+            final = open("%s/FeGenie-geneSummary-clusters.csv" % outDirectory, "r")
+            for i in final:
+                ls = (i.rstrip().split(","))
+                if not re.search(r'#', i):
+                    if ls[0] != "" and ls[1] != "assembly" and ls[1] != "genome" and ls[1] != "genome/assembly":
+                        if not re.match(r'#', i):
+                            process = ls[0]
+                            cell = ls[1]
+                            orf = ls[2]
+                            contig = allButTheLast(orf, "_")
+                            gene = ls[3]
+                            Dict[cell][process].append(float(depthDict[cell][contig]))
 
-                outHeat = open("%s/FeGenie-heatmap-data.csv" % outDirectory, "w")
-                outHeat.write("X" + ',')
-                for i in sorted(Dict.keys()):
-                    outHeat.write(i + ",")
+            outHeat = open("%s/FeGenie-heatmap-data.csv" % outDirectory, "w")
+            outHeat.write("X" + ',')
+            for i in sorted(Dict.keys()):
+                outHeat.write(i + ",")
+            outHeat.write("\n")
+
+            for i in cats:
+                outHeat.write(i + ",")
+                for j in sorted(Dict.keys()):
+                    if not re.match(r'#', j):
+                        outHeat.write(str(SUM(Dict[j][i])) + ",")
                 outHeat.write("\n")
-
-                for i in cats:
-                    outHeat.write(i + ",")
-                    for j in sorted(Dict.keys()):
-                        if not re.match(r'#', j):
-                            outHeat.write(str(SUM(Dict[j][i])) + ",")
-                    outHeat.write("\n")
 
             outHeat.close()
 
@@ -2562,32 +2562,32 @@ def main():
                             total += float(LS[2])
                     normDict[cell] = total
 
-                Dict = defaultdict(lambda: defaultdict(list))
-                final = open("%s/FeGenie-geneSummary-clusters.csv" % outDirectory, "r")
-                for i in final:
-                    ls = (i.rstrip().split(","))
-                    if not re.search(r'#', i):
-                        if ls[0] != "" and ls[1] != "assembly" and ls[1] != "genome" and ls[1] != "genome/assembly":
-                            if not re.match(r'#', i):
-                                process = ls[0]
-                                cell = ls[1]
-                                orf = ls[2]
-                                contig = allButTheLast(orf, "_")
-                                gene = ls[3]
-                                Dict[cell][process].append(float(depthDict[cell][contig]))
+            Dict = defaultdict(lambda: defaultdict(list))
+            final = open("%s/FeGenie-geneSummary-clusters.csv" % outDirectory, "r")
+            for i in final:
+                ls = (i.rstrip().split(","))
+                if not re.search(r'#', i):
+                    if ls[0] != "" and ls[1] != "assembly" and ls[1] != "genome" and ls[1] != "genome/assembly":
+                        if not re.match(r'#', i):
+                            process = ls[0]
+                            cell = ls[1]
+                            orf = ls[2]
+                            contig = allButTheLast(orf, "_")
+                            gene = ls[3]
+                            Dict[cell][process].append(float(depthDict[cell][contig]))
 
-                outHeat = open("%s/FeGenie-heatmap-data.csv" % outDirectory, "w")
-                outHeat.write("X" + ',')
-                for i in sorted(Dict.keys()):
-                    outHeat.write(i + ",")
+            outHeat = open("%s/FeGenie-heatmap-data.csv" % outDirectory, "w")
+            outHeat.write("X" + ',')
+            for i in sorted(Dict.keys()):
+                outHeat.write(i + ",")
+            outHeat.write("\n")
+
+            for i in cats:
+                outHeat.write(i + ",")
+                for j in sorted(Dict.keys()):
+                    if not re.match(r'#', j):
+                        outHeat.write(str(SUM(Dict[j][i])) + ",")
                 outHeat.write("\n")
-
-                for i in cats:
-                    outHeat.write(i + ",")
-                    for j in sorted(Dict.keys()):
-                        if not re.match(r'#', j):
-                            outHeat.write(str(SUM(Dict[j][i])) + ",")
-                    outHeat.write("\n")
 
             outHeat.close()
 
