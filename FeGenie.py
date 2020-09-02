@@ -584,7 +584,7 @@ def main():
     # *************** CALL ORFS FROM BINS AND READ THE ORFS INTO HASH MEMORY ************************ #
     BinDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
     for i in binDirLS:
-        if lastItem(i.split(".")) == args.bin_ext:
+        if lastItem(i.split(".")) == args.bin_ext and not re.match(r'\.', i):
             if args.debug:
                 print(i)
             cell = i
