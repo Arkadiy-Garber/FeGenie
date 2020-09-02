@@ -585,6 +585,8 @@ def main():
     BinDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
     for i in binDirLS:
         if lastItem(i.split(".")) == args.bin_ext:
+            if args.debug:
+                print(i)
             cell = i
             if not args.gbk:
 
@@ -636,7 +638,7 @@ def main():
             else:
                 os.system('gtt-genbank-to-AA-seqs -i %s/%s -o %s/%s.faa' % (binDir, i, outDirectory, i))
 
-                faa = open("%s/%s.faa" % (binDir, i))
+                faa = open("%s/%s.faa" % (outDirectory, i))
                 faa = fasta(faa)
 
                 gbkDict = defaultdict(list)
@@ -705,13 +707,13 @@ def main():
 
                 idxOut = open("%s/ORF_calls/%s-proteins.idx" % (outDirectory, i), "w")
                 faaOut = open("%s/ORF_calls/%s-proteins.faa" % (outDirectory, i), "w")
-
                 for gbkkey1 in gbkDict.keys():
                     counter = 0
                     for gbkey2 in gbkDict[gbkkey1]:
                         counter += 1
                         if len(faa[gbkey2]) > 0:
                             newOrf = gbkkey1 + "_" + str(counter)
+                            print(newOrf)
                             idxOut.write(gbkey2 + "," + newOrf + "\n")
                             faaOut.write(">" + newOrf + "\n")
                             faaOut.write(str(faa[gbkey2]) + "\n")
@@ -736,8 +738,6 @@ def main():
         metaDict[ls[0]] = ls[1]
 
     # ******************* BEGINNING MAIN ALGORITHM **********************************))))
-    if args.debug:
-        DEBUG = open(args.out + "/debug.issue19.txt", "w")
 
     if not args.skip:
         print("starting main pipeline...")
@@ -2166,8 +2166,9 @@ def main():
         if args.gbk:
             idxDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
             for idxfile in binDirLS:
+                print(idxfile)
                 if lastItem(idxfile.split(".")) == "idx":
-                    print(idxfile)
+                    print(newOrf)
                     idxfileopen = open("%s/%s" % (binDir, idxfile))
                     for idxline in idxfileopen:
                         ls = idxline.rstrip().split(",")
@@ -2175,11 +2176,14 @@ def main():
                         oldOrf = ls[0]
                         idxDict[newOrf] = oldOrf
 
+            print("\n")
             for i in summaryDict.keys():
                 if len(summaryDict[i]) > 0:
                     for j in summaryDict[i]:
                         ls = j.split(",")
                         if args.ref != "NA":
+                            print(ls[2])
+                            print(idxDict[ls[2]])
                             out.write(
                                 ls[0] + "," + ls[1] + "," + str(idxDict[ls[2]]) + "," + ls[3] + "," + ls[4] + "," + ls[
                                     5] + "," + ls[6] + "," + ls[7] + "," + ls[8] + "," + ls[9] + "," + ls[10] + "\n")
@@ -2316,10 +2320,6 @@ def main():
                     for k in depth:
                         LS = k.rstrip().split("\t")
                         if LS[0] != "contigName":
-                            if args.debug:
-                                DEBUG.write(cell)
-                                DEBUG.write(LS[0])
-                                DEBUG.write("")
                             depthDict[cell][LS[0]] = LS[2]
                             total += float(LS[2])
                     normDict[cell] = total
@@ -2335,8 +2335,7 @@ def main():
                             depthDict[cell][LS[0]] = LS[2]
                             total += float(LS[2])
                     normDict[cell] = total
-            if args.debug:
-                DEBUG.write("\n\n#######################################################################\n\n")
+
             Dict = defaultdict(lambda: defaultdict(list))
             final = open("%s/FeGenie-geneSummary-clusters.csv" % outDirectory, "r")
             for i in final:
@@ -2349,10 +2348,6 @@ def main():
                             orf = ls[2]
                             contig = allButTheLast(orf, "_")
                             gene = ls[3]
-                            if args.debug:
-                                DEBUG.write(cell)
-                                DEBUG.write(contig)
-                                DEBUG.write("")
                             Dict[cell][process].append(float(depthDict[cell][contig]))
 
             outHeat = open("%s/FeGenie-heatmap-data.csv" % outDirectory, "w")
