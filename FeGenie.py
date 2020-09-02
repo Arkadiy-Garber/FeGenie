@@ -592,6 +592,8 @@ def main():
 
                 if args.orfs:
                     testFile = open("%s/%s" % (binDir, i), "r")
+                    if args.debug:
+                        print(testFile)
                     for line in testFile:
                         if re.match(r'>', line):
                             if re.findall(r'\|]', line):
