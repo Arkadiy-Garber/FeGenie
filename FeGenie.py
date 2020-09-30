@@ -5,6 +5,7 @@ import os
 import textwrap
 import argparse
 import sys
+import time
 
 
 # TODO: ADD CYTOCHROME 579 HMM
@@ -585,15 +586,11 @@ def main():
     BinDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
     for i in binDirLS:
         if lastItem(i.split(".")) == args.bin_ext and not re.match(r'\.', i):
-            if args.debug:
-                print(i)
             cell = i
             if not args.gbk:
 
                 if args.orfs:
                     testFile = open("%s/%s" % (binDir, i), "r")
-                    if args.debug:
-                        print(testFile)
                     for line in testFile:
                         if re.match(r'>', line):
                             if re.findall(r'\|]', line):
@@ -729,7 +726,7 @@ def main():
                 file = open("%s/ORF_calls/%s-proteins.faa" % (outDirectory, i))
             file = fasta(file)
             for j in file.keys():
-                orf = j.split(" # ")[0]
+                orf = j.split(" ")[0]
                 BinDict[cell][orf] = file[j]
 
     # ******************** READ BITSCORE CUT-OFFS INTO HASH MEMORY ****************************** #
@@ -824,6 +821,7 @@ def main():
                                   str(HMMdict[key][j]["evalue"]) + "," + str(HMMdict[key][j]["bit"]) + "\n")
 
                 out.close()
+                time.sleep(5)
 
         print("\n")
         print("Consolidating summary files into one master summary file")
@@ -845,6 +843,7 @@ def main():
                         out.write(i.split("-summary")[0] + "," + cell + "," + orf + "," + hmm + "," + str(bit) + "\n")
 
         out.close()
+        time.sleep(5)
 
         # ****************************************** DEREPLICATION *********************************************************
         summary = open(outDirectory + "/FinalSummary.csv", "r")
@@ -926,8 +925,8 @@ def main():
 
                             orf = j + args.delim + str(l)
 
-
-
+                            print(SummaryDict[i][orf]["category"] + "," + i + "," + orf + "," + SummaryDict[i][orf][
+                                "hmm"] + "," + str(SummaryDict[i][orf]["hmmBit"]) + "," + str(counter) + "\n")
                             out.write(SummaryDict[i][orf]["category"] + "," + i + "," + orf + "," + SummaryDict[i][orf][
                                 "hmm"] + "," + str(SummaryDict[i][orf]["hmmBit"]) + "," + str(counter) + "\n")
 
@@ -935,6 +934,7 @@ def main():
                             "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
                         counter += 1
         out.close()
+        time.sleep(5)
 
 
         # else:
@@ -1118,6 +1118,7 @@ def main():
                             "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
                         counter += 1
         out.close()
+        time.sleep(5)
 
         summary = open("%s/FinalSummary-dereplicated-clustered.csv" % outDirectory)
         out = open("%s/FinalSummary-dereplicated-clustered-blast.csv" % outDirectory, "w")
@@ -1136,7 +1137,7 @@ def main():
                 out.write(i.rstrip() + "\n")
 
         out.close()
-
+        time.sleep(5)
         # ****************************** FILTERING OUT LIKELY FALSE POSITIVES *************************************
 
         if not args.all_results:
@@ -1376,6 +1377,7 @@ def main():
                     out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
 
             out.close()
+            time.sleep(5)
 
             # REMOVING FILES
             os.system("rm %s/GeoThermin.csv" % outDirectory)
@@ -1400,6 +1402,7 @@ def main():
                         out.write(header + "\n")
                         out.write(seq + "\n")
                 out.close()
+                time.sleep(5)
 
                 os.system("diamond blastp --db %s.dmnd --out "
                           "%s/FeGenie-summary.dmndout --max-target-seqs 1 --outfmt 6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore stitle "
@@ -1463,6 +1466,7 @@ def main():
                     out.write(i)
 
             out.close()
+            time.sleep(5)
 
         else:
             print("Pre-processing of final outout file")
@@ -1474,6 +1478,7 @@ def main():
 
             out.close()
 
+            time.sleep(5)
             # REMOVING FILES
             os.system("rm %s/GeoThermin.csv" % outDirectory)
             os.system("rm %s/*summary*" % outDirectory)
@@ -1498,6 +1503,7 @@ def main():
                         out.write(header + "\n")
                         out.write(seq + "\n")
                 out.close()
+                time.sleep(5)
 
                 os.system("diamond blastp --db %s.dmnd --out "
                           "%s/FeGenie-summary.dmndout --max-target-seqs 1 --outfmt 6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore stitle "
@@ -1516,6 +1522,7 @@ def main():
                     dmndblastDict[cell][orf]["e"] = evalue
                     dmndblastDict[cell][orf]["target"] = target
 
+            time.sleep(5)
             summary = open("%s/FeGenie-summary.csv" % outDirectory, "r")
             out = open("%s/FeGenie-summary-blasthits.csv" % outDirectory, "w")
             if args.ref != "NA":
@@ -1565,7 +1572,7 @@ def main():
 
             out.close()
 
-
+        time.sleep(5)
         # REMOVING FILES
         if args.ref != "NA":
             os.system("rm %s/FeGenie-summary.dmndout" % outDirectory)
@@ -2055,6 +2062,8 @@ def main():
                                 memoryDict[dataset][orf]["seq"] + "\n")
 
             out.close()
+
+            time.sleep(5)
             os.system("mv %s/FeGenie-summary-fixed.csv %s/FeGenie-summary.csv" % (outDirectory, outDirectory))
         else:
             print("Final processing of output\n")
@@ -2144,6 +2153,7 @@ def main():
                             memoryDict[dataset][orf]["seq"] + "\n")
 
             out.close()
+            time.sleep(5)
             os.system("mv %s/FeGenie-summary-fixed.csv %s/FeGenie-summary.csv" % (outDirectory, outDirectory))
 
         # ****************************** PRE-FINAL ALTERATION OF THE OUTPUT FILE ***************************************
@@ -2206,6 +2216,7 @@ def main():
                         "#####################################################################################################\n")
         out.close()
 
+        time.sleep(5)
         os.system("mv %s/FeGenie-summary-altered.csv %s/FeGenie-geneSummary-clusters.csv" % (outDirectory, outDirectory))
         os.system("rm %s/FeGenie-summary.csv" % outDirectory)
 
@@ -2227,6 +2238,7 @@ def main():
 
         out.close()
 
+        time.sleep(5)
         try:
             hmmout = os.listdir("%s/HMM_results" % outDirectory)
             os.system("rm -rf %s/HMM_results/*" % outDirectory)
@@ -2240,6 +2252,7 @@ def main():
 
         os.system("rm -rf %s/makedbfile.txt.perf" % outDirectory)
 
+        time.sleep(5)
         # ****************************** CREATING A HEATMAP-COMPATIBLE CSV FILE *************************************
         print("Writing heatmap-formatted output file: %s/FeGenie-heatmap-data.csv\n" % outDirectory)
 
@@ -2426,6 +2439,8 @@ def main():
                         outHeat.write(str(SUM(Dict[j][i])) + ",")
                 outHeat.write("\n")
 
+        outHeat.close()
+        time.sleep(5)
         # ******** RUNNING RSCRIPT TO GENERATE PLOTS **************
         if args.makeplots:
             print("Running Rscript to generate plots. Do not be alarmed if you see Warning or Error messages from Rscript. "
@@ -2663,6 +2678,8 @@ def main():
                         outHeat.write(str(SUM(Dict[j][i])) + ",")
                 outHeat.write("\n")
 
+        outHeat.close()
+        time.sleep(5)
         # ******** RUNNING RSCRIPT TO GENERATE PLOTS **************
         if args.makeplots:
             print(
