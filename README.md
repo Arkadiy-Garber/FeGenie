@@ -4,6 +4,53 @@ Please see the Wiki page for introduction and tutorial on how to use this tool.
 
 Special thanks to Michael Lee (https://github.com/AstrobioMike) for helping to put together the setup.sh script, which signficantly eases installation.
 
+## Tutorial (Binder)
+
+FeGenie introductory slideshow:
+
+[Content](https://github.com/biovcnet/topic-functional-annotation/blob/master/Lesson-4/FeGenie%20intro%20and%20tutorial.pdf) | [Video presentation](https://www.youtube.com/watch?v=sp5ZDcHaYOc&t=24s)
+
+
+FeGenie video tutorial:
+
+[Content](https://github.com/biovcnet/topic-functional-annotation/blob/master/Lesson-4/README.md) | [Video presentation](https://www.youtube.com/watch?v=WV0GAGSD4kc)
+
+
+To start the tutorial, hit the 'launch binder' button below, and follow the commands in 'Walkthrough'
+
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Arkadiy-Garber/bvcn-binder-FeGenie/master?urlpath=lab)
+(Initially forked from [here](https://github.com/binder-examples/conda). Thank you to the awesome [binder](https://mybinder.org/) team!)
+
+
+### Walkthrough
+
+Enter the main FeGenie directory
+
+    cd FeGenie
+
+print the FeGenie help menu
+
+    FeGenie -h
+
+run FeGenie on test dataset
+
+    FeGenie.py -bin_dir genomes/ -bin_ext fna -out fegenie_out
+
+Go into the output directory and check out the output files
+
+    cd fegenie_out
+    less FeGenie-geneSummary-clusters.csv
+
+run FeGenie on gene calls
+
+    FeGenie.py -bin_dir ORFs/ -bin_ext faa -out fegenie_out --orfs
+
+run FeGenie on gene calls, and use reference database (RefSeq sub-sample) for cross-validation
+
+    FeGenie.py -bin_dir ORFs/ -bin_ext faa -out fegenie_out --orfs -ref refseq_db/refseq_nr.sample.faa
+
+
+
 ### Easy Installation (if you have Conda installed)
     git clone https://github.com/Arkadiy-Garber/FeGenie.git
     cd FeGenie
