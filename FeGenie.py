@@ -2225,12 +2225,6 @@ def main():
         print("Writing summary to file: %s/FeGenie-geneSummary.csv for downstream parsing and analyses" % outDirectory)
         summary = open("%s/FeGenie-geneSummary-clusters.csv" % outDirectory, "r")
         out = open("%s/FeGenie-geneSummary.csv" % outDirectory, "w")
-        if args.ref != "NA":
-            out.write(
-                "category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore" + "," + "bitscore_cutoff" + "," + "clusterID" + "," + "heme_binding_motifs" + "," + "top_blast_hit" + "," + "blast_hit_evalue" + "," + "protein_sequence" + "\n")
-        else:
-            out.write(
-                "category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore" + "," + "bitscore_cutoff" + "," + "clusterID" + "," + "heme_binding_motifs" + "," + "protein_sequence" + "\n")
 
         for i in summary:
             if not re.search(r'#', i):
