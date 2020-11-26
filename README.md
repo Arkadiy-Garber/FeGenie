@@ -4,6 +4,10 @@ Please see the Wiki page for introduction and tutorial on how to use this tool.
 
 Special thanks to Michael Lee (https://github.com/AstrobioMike) for helping to put together the setup.sh script, which signficantly eases installation.
 
+### Citing FeGenie:
+
+Garber AI, Nealson KH, Okamoto A, McAllister SM, Chan CS, Barco RA and Merino N (2020) FeGenie: A Comprehensive Tool for the Identification of Iron Genes and Iron Gene Neighborhoods in Genome and Metagenome Assemblies. Front. Microbiol. 11:37. doi: [10.3389/fmicb.2020.00037](https://www.frontiersin.org/articles/10.3389/fmicb.2020.00037/full)
+
 ## Tutorial (Binder)
 
 FeGenie introductory slideshow:
@@ -94,7 +98,3 @@ Beware that you need to mount directories which contain files `FeGenie` is suppo
 6) Include option to release all results (regardless of whether rules for reporting were met)
 7) Identification of iron-sulfur proteins.
 
-
-### Citing FeGenie:
-
-Garber AI, Nealson KH, Okamoto A, McAllister SM, Chan CS, Barco RA and Merino N (2020) FeGenie: A Comprehensive Tool for the Identification of Iron Genes and Iron Gene Neighborhoods in Genome and Metagenome Assemblies. Front. Microbiol. 11:37. doi: 10.3389/fmicb.2020.00037
