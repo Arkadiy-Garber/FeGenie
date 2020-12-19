@@ -837,6 +837,7 @@ def main():
                     cell = ls[0]
                     orf = ls[1]
                     hmm = ls[2]
+
                     bit = ls[4]
 
                     if cell != "cell":
@@ -2023,6 +2024,23 @@ def main():
                                         memoryDict[dataset][orf]["heme"] + "," +
                                         memoryDict[dataset][orf]["seq"] + "\n")
 
+                            elif "MtrC_TIGR03507" in operon:
+                                if args.ref != "NA":
+                                    out.write(
+                                        "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                                        memoryDict[dataset][orf]["bit"] + "," +
+                                        memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                        memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] +
+                                        memoryDict[dataset][orf]["blastEval"] + "," +
+                                        memoryDict[dataset][orf]["seq"] + "\n")
+                                else:
+                                    out.write(
+                                        "probable_iron_reduction" + "," + dataset + "," + orf + "," + hmm + "," +
+                                        memoryDict[dataset][orf]["bit"] + "," +
+                                        memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                        memoryDict[dataset][orf]["heme"] + "," +
+                                        memoryDict[dataset][orf]["seq"] + "\n")
+
 
                             else:
                                 pass
@@ -2225,6 +2243,12 @@ def main():
         print("Writing summary to file: %s/FeGenie-geneSummary.csv for downstream parsing and analyses" % outDirectory)
         summary = open("%s/FeGenie-geneSummary-clusters.csv" % outDirectory, "r")
         out = open("%s/FeGenie-geneSummary.csv" % outDirectory, "w")
+        if args.ref != "NA":
+            out.write(
+                "category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore" + "," + "bitscore_cutoff" + "," + "clusterID" + "," + "heme_binding_motifs" + "," + "top_blast_hit" + "," + "blast_hit_evalue" + "," + "protein_sequence" + "\n")
+        else:
+            out.write(
+                "category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore" + "," + "bitscore_cutoff" + "," + "clusterID" + "," + "heme_binding_motifs" + "," + "protein_sequence" + "\n")
 
         for i in summary:
             if not re.search(r'#', i):
