@@ -1430,13 +1430,16 @@ def main():
                 out.write(
                     "category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore" + "," + "bitscore_cutoff" + "," + "cluster" + "," + "heme_binding_motifs" + "," + "protein_sequence" + "\n")
 
+
             # SUMMARIZING CROSS-REFERENCE RESULTS AND COUNTING HEME-BINDING MOTIFS
             print("Counting heme-binding motifs")
+            aromatics = ["F", "Y", "W", "H"]
             counter = 1
             for i in summary:
                 if not re.match(r'#', i):
                     ls = i.rstrip().split(",")
                     seq = BinDict[ls[1]][ls[2]]
+
                     hemes = len(re.findall(r'C(..)CH', seq)) + len(re.findall(r'C(...)CH', seq)) \
                             + len(re.findall(r'C(....)CH', seq)) + len(re.findall(r'C(..............)CH', seq)) \
                             + len(re.findall(r'C(...............)CH', seq))
@@ -1894,6 +1897,40 @@ def main():
                                     memoryDict[dataset][orf]["seq"] + "\n")
 
                     elif cat == "iron_reduction":
+                        if hmm in ["t4ap"]:
+                            aromatics = ["F", "Y", "W", "H"]
+                            seq = memoryDict[dataset][orf]["seq"]
+                            aromaticAAs = 0
+                            aromaticFreeGap = 0
+                            gapThreshold = 0
+                            for aa in seq:
+                                if aa in aromatics:
+                                    if aromaticFreeGap > 22:
+                                        gapThreshold += 1
+                                    aromaticAAs += 1
+                                    aromaticFreeGap = 0
+                                else:
+                                    aromaticFreeGap += 1
+
+                            percAromatic = aromaticAAs / len(seq)
+                            if percAromatic > 0.098 and gapThreshold == 0 and \
+                                    re.findall(r'F(......................)Y(..)Y(....)[YF](.................)[YF][YF](.....)[YF]', seq):
+                                if args.ref != "NA":
+                                    out.write(
+                                        memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
+                                        memoryDict[dataset][orf]["bit"] + "," +
+                                        memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                        memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] +
+                                        memoryDict[dataset][orf]["blastEval"] + "," +
+                                        memoryDict[dataset][orf]["seq"] + "\n")
+                                else:
+                                    out.write(
+                                        memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
+                                        memoryDict[dataset][orf]["bit"] + "," +
+                                        memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                        memoryDict[dataset][orf]["heme"] + "," +
+                                        memoryDict[dataset][orf]["seq"] + "\n")
+
                         if hmm in ["DFE_0465", "DFE_0464", "DFE_0463", "DFE_0462", "DFE_0461"]:
                             if checkDFE1(clusterDict[i]) < 3:
                                 pass
