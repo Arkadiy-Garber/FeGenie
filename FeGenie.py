@@ -1913,8 +1913,8 @@ def main():
                                     aromaticFreeGap += 1
 
                             percAromatic = aromaticAAs / len(seq)
-                            if percAromatic > 0.098 and gapThreshold == 0 and \
-                                    re.findall(r'F(......................)Y(..)Y(....)[YF](.................)[YF][YF](.....)[YF]', seq):
+                            if percAromatic > 0.11 and gapThreshold == 0 and \
+                                    re.findall(r'F(......................)Y(..)Y(....)[YF](.................)[YF][YF](.....)[YF]', seq) and len(seq) < 182:
                                 if args.ref != "NA":
                                     out.write(
                                         memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
@@ -1930,6 +1930,8 @@ def main():
                                         memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
                                         memoryDict[dataset][orf]["heme"] + "," +
                                         memoryDict[dataset][orf]["seq"] + "\n")
+                            else:
+                                pass
 
                         if hmm in ["DFE_0465", "DFE_0464", "DFE_0463", "DFE_0462", "DFE_0461"]:
                             if checkDFE1(clusterDict[i]) < 3:
