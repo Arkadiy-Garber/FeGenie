@@ -59,10 +59,13 @@ run FeGenie on gene calls, and use reference database (RefSeq sub-sample) for cr
     git clone https://github.com/Arkadiy-Garber/FeGenie.git
     cd FeGenie
     bash setup.sh
+    Rscript -e 'install.packages("grid", repos = "http://cran.us.r-project.org")'
+    Rscript -e 'install.packages("broom", repos = "http://cran.us.r-project.org”)'
+    Rscript -e 'install.packages("ggpubr", repos = "http://cran.us.r-project.org”)’
     conda activate fegenie
     FeGenie.py -h
 
-### Easy Installation (if you don't have Conda)
+### Installation (if you don't have Conda)
     git clone https://github.com/Arkadiy-Garber/FeGenie.git
     cd FeGenie
     bash setup_noconda.sh
