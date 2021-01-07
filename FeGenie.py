@@ -92,6 +92,17 @@ def main():
                     count += 1
         return count
 
+    def checkGACE(ls):
+        count = 0
+        uniqueLS = []
+        for i in ls:
+            hmm = i.split("|")[0]
+            if hmm not in uniqueLS:
+                uniqueLS.append(hmm)
+                if hmm in ["GACE_1843", "GACE_1844", "GACE_1845", "GACE_1846", "GACE_1847"]:
+                    count += 1
+        return count
+
     def check1(ls):
         count = 0
         uniqueLS = []
@@ -544,11 +555,8 @@ def main():
     try:
         os.listdir(args.out)
         print("Looks like you already have a directory with the name: " + args.out)
-        
-        if args.debug:
-            answer = "y"
-        else:
-            answer = input("Would you like FeGenie to proceed and potentially overwrite files in this directory? (y/n): ")
+
+        answer = input("Would you like FeGenie to proceed and potentially overwrite files in this directory? (y/n): ")
         if answer == "y":
             print("Ok, proceeding with analysis!")
             try:
@@ -1936,7 +1944,28 @@ def main():
                             else:
                                 pass
 
-                        if hmm in ["DFE_0465", "DFE_0464", "DFE_0463", "DFE_0462", "DFE_0461"]:
+                        elif hmm in ["GACE_1843", "GACE_1844", "GACE_1845", "GACE_1846", "GACE_1847"]:
+                            if checkGACE(clusterDict[i]) < 3:
+                                pass
+                            else:
+                                if args.ref != "NA":
+                                    out.write(
+                                        memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
+                                        memoryDict[dataset][orf]["bit"] + "," +
+                                        memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                        memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["blastHit"] +
+                                        memoryDict[dataset][orf]["blastEval"] + "," +
+                                        memoryDict[dataset][orf]["seq"] + "\n")
+                                else:
+                                    out.write(
+                                        memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
+                                        memoryDict[dataset][orf]["bit"] + "," +
+                                        memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                        memoryDict[dataset][orf]["heme"] + "," +
+                                        memoryDict[dataset][orf]["seq"] + "\n")
+
+
+                        elif hmm in ["DFE_0465", "DFE_0464", "DFE_0463", "DFE_0462", "DFE_0461"]:
                             if checkDFE1(clusterDict[i]) < 3:
                                 pass
                             else:
