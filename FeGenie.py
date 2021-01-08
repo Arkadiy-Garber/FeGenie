@@ -558,7 +558,7 @@ def main():
         
         if args.debug:
             answer = "y"
-           else:
+        else:
             answer = input("Would you like FeGenie to proceed and potentially overwrite files in this directory? (y/n): ")
         if answer == "y":
             print("Ok, proceeding with analysis!")
