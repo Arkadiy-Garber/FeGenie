@@ -555,11 +555,8 @@ def main():
     try:
         os.listdir(args.out)
         print("Looks like you already have a directory with the name: " + args.out)
-        
-        if args.debug:
-            answer = "y"
-        else:
-            answer = input("Would you like FeGenie to proceed and potentially overwrite files in this directory? (y/n): ")
+
+        answer = input("Would you like FeGenie to proceed and potentially overwrite files in this directory? (y/n): ")
         if answer == "y":
             print("Ok, proceeding with analysis!")
             try:
@@ -726,7 +723,6 @@ def main():
                         counter += 1
                         if len(faa[gbkey2]) > 0:
                             newOrf = gbkkey1 + "_" + str(counter)
-                            print(newOrf)
                             idxOut.write(gbkey2 + "," + newOrf + "\n")
                             faaOut.write(">" + newOrf + "\n")
                             faaOut.write(str(faa[gbkey2]) + "\n")
@@ -940,8 +936,6 @@ def main():
 
                             orf = j + args.delim + str(l)
 
-                            print(SummaryDict[i][orf]["category"] + "," + i + "," + orf + "," + SummaryDict[i][orf][
-                                "hmm"] + "," + str(SummaryDict[i][orf]["hmmBit"]) + "," + str(counter) + "\n")
                             out.write(SummaryDict[i][orf]["category"] + "," + i + "," + orf + "," + SummaryDict[i][orf][
                                 "hmm"] + "," + str(SummaryDict[i][orf]["hmmBit"]) + "," + str(counter) + "\n")
 
@@ -1919,7 +1913,7 @@ def main():
                             gapThreshold = 0
                             for aa in seq:
                                 if aa in aromatics:
-                                    if aromaticFreeGap > 22:
+                                    if aromaticFreeGap > 35:
                                         gapThreshold += 1
                                     aromaticAAs += 1
                                     aromaticFreeGap = 0
@@ -1927,8 +1921,8 @@ def main():
                                     aromaticFreeGap += 1
 
                             percAromatic = aromaticAAs / len(seq)
-                            if percAromatic > 0.11 and gapThreshold == 0 and \
-                                    re.findall(r'F(......................)Y(..)Y(....)[YF](.................)[YF][YF](.....)[YF]', seq) and len(seq) < 182:
+                            if percAromatic > 0.097 and gapThreshold == 0 and \
+                                    re.findall(r'[FYWH](......................)[FYWH](..)[FYWH](....)[FYWH](.................)[FYWH][FYWH](.....)[FYWH]', seq):
                                 if args.ref != "NA":
                                     out.write(
                                         memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
@@ -1944,8 +1938,6 @@ def main():
                                         memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
                                         memoryDict[dataset][orf]["heme"] + "," +
                                         memoryDict[dataset][orf]["seq"] + "\n")
-                            else:
-                                pass
 
                         elif hmm in ["GACE_1843", "GACE_1844", "GACE_1845", "GACE_1846", "GACE_1847"]:
                             if checkGACE(clusterDict[i]) < 3:
@@ -2270,9 +2262,7 @@ def main():
         if args.gbk:
             idxDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
             for idxfile in binDirLS:
-                print(idxfile)
                 if lastItem(idxfile.split(".")) == "idx":
-                    print(newOrf)
                     idxfileopen = open("%s/%s" % (binDir, idxfile))
                     for idxline in idxfileopen:
                         ls = idxline.rstrip().split(",")
@@ -2286,8 +2276,6 @@ def main():
                     for j in summaryDict[i]:
                         ls = j.split(",")
                         if args.ref != "NA":
-                            print(ls[2])
-                            print(idxDict[ls[2]])
                             out.write(
                                 ls[0] + "," + ls[1] + "," + str(idxDict[ls[2]]) + "," + ls[3] + "," + ls[4] + "," + ls[
                                     5] + "," + ls[6] + "," + ls[7] + "," + ls[8] + "," + ls[9] + "," + ls[10] + "\n")
