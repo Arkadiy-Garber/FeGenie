@@ -473,7 +473,7 @@ def main():
     parser.add_argument('--all_results', type=str,
                         help="report all results, regardless of clustering patterns and operon structure", const=True, nargs="?")
 
-    parser.add_argument('--hemes', type=str,
+    parser.add_argument('--heme', type=str,
                         help="find all genes with heme-binding motifs (CXXCH), and output them to a separate summary file", const=True, nargs="?")
 
     parser.add_argument('--hbm', type=str,
@@ -2256,10 +2256,10 @@ def main():
         out = open(outDirectory + "/FeGenie-summary-altered.csv", "w")
         if args.ref != "NA":
             out.write(
-                "category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore" + "," + "bitscore_cutoff" + "," + "clusterID" + "," + "heme_c_binding_motifs" + "," + "top_blast_hit" + "," + "blast_hit_evalue" + "," + "protein_sequence" + "\n")
+                "category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore" + "," + "bitscore_cutoff" + "," + "clusterID" + "," + "heme_c_binding_motifs" + "," + "heme_b_binding_motifs" + "," + "hematite_binding_motifs" + "," + "top_blast_hit" + "," + "blast_hit_evalue" + "," + "protein_sequence" + "\n")
         else:
             out.write(
-                "category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore" + "," + "bitscore_cutoff" + "," + "clusterID" + "," + "heme_c_binding_motifs" + "," + "protein_sequence" + "\n")
+                "category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore" + "," + "bitscore_cutoff" + "," + "clusterID" + "," + "heme_c_binding_motifs" + "," + "heme_b_binding_motifs" + "," + "hematite_binding_motifs" + "," + "protein_sequence" + "\n")
 
         for i in summary:
             if re.search(r'#', i):
@@ -2281,27 +2281,56 @@ def main():
             print("\n")
             for i in summaryDict.keys():
                 if len(summaryDict[i]) > 0:
-                    for j in summaryDict[i]:
-                        ls = j.split(",")
-                        if args.ref != "NA":
+                    if args.ref != "NA":
+                        for j in summaryDict[i]:
+                            ls = j.split(",")
+                            seq = ls[10]
+                            hemeb = len(re.findall(r'G(.)[HR]XC[PLAV]G', seq))
+                            hbm = len(re.findall(r'[ST][AVILMFYWH][ST]P[ST]', seq))
+                            out.write(ls[0] + "," + ls[1] + "," + str(idxDict[ls[2]]) + "," + ls[3] + "," + ls[4] + "," + ls[
+                                    5] + "," + ls[6] + "," + ls[7] + "," + str(hemeb) + "," + str(hbm) + "," + ls[8] + "," + ls[9] + "," + ls[10] + "\n")
+                        out.write("##########################################################################################################################################################################################################\n")
+                    else:
+                        for j in summaryDict[i]:
+                            ls = j.split(",")
+                            seq = ls[8]
+                            hemeb = len(re.findall(r'G(.)[HR]XC[PLAV]G', seq))
+                            hbm = len(re.findall(r'[ST][AVILMFYWH][ST]P[ST]', seq))
                             out.write(
                                 ls[0] + "," + ls[1] + "," + str(idxDict[ls[2]]) + "," + ls[3] + "," + ls[4] + "," + ls[
-                                    5] + "," + ls[6] + "," + ls[7] + "," + ls[8] + "," + ls[9] + "," + ls[10] + "\n")
-                        else:
-                            out.write(
-                                ls[0] + "," + ls[1] + "," + str(idxDict[ls[2]]) + "," + ls[3] + "," + ls[4] + "," + ls[
-                                    5] + "," + ls[6] + "," + ls[7] + "," + ls[8] + "\n")
-                    out.write(
-                        "#####################################################################################################"
-                        "#####################################################################################################\n")
+                                    5] + "," + ls[6] + "," + ls[7] + "," + str(hemeb) + "," + str(hbm) + "," + ls[8] + "\n")
+                        out.write(
+                            "#####################################################################################################"
+                            "#####################################################################################################\n")
         else:
             for i in summaryDict.keys():
                 if len(summaryDict[i]) > 0:
-                    for j in summaryDict[i]:
-                        out.write(j + "\n")
-                    out.write(
-                        "#####################################################################################################"
-                        "#####################################################################################################\n")
+                    if args.ref != "NA":
+                        for j in summaryDict[i]:
+                            ls = j.split(",")
+                            seq = ls[8]
+                            hemeb = len(re.findall(r'G(.)[HR]XC[PLAV]G', seq))
+                            hbm = len(re.findall(r'[STC][AVILMFYWH][ST]P[ST]', seq))
+                            out.write(
+                                ls[0] + "," + ls[1] + "," + str(idxDict[ls[2]]) + "," + ls[3] + "," + ls[4] + "," + ls[
+                                    5] + "," + ls[6] + "," + ls[7] + "," + str(hemeb) + "," + str(hbm) + "," + ls[
+                                    8] + "," + ls[9] + "," + ls[10] + "\n")
+                        out.write(
+                            "#####################################################################################################"
+                            "#####################################################################################################\n")
+                    else:
+                        for j in summaryDict[i]:
+                            ls = j.split(",")
+                            seq = ls[8]
+                            hemeb = len(re.findall(r'G(.)[HR]XC[PLAV]G', seq))
+                            hbm = len(re.findall(r'[STC][AVILMFYWH][ST]P[ST]', seq))
+                            out.write(
+                                ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + ls[4] + "," + ls[
+                                    5] + "," + ls[6] + "," + ls[7] + "," + str(hemeb) + "," + str(hbm) + "," + ls[8] + "\n")
+                        out.write(
+                            "#####################################################################################################"
+                            "#####################################################################################################\n")
+
         out.close()
 
         time.sleep(5)
@@ -2309,8 +2338,6 @@ def main():
         os.system("rm %s/FeGenie-summary.csv" % outDirectory)
 
         # ****************************** REMOVING #'S ***************************************
-        print("Writing summary to file: %s/FeGenie-geneSummary-clusters.csv for visual inspection" % outDirectory)
-        print("Writing summary to file: %s/FeGenie-geneSummary.csv for downstream parsing and analyses" % outDirectory)
         summary = open("%s/FeGenie-geneSummary-clusters.csv" % outDirectory, "r")
         out = open("%s/FeGenie-geneSummary.csv" % outDirectory, "w")
         if args.ref != "NA":
@@ -2340,7 +2367,72 @@ def main():
 
         os.system("rm -rf %s/makedbfile.txt.perf" % outDirectory)
 
+        if args.heme:
+            print("Looking for heme-binding motifs")
+            out = open("%s/FeGenie-hemeProteins.csv" % outDirectory, "w")
+            out.write("genome/assembly,orf,heme_c_binding_motifs,heme_b_binding_motifs,seq\n")
+            for i in binDirLS:
+                if lastItem(i.split(".")) == args.bin_ext:  # FILTERING OUT ANY NON-BIN-RELATED FILES
+                    if args.orfs:
+                        BIN = open("%s/%s" % (binDir, i))
+                        BIN = fasta(BIN)
+                        for j in BIN.keys():
+                            seq = BIN[j]
+                            hemec = len(re.findall(r'C(..)CH', seq)) + len(re.findall(r'C(...)CH', seq)) \
+                                    + len(re.findall(r'C(....)CH', seq)) + len(re.findall(r'C(..............)CH', seq)) \
+                                    + len(re.findall(r'C(...............)CH', seq))
+                            hemeb = len(re.findall(r'G(.)[HR]XC[PLAV]G', seq))
+                            if hemec > 0 or hemeb > 0:
+                                out.write(i + "," + j + "," + str(hemec) + "," + str(hemeb) + "," + seq + "\n")
+
+                    else:
+                        BIN = open("%s/ORF_calls/%s-proteins.faa" % (outDirectory, i))
+                        BIN = fasta(BIN)
+                        for j in BIN.keys():
+                            seq = BIN[j]
+                            hemec = len(re.findall(r'C(..)CH', seq)) + len(re.findall(r'C(...)CH', seq)) \
+                                    + len(re.findall(r'C(....)CH', seq)) + len(re.findall(r'C(..............)CH', seq)) \
+                                    + len(re.findall(r'C(...............)CH', seq))
+                            hemeb = len(re.findall(r'G(.)[HR]XC[PLAV]G', seq))
+                            if hemec > 0 or hemeb > 0:
+                                out.write(i + "," + j + "," + str(hemec) + "," + str(hemeb) + "," + seq + "\n")
+            out.close()
+
+        if args.hbm:
+            print("Looking for hematite-binding motifs")
+            positive = ["R", "H", "K"]
+            negative = ["D", "E"]
+            polar = ["S", "T", "N", "Q"]
+            special = ["C", "G", "P"]
+            hydrophobic = ["A", "V", "I", "L", "M", "F", "Y", "W"]
+
+            out = open("%s/FeGenie-hematiteProteins.csv" % outDirectory, "w")
+            out.write("genome/assembly,orf,hematite_binding_motifs,seq\n")
+            for i in binDirLS:
+                if lastItem(i.split(".")) == args.bin_ext:  # FILTERING OUT ANY NON-BIN-RELATED FILES
+                    if args.orfs:
+                        BIN = open("%s/%s" % (binDir, i))
+                        BIN = fasta(BIN)
+                        for j in BIN.keys():
+                            seq = BIN[j]
+                            hbm = len(re.findall(r'[STC][AVILMFYWH][ST]P[ST]', seq))
+                            if hbm > 0:
+                                out.write(i + "," + j + "," + str(hbm) + "," + seq + "\n")
+
+                    else:
+                        BIN = open("%s/ORF_calls/%s-proteins.faa" % (outDirectory, i))
+                        BIN = fasta(BIN)
+                        for j in BIN.keys():
+                            seq = BIN[j]
+                            hbm = len(re.findall(r'[STC][AVILMFYWH][ST]P[ST]', seq))
+                            if hbm > 0:
+                                out.write(i + "," + j + "," + str(hbm) + "," + seq + "\n")
+            out.close()
+
         time.sleep(5)
+
+        print("Writen summary to file: %s/FeGenie-geneSummary-clusters.csv for visual inspection" % outDirectory)
+        print("Writen summary to file: %s/FeGenie-geneSummary.csv for downstream parsing and analyses" % outDirectory)
         # ****************************** CREATING A HEATMAP-COMPATIBLE CSV FILE *************************************
         print("Writing heatmap-formatted output file: %s/FeGenie-heatmap-data.csv\n" % outDirectory)
 
@@ -2530,68 +2622,6 @@ def main():
         outHeat.close()
         time.sleep(5)
 
-        if args.heme:
-            print("Looking for heme-binding motifs")
-            out = open("%s/FeGenie-hemeProteins.csv" % outDirectory, "w")
-            out.write("genome/assembly,orf,heme_c_binding_motifs,heme_b_binding_motifs,seq\n")
-            for i in args.bin_dir:
-                if lastItem(i.split(".")) == args.bin_ext:  # FILTERING OUT ANY NON-BIN-RELATED FILES
-                    if args.orfs:
-                        BIN = open("%s/%s" % (binDir, i))
-                        BIN = fasta(BIN)
-                        for j in BIN.keys():
-                            seq = BIN[j]
-                            hemec = len(re.findall(r'C(..)CH', seq)) + len(re.findall(r'C(...)CH', seq)) \
-                                    + len(re.findall(r'C(....)CH', seq)) + len(re.findall(r'C(..............)CH', seq)) \
-                                    + len(re.findall(r'C(...............)CH', seq))
-                            hemeb = len(re.findall(r'G(.)[HR]XC[PLAV]G', seq))
-                            if hemec > 0 or hemeb > 0:
-                                out.write(i + "," + j + "," + str(hemec) + "," + str(hemeb) + "," + seq + "\n")
-
-                    else:
-                        BIN = open("%s/%s-proteins.faa" % (binDir, i))
-                        BIN = fasta(BIN)
-                        for j in BIN.keys():
-                            seq = BIN[j]
-                            hemec = len(re.findall(r'C(..)CH', seq)) + len(re.findall(r'C(...)CH', seq)) \
-                                    + len(re.findall(r'C(....)CH', seq)) + len(re.findall(r'C(..............)CH', seq)) \
-                                    + len(re.findall(r'C(...............)CH', seq))
-                            hemeb = len(re.findall(r'G(.)[HR]XC[PLAV]G', seq))
-                            if hemec > 0 or hemeb > 0:
-                                out.write(i + "," + j + "," + str(hemec) + "," + str(hemeb) + "," + seq + "\n")
-
-        if args.hbm:
-            print("Looking for hematite-binding motifs")
-            positive = ["R", "H", "K"]
-            negative = ["D", "E"]
-            polar = ["S", "T", "N", "Q"]
-            special = ["C", "G", "P"]
-            hydrophobic = ["A", "V", "I", "L", "M", "F", "Y", "W"]
-
-            out = open("%s/FeGenie-hematiteProteins.csv" % outDirectory, "w")
-            out.write("genome/assembly,orf,hematite_binding_motifs,seq\n")
-            for i in args.bin_dir:
-                if lastItem(i.split(".")) == args.bin_ext:  # FILTERING OUT ANY NON-BIN-RELATED FILES
-                    if args.orfs:
-                        BIN = open("%s/%s" % (binDir, i))
-                        BIN = fasta(BIN)
-                        for j in BIN.keys():
-                            seq = BIN[j]
-                            hbm = len(re.findall(r'[ST][AVILMFYWH][ST]P[ST]', seq))
-                            if hbm > 0:
-                                out.write(i + "," + j + "," + str(hbm) + "," + seq + "\n")
-
-                    else:
-                        BIN = open("%s/%s-proteins.faa" % (binDir, i))
-                        BIN = fasta(BIN)
-                        for j in BIN.keys():
-                            seq = BIN[j]
-                            hbm = len(re.findall(r'[ST][AVILMFYWH][ST]P[ST]', seq))
-                            if hbm > 0:
-                                out.write(i + "," + j + "," + str(hbm) + "," + seq + "\n")
-            out.close()
-            
-        time.sleep(5)
         # ******** RUNNING RSCRIPT TO GENERATE PLOTS **************
         if args.makeplots:
             print("Running Rscript to generate plots. Do not be alarmed if you see Warning or Error messages from Rscript. "
@@ -2640,6 +2670,69 @@ def main():
 
     else:
         # ****************************** CREATING A HEATMAP-COMPATIBLE CSV FILE *************************************
+        if args.heme:
+            print("Looking for heme-binding motifs")
+            out = open("%s/FeGenie-hemeProteins.csv" % outDirectory, "w")
+            out.write("genome/assembly,orf,heme_c_binding_motifs,heme_b_binding_motifs,seq\n")
+            for i in binDirLS:
+                if lastItem(i.split(".")) == args.bin_ext:  # FILTERING OUT ANY NON-BIN-RELATED FILES
+                    if args.orfs:
+                        BIN = open("%s/%s" % (binDir, i))
+                        BIN = fasta(BIN)
+                        for j in BIN.keys():
+                            seq = BIN[j]
+                            hemec = len(re.findall(r'C(..)CH', seq)) + len(re.findall(r'C(...)CH', seq)) \
+                                    + len(re.findall(r'C(....)CH', seq)) + len(re.findall(r'C(..............)CH', seq)) \
+                                    + len(re.findall(r'C(...............)CH', seq))
+                            hemeb = len(re.findall(r'G(.)[HR]XC[PLAV]G', seq))
+                            if hemec > 0 or hemeb > 0:
+                                out.write(i + "," + j + "," + str(hemec) + "," + str(hemeb) + "," + seq + "\n")
+
+                    else:
+                        BIN = open("%s/ORF_calls/%s-proteins.faa" % (outDirectory, i))
+                        BIN = fasta(BIN)
+                        for j in BIN.keys():
+                            seq = BIN[j]
+                            hemec = len(re.findall(r'C(..)CH', seq)) + len(re.findall(r'C(...)CH', seq)) \
+                                    + len(re.findall(r'C(....)CH', seq)) + len(re.findall(r'C(..............)CH', seq)) \
+                                    + len(re.findall(r'C(...............)CH', seq))
+                            hemeb = len(re.findall(r'G(.)[HR]XC[PLAV]G', seq))
+                            if hemec > 0 or hemeb > 0:
+                                out.write(i + "," + j + "," + str(hemec) + "," + str(hemeb) + "," + seq + "\n")
+            out.close()
+
+        if args.hbm:
+            print("Looking for hematite-binding motifs")
+            positive = ["R", "H", "K"]
+            negative = ["D", "E"]
+            polar = ["S", "T", "N", "Q"]
+            special = ["C", "G", "P"]
+            hydrophobic = ["A", "V", "I", "L", "M", "F", "Y", "W"]
+
+            out = open("%s/FeGenie-hematiteProteins.csv" % outDirectory, "w")
+            out.write("genome/assembly,orf,hematite_binding_motifs,seq\n")
+            for i in binDirLS:
+                if lastItem(i.split(".")) == args.bin_ext:  # FILTERING OUT ANY NON-BIN-RELATED FILES
+                    if args.orfs:
+                        BIN = open("%s/%s" % (binDir, i))
+                        BIN = fasta(BIN)
+                        for j in BIN.keys():
+                            seq = BIN[j]
+                            hbm = len(re.findall(r'[STC][AVILMFYWH][ST]P[ST]', seq))
+                            if hbm > 0:
+                                out.write(i + "," + j + "," + str(hbm) + "," + seq + "\n")
+
+                    else:
+                        BIN = open("%s/ORF_calls/%s-proteins.faa" % (outDirectory, i))
+                        BIN = fasta(BIN)
+                        for j in BIN.keys():
+                            seq = BIN[j]
+                            hbm = len(re.findall(r'[STC][AVILMFYWH][ST]P[ST]', seq))
+                            if hbm > 0:
+                                out.write(i + "," + j + "," + str(hbm) + "," + seq + "\n")
+            out.close()
+
+        time.sleep(5)
         print("Writing heatmap-formatted output file: %s/FeGenie-heatmap-data.csv\n" % outDirectory)
 
         # GENE-COUNTS BASED ABUNDANCE
@@ -2831,68 +2924,6 @@ def main():
 
         outHeat.close()
         time.sleep(5)
-
-        if args.heme:
-            print("Looking for heme-binding motifs")
-            out = open("%s/FeGenie-hemeProteins.csv" % outDirectory, "w")
-            out.write("genome/assembly,orf,heme_c_binding_motifs,heme_b_binding_motifs,seq\n")
-            for i in args.bin_dir:
-                if lastItem(i.split(".")) == args.bin_ext:  # FILTERING OUT ANY NON-BIN-RELATED FILES
-                    if args.orfs:
-                        BIN = open("%s/%s" % (binDir, i))
-                        BIN = fasta(BIN)
-                        for j in BIN.keys():
-                            seq = BIN[j]
-                            hemec = len(re.findall(r'C(..)CH', seq)) + len(re.findall(r'C(...)CH', seq)) \
-                                    + len(re.findall(r'C(....)CH', seq)) + len(re.findall(r'C(..............)CH', seq)) \
-                                    + len(re.findall(r'C(...............)CH', seq))
-                            hemeb = len(re.findall(r'G(.)[HR]XC[PLAV]G', seq))
-                            if hemec > 0 or hemeb > 0:
-                                out.write(i + "," + j + "," + str(hemec) + "," + str(hemeb) + "," + seq + "\n")
-
-                    else:
-                        BIN = open("%s/%s-proteins.faa" % (binDir, i))
-                        BIN = fasta(BIN)
-                        for j in BIN.keys():
-                            seq = BIN[j]
-                            hemec = len(re.findall(r'C(..)CH', seq)) + len(re.findall(r'C(...)CH', seq)) \
-                                    + len(re.findall(r'C(....)CH', seq)) + len(re.findall(r'C(..............)CH', seq)) \
-                                    + len(re.findall(r'C(...............)CH', seq))
-                            hemeb = len(re.findall(r'G(.)[HR]XC[PLAV]G', seq))
-                            if hemec > 0 or hemeb > 0:
-                                out.write(i + "," + j + "," + str(hemec) + "," + str(hemeb) + "," + seq + "\n")
-
-        if args.hbm:
-            print("Looking for hematite-binding motifs")
-            positive = ["R", "H", "K"]
-            negative = ["D", "E"]
-            polar = ["S", "T", "N", "Q"]
-            special = ["C", "G", "P"]
-            hydrophobic = ["A", "V", "I", "L", "M", "F", "Y", "W"]
-
-            out = open("%s/FeGenie-hematiteProteins.csv" % outDirectory, "w")
-            out.write("genome/assembly,orf,hematite_binding_motifs,seq\n")
-            for i in args.bin_dir:
-                if lastItem(i.split(".")) == args.bin_ext:  # FILTERING OUT ANY NON-BIN-RELATED FILES
-                    if args.orfs:
-                        BIN = open("%s/%s" % (binDir, i))
-                        BIN = fasta(BIN)
-                        for j in BIN.keys():
-                            seq = BIN[j]
-                            hbm = len(re.findall(r'[ST][AVILMFYWH][ST]P[ST]', seq))
-                            if hbm > 0:
-                                out.write(i + "," + j + "," + str(hbm) + "," + seq + "\n")
-
-                    else:
-                        BIN = open("%s/%s-proteins.faa" % (binDir, i))
-                        BIN = fasta(BIN)
-                        for j in BIN.keys():
-                            seq = BIN[j]
-                            hbm = len(re.findall(r'[ST][AVILMFYWH][ST]P[ST]', seq))
-                            if hbm > 0:
-                                out.write(i + "," + j + "," + str(hbm) + "," + seq + "\n")
-            out.close()
-            time.sleep(5)
 
         # ******** RUNNING RSCRIPT TO GENERATE PLOTS **************
         if args.makeplots:
