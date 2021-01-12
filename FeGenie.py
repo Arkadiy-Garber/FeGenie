@@ -2285,7 +2285,7 @@ def main():
                         for j in summaryDict[i]:
                             ls = j.split(",")
                             seq = ls[10]
-                            hemeb = len(re.findall(r'G(.)[HR]XC[PLAV]G', seq))
+                            hemeb = len(re.findall(r'G(.)[HR](.)C[PLAV]G', seq))
                             hbm = len(re.findall(r'[ST][AVILMFYWH][ST]P[ST]', seq))
                             out.write(ls[0] + "," + ls[1] + "," + str(idxDict[ls[2]]) + "," + ls[3] + "," + ls[4] + "," + ls[
                                     5] + "," + ls[6] + "," + ls[7] + "," + str(hemeb) + "," + str(hbm) + "," + ls[8] + "," + ls[9] + "," + ls[10] + "\n")
@@ -2294,7 +2294,7 @@ def main():
                         for j in summaryDict[i]:
                             ls = j.split(",")
                             seq = ls[8]
-                            hemeb = len(re.findall(r'G(.)[HR]XC[PLAV]G', seq))
+                            hemeb = len(re.findall(r'G(.)[HR](.)C[PLAV]G', seq))
                             hbm = len(re.findall(r'[ST][AVILMFYWH][ST]P[ST]', seq))
                             out.write(
                                 ls[0] + "," + ls[1] + "," + str(idxDict[ls[2]]) + "," + ls[3] + "," + ls[4] + "," + ls[
@@ -2309,7 +2309,7 @@ def main():
                         for j in summaryDict[i]:
                             ls = j.split(",")
                             seq = ls[8]
-                            hemeb = len(re.findall(r'G(.)[HR]XC[PLAV]G', seq))
+                            hemeb = len(re.findall(r'G(.)[HR](.)C[PLAV]G', seq))
                             hbm = len(re.findall(r'[STC][AVILMFYWH][ST]P[ST]', seq))
                             out.write(
                                 ls[0] + "," + ls[1] + "," + str(idxDict[ls[2]]) + "," + ls[3] + "," + ls[4] + "," + ls[
@@ -2322,7 +2322,7 @@ def main():
                         for j in summaryDict[i]:
                             ls = j.split(",")
                             seq = ls[8]
-                            hemeb = len(re.findall(r'G(.)[HR]XC[PLAV]G', seq))
+                            hemeb = len(re.findall(r'G(.)[HR](.)C[PLAV]G', seq))
                             hbm = len(re.findall(r'[STC][AVILMFYWH][ST]P[ST]', seq))
                             out.write(
                                 ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + ls[4] + "," + ls[
@@ -2381,7 +2381,7 @@ def main():
                             hemec = len(re.findall(r'C(..)CH', seq)) + len(re.findall(r'C(...)CH', seq)) \
                                     + len(re.findall(r'C(....)CH', seq)) + len(re.findall(r'C(..............)CH', seq)) \
                                     + len(re.findall(r'C(...............)CH', seq))
-                            hemeb = len(re.findall(r'G(.)[HR]XC[PLAV]G', seq))
+                            hemeb = len(re.findall(r'G(.)[HR](.)C[PLAV]G', seq))
                             if hemec > 0 or hemeb > 0:
                                 out.write(i + "," + j + "," + str(hemec) + "," + str(hemeb) + "," + seq + "\n")
 
@@ -2393,7 +2393,7 @@ def main():
                             hemec = len(re.findall(r'C(..)CH', seq)) + len(re.findall(r'C(...)CH', seq)) \
                                     + len(re.findall(r'C(....)CH', seq)) + len(re.findall(r'C(..............)CH', seq)) \
                                     + len(re.findall(r'C(...............)CH', seq))
-                            hemeb = len(re.findall(r'G(.)[HR]XC[PLAV]G', seq))
+                            hemeb = len(re.findall(r'G(.)[HR](.)C[PLAV]G', seq))
                             if hemec > 0 or hemeb > 0:
                                 out.write(i + "," + j + "," + str(hemec) + "," + str(hemeb) + "," + seq + "\n")
             out.close()
@@ -2684,7 +2684,7 @@ def main():
                             hemec = len(re.findall(r'C(..)CH', seq)) + len(re.findall(r'C(...)CH', seq)) \
                                     + len(re.findall(r'C(....)CH', seq)) + len(re.findall(r'C(..............)CH', seq)) \
                                     + len(re.findall(r'C(...............)CH', seq))
-                            hemeb = len(re.findall(r'G(.)[HR]XC[PLAV]G', seq))
+                            hemeb = len(re.findall(r'G(.)[HR](.)C[PLAV]G', seq))
                             if hemec > 0 or hemeb > 0:
                                 out.write(i + "," + j + "," + str(hemec) + "," + str(hemeb) + "," + seq + "\n")
 
@@ -2696,7 +2696,7 @@ def main():
                             hemec = len(re.findall(r'C(..)CH', seq)) + len(re.findall(r'C(...)CH', seq)) \
                                     + len(re.findall(r'C(....)CH', seq)) + len(re.findall(r'C(..............)CH', seq)) \
                                     + len(re.findall(r'C(...............)CH', seq))
-                            hemeb = len(re.findall(r'G(.)[HR]XC[PLAV]G', seq))
+                            hemeb = len(re.findall(r'G(.)[HR](.)C[PLAV]G', seq))
                             if hemec > 0 or hemeb > 0:
                                 out.write(i + "," + j + "," + str(hemec) + "," + str(hemeb) + "," + seq + "\n")
             out.close()
