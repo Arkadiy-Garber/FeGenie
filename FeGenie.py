@@ -604,9 +604,11 @@ def main():
 
     # *************** CALL ORFS FROM BINS AND READ THE ORFS INTO HASH MEMORY ************************ #
     BinDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
+    binCounter = 0
     for i in binDirLS:
         if lastItem(i.split(".")) == args.bin_ext and not re.match(r'\.', i):
             cell = i
+            binCounter += 1
             if not args.gbk:
 
                 if args.orfs:
@@ -748,6 +750,10 @@ def main():
                 orf = j.split(" ")[0]
                 BinDict[cell][orf] = file[j]
 
+    if binCounter == 0:
+        print("Did not detect any files in the provided directory (%s) matching the provided filename extension (%s). "
+              "Please double-check the filenames and your command" % (args.bin_dir, args.bin_ext))
+        raise SystemExit
     # ******************** READ BITSCORE CUT-OFFS INTO HASH MEMORY ****************************** #
     meta = open(bits, "r")
     metaDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
@@ -2718,6 +2724,7 @@ def main():
                         BIN = fasta(BIN)
                         for j in BIN.keys():
                             seq = BIN[j]
+                            print()
                             hbm = len(re.findall(r'[STC][AVILMFYWH][ST]P[ST]', seq))
                             if hbm > 0:
                                 out.write(i + "," + j + "," + str(hbm) + "," + seq + "\n")
