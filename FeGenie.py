@@ -1134,8 +1134,7 @@ def main():
                             orf = (operonDict[i]["orfs"][j])
                             header = (operonDict[i]["headers"][j])
                             evalue = blastDict[orf]["e"]
-                            out.write(category + "," + genome + "," + orf + "," + replace(header, [","],
-                                                                                          ";") + "," + "evalue: " + str(
+                            out.write(category + "," + genome + "," + orf + "," + replace(header, [","], ";") + "," + "evalue: " + str(
                                 evalue) + "," + str(counter) + "\n")
                         out.write(
                             "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
@@ -2724,7 +2723,6 @@ def main():
                         BIN = fasta(BIN)
                         for j in BIN.keys():
                             seq = BIN[j]
-                            print()
                             hbm = len(re.findall(r'[STC][AVILMFYWH][ST]P[ST]', seq))
                             if hbm > 0:
                                 out.write(i + "," + j + "," + str(hbm) + "," + seq + "\n")
@@ -2740,10 +2738,9 @@ def main():
             out.close()
 
         time.sleep(5)
+
         print("Writing heatmap-formatted output file: %s/FeGenie-heatmap-data.csv\n" % outDirectory)
-
         # GENE-COUNTS BASED ABUNDANCE
-
         if args.bam == "NA" and args.bams == "NA":
             cats = ["iron_aquisition-iron_transport", "iron_aquisition-heme_transport",
                     "iron_aquisition-heme_oxygenase",
