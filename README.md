@@ -1,4 +1,5 @@
 ## FeGenie
+### Version 2
 
 Please see the Wiki page for introduction and tutorial on how to use this tool.
 
