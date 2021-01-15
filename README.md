@@ -4,11 +4,38 @@
 
 Please see the Wiki page for introduction and tutorial on how to use this tool.
 
-Special thanks to Michael Lee (https://github.com/AstrobioMike) for helping to put together the setup.sh script, which signficantly eases installation.
-
 ### Citing FeGenie:
 
 Garber AI, Nealson KH, Okamoto A, McAllister SM, Chan CS, Barco RA and Merino N (2020) FeGenie: A Comprehensive Tool for the Identification of Iron Genes and Iron Gene Neighborhoods in Genome and Metagenome Assemblies. Front. Microbiol. 11:37. doi: [10.3389/fmicb.2020.00037](https://www.frontiersin.org/articles/10.3389/fmicb.2020.00037/full)
+
+Special thanks to Michael Lee (https://github.com/AstrobioMike) for helping to put together the setup.sh script, which signficantly eases installation.
+
+
+### Easy Installation (if you have Conda installed)
+    git clone https://github.com/Arkadiy-Garber/FeGenie.git
+    cd FeGenie
+    bash setup.sh
+    Rscript -e 'install.packages("grid", repos = "http://cran.us.r-project.org")'
+    Rscript -e 'install.packages("broom", repos = "http://cran.us.r-project.org”)'
+    Rscript -e 'install.packages("ggpubr", repos = "http://cran.us.r-project.org”)’
+    conda activate fegenie
+    FeGenie.py -h
+
+### Installation (if you don't have Conda)
+    git clone https://github.com/Arkadiy-Garber/FeGenie.git
+    cd FeGenie
+    bash setup_noconda.sh
+    ./FeGenie.py -h
+
+### Quick-start
+    FeGenie.py -bin_dir /directory/of/bins/ -bin_ext fasta -t 16
+The argument for -bin_ext needs to represent the filename extension of the FASTA files in the selected directory that you would like analyzed (e.g. fa, fasta, fna, etc).
+
+
+### Quick-start (if you installed using the 'setup_noconda.sh' script)
+    ./FeGenie.py -hmm_lib hmms/iron -bin_dir /directory/of/bins/ -bin_ext fasta -t 16 -out output_fegenie
+`hmms/iron` directory can be found within FeGenie's main repository
+-t 8 means that 8 threads will be used for HMMER and BLAST. If you have less than 16 available on your system, set this number lower (default = 1)
 
 ## Tutorial (Binder)
 
@@ -55,33 +82,6 @@ run FeGenie on gene calls, and use reference database (RefSeq sub-sample) for cr
 
     FeGenie.py -bin_dir ORFs/ -bin_ext faa -out fegenie_out --orfs -ref refseq_db/refseq_nr.sample.faa
 
-
-
-### Easy Installation (if you have Conda installed)
-    git clone https://github.com/Arkadiy-Garber/FeGenie.git
-    cd FeGenie
-    bash setup.sh
-    Rscript -e 'install.packages("grid", repos = "http://cran.us.r-project.org")'
-    Rscript -e 'install.packages("broom", repos = "http://cran.us.r-project.org”)'
-    Rscript -e 'install.packages("ggpubr", repos = "http://cran.us.r-project.org”)’
-    conda activate fegenie
-    FeGenie.py -h
-
-### Installation (if you don't have Conda)
-    git clone https://github.com/Arkadiy-Garber/FeGenie.git
-    cd FeGenie
-    bash setup_noconda.sh
-    ./FeGenie.py -h
-
-### Quick-start
-    FeGenie.py -bin_dir /directory/of/bins/ -bin_ext fasta -t 16
-The argument for -bin_ext needs to represent the filename extension of the FASTA files in the selected directory that you would like analyzed (e.g. fa, fasta, fna, etc).
-
-
-### Quick-start (if you installed using the 'setup_noconda.sh' script)
-    ./FeGenie.py -hmm_lib hmms/iron -bin_dir /directory/of/bins/ -bin_ext fasta -t 16 -out output_fegenie
-`hmms/iron` directory can be found within FeGenie's main repository
--t 8 means that 8 threads will be used for HMMER and BLAST. If you have less than 16 available on your system, set this number lower (default = 1)
 
 ### Running with docker
 
