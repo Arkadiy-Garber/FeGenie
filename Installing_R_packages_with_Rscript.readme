@@ -3,7 +3,7 @@
 
 Rscript -e 'install.packages("grid", repos = "http://cran.us.r-project.org")'
 Rscript -e 'install.packages("broom", repos = "http://cran.us.r-project.org”)'
-Rscript -e 'install.packages("ggpubr", repos = "http://cran.us.r-project.org”)’
+Rscript -e 'install.packages("ggpubr", repos = "http://cran.us.r-project.org”)'
 
 NOTE: you may need super user (sudo) permisions to run some of these commands, 
 so if you are running FeGenie off a server where you do not have such permissions,
