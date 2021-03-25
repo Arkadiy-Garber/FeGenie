@@ -4,7 +4,7 @@ tar -xvf test_dataset.tar.gz
 
 Rscript -e 'install.packages("grid", repos = "http://cran.us.r-project.org")'
 Rscript -e 'install.packages("broom", repos = "http://cran.us.r-project.org”)'
-Rscript -e 'install.packages("ggpubr", repos = "http://cran.us.r-project.org”)’
+Rscript -e 'install.packages("ggpubr", repos = "http://cran.us.r-project.org”)'
 Rscript -e 'install.packages("ggplot2", repos = "http://cran.us.r-project.org")'
 Rscript -e 'install.packages("reshape", repos = "http://cran.us.r-project.org")'
 Rscript -e 'install.packages("reshape2", repos = "http://cran.us.r-project.org")'
