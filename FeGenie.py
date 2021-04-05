@@ -110,7 +110,7 @@ def main():
             hmm = i.split("|")[0]
             if hmm not in uniqueLS:
                 uniqueLS.append(hmm)
-                if geneToCatDict[hmm] in ["iron_aquisition-siderophore_transport_potential", "iron_aquisition-heme_transport"]:
+                if geneToCatDict[hmm] in ["iron_aquisition-siderophore_transport_potential", "iron_aquisition-heme_transport", "iron_aquisition-siderophore_transport"]:
                     count += 1
         return count
 
@@ -1369,7 +1369,8 @@ def main():
 
                 elif "iron_aquisition-siderophore_synthesis" in clusterDict[i]["category"] or \
                                 "iron_aquisition-siderophore_transport_potential" in clusterDict[i]["category"] or \
-                                "iron_aquisition-iron_transport" in clusterDict[i][
+                                "iron_aquisition-siderophore_transport" in clusterDict[i]["category"] or \
+                        "iron_aquisition-iron_transport" in clusterDict[i][
                             "category"] or "iron_aquisition-heme_transport" in clusterDict[i]["category"]:
 
                     if len(Unique(ls)) > 1:
@@ -1678,7 +1679,7 @@ def main():
                     orf = j.split("|")[2]
                     cat = memoryDict[dataset][orf]["cat"]
 
-                    if cat in ["iron_aquisition-siderophore_transport_potential", "iron_aquisition-heme_transport"]:
+                    if cat in ["iron_aquisition-siderophore_transport_potential", "iron_aquisition-siderophore_transport", "iron_aquisition-heme_transport"]:
                         if len(Unique2(clusterDict[i])) < 2:
                             break
                         elif check1(clusterDict[i]) < 2:
@@ -2465,7 +2466,7 @@ def main():
 
         if args.bam == "NA" and args.bams == "NA":
             cats = ["iron_aquisition-iron_transport", "iron_aquisition-heme_transport", "iron_aquisition-heme_oxygenase",
-                    "iron_aquisition-siderophore_synthesis",
+                    "iron_aquisition-siderophore_synthesis", "iron_aquisition-siderophore_transport",
                     "iron_aquisition-siderophore_transport_potential", "iron_gene_regulation", "iron_oxidation",
                     "possible_iron_oxidation_and_possible_iron_reduction", "probable_iron_reduction",
                     "iron_reduction", "iron_storage", "magnetosome_formation"]
@@ -2516,7 +2517,7 @@ def main():
             # COVERAGE-BASED ABUNDANCE WITH MULTIPLE BAM FILES
 
             cats = ["iron_aquisition-iron_transport", "iron_aquisition-heme_transport", "iron_aquisition-heme_oxygenase",
-                    "iron_aquisition-siderophore_synthesis",
+                    "iron_aquisition-siderophore_synthesis", "iron_aquisition-siderophore_transport",
                     "iron_aquisition-siderophore_transport_potential", "iron_gene_regulation", "iron_oxidation",
                     "possible_iron_oxidation_and_possible_iron_reduction", "probable_iron_reduction",
                     "iron_reduction", "iron_storage", "magnetosome_formation"]
@@ -2590,7 +2591,7 @@ def main():
             # COVERAGE-BASED ABUNDANCE USING ONLY ONE BAM FILE
 
             cats = ["iron_aquisition-iron_transport", "iron_aquisition-heme_transport", "iron_aquisition-heme_oxygenase",
-                    "iron_aquisition-siderophore_synthesis",
+                    "iron_aquisition-siderophore_synthesis", "iron_aquisition-siderophore_transport",
                     "iron_aquisition-siderophore_transport_potential", "iron_gene_regulation", "iron_oxidation",
                     "possible_iron_oxidation_and_possible_iron_reduction", "probable_iron_reduction",
                     "iron_reduction", "iron_storage", "magnetosome_formation"]
@@ -2764,7 +2765,7 @@ def main():
         if args.bam == "NA" and args.bams == "NA":
             cats = ["iron_aquisition-iron_transport", "iron_aquisition-heme_transport",
                     "iron_aquisition-heme_oxygenase",
-                    "iron_aquisition-siderophore_synthesis",
+                    "iron_aquisition-siderophore_synthesis", "iron_aquisition-siderophore_transport",
                     "iron_aquisition-siderophore_transport_potential", "iron_gene_regulation", "iron_oxidation",
                     "possible_iron_oxidation_and_possible_iron_reduction", "probable_iron_reduction",
                     "iron_reduction", "iron_storage", "magnetosome_formation"]
@@ -2816,7 +2817,7 @@ def main():
 
             cats = ["iron_aquisition-iron_transport", "iron_aquisition-heme_transport",
                     "iron_aquisition-heme_oxygenase",
-                    "iron_aquisition-siderophore_synthesis",
+                    "iron_aquisition-siderophore_synthesis", "iron_aquisition-siderophore_transport",
                     "iron_aquisition-siderophore_transport_potential", "iron_gene_regulation", "iron_oxidation",
                     "possible_iron_oxidation_and_possible_iron_reduction", "probable_iron_reduction",
                     "iron_reduction", "iron_storage", "magnetosome_formation"]
@@ -2892,7 +2893,7 @@ def main():
 
             cats = ["iron_aquisition-iron_transport", "iron_aquisition-heme_transport",
                     "iron_aquisition-heme_oxygenase",
-                    "iron_aquisition-siderophore_synthesis",
+                    "iron_aquisition-siderophore_synthesis", "iron_aquisition-siderophore_transport",
                     "iron_aquisition-siderophore_transport_potential", "iron_gene_regulation", "iron_oxidation",
                     "possible_iron_oxidation_and_possible_iron_reduction", "probable_iron_reduction",
                     "iron_reduction", "iron_storage", "magnetosome_formation"]
