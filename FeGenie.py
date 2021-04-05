@@ -1796,6 +1796,7 @@ def main():
                         if hmm in ["Cyc2_repCluster1.hmm", "Cyc2_repCluster2.hmm", "Cyc2_repCluster3.hmm"]:
 
                             seq = memoryDict[dataset][orf]["seq"]
+
                             numhemes = len(re.findall(r'C(..)CH', seq)) + len(re.findall(r'C(...)CH', seq)) \
                             + len(re.findall(r'C(....)CH', seq)) + len(re.findall(r'C(..............)CH', seq)) \
                             + len(re.findall(r'C(...............)CH', seq))
