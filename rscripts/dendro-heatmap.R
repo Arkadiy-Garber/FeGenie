@@ -9,8 +9,9 @@ library("pvclust", lib.loc = library.path)
 args <- commandArgs(trailingOnly = TRUE)
 
 fegenie <- read.csv(args[1])
-l = length(fegenie)-1
+l = length(fegenie)
 fegenie.sub <- t(fegenie[,2:l])
+print(fegenie.sub)
 
 fegenie.matrix <- as.matrix(fegenie.sub)
 
