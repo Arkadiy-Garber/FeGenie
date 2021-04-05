@@ -476,7 +476,7 @@ def main():
     parser.add_argument('--heme', type=str,
                         help="find all genes with heme-binding motifs (CXXCH), and output them to a separate summary file", const=True, nargs="?")
 
-    parser.add_argument('--hbm', type=str,
+    parser.add_argument('--hematite', type=str,
                         help="find all genes with hematite-binding motifs, and output them to a separate summary file", const=True, nargs="?")
 
     parser.add_argument('--makeplots', type=str,
@@ -487,7 +487,7 @@ def main():
                              "If you see error or warning messages associated with Rscript, you can still expect to "
                              "see the main output (CSV files) from FeGenie.", const=True, nargs="?")
 
-    parser.add_argument('--debug', type=str, help="Generate more info on the source of error (should generate a debug.issue#.txt file)", const=True,
+    parser.add_argument('--nohup', type=str, help="include this flag if you are running FeGenie under \'nohup\', and would like to re-write a currently existing directory.", const=True,
                         nargs="?")
 
     # CHECKING FOR CONDA INSTALL
@@ -562,7 +562,7 @@ def main():
         os.listdir(args.out)
         print("Looks like you already have a directory with the name: " + args.out)
 
-        if args.debug:
+        if args.nohup:
             answer = "y"
         else:
             answer = input("Would you like FeGenie to proceed and potentially overwrite files in this directory? (y/n): ")
@@ -728,6 +728,7 @@ def main():
 
                 idxOut = open("%s/ORF_calls/%s-proteins.idx" % (outDirectory, i), "w")
                 faaOut = open("%s/ORF_calls/%s-proteins.faa" % (outDirectory, i), "w")
+
                 for gbkkey1 in gbkDict.keys():
                     counter = 0
                     for gbkey2 in gbkDict[gbkkey1]:
@@ -1792,6 +1793,26 @@ def main():
                                         memoryDict[dataset][orf]["heme"] + "," +
                                         memoryDict[dataset][orf]["seq"] + "\n")
 
+                        if hmm in ["Cyc2_repCluster1.hmm", "Cyc2_repCluster2.hmm", "Cyc2_repCluster3.hmm"]:
+
+                            seq = memoryDict[dataset][orf]["seq"]
+                            numhemes = len(re.findall(r'C(..)CH', seq)) + len(re.findall(r'C(...)CH', seq)) \
+                            + len(re.findall(r'C(....)CH', seq)) + len(re.findall(r'C(..............)CH', seq)) \
+                            + len(re.findall(r'C(...............)CH', seq))
+
+                            if len(seq) > 375 and numhemes > 0:
+                                out.write(
+                                    memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
+                                    memoryDict[dataset][orf]["bit"] + "," +
+                                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                    memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf][
+                                        "blastHit"] + "," +
+                                    memoryDict[dataset][orf]["blastEval"] + "," + memoryDict[dataset][orf][
+                                        "seq"] + "\n")
+
+                            else:
+                                pass
+
                         elif hmm in ["MtoA", "MtrA", "MtrB_TIGR03509", "MtrC_TIGR03507"]:
                             operon = clusterDict[i]
                             operon = Strip(operon)
@@ -2119,8 +2140,6 @@ def main():
                                         memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
                                         memoryDict[dataset][orf]["heme"] + "," +
                                         memoryDict[dataset][orf]["seq"] + "\n")
-
-
                             else:
                                 pass
 
@@ -2403,7 +2422,7 @@ def main():
                                 out.write(i + "," + j + "," + str(hemec) + "," + str(hemeb) + "," + seq + "\n")
             out.close()
 
-        if args.hbm:
+        if args.hematite:
             print("Looking for hematite-binding motifs")
             positive = ["R", "H", "K"]
             negative = ["D", "E"]
