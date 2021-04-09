@@ -903,62 +903,77 @@ def main():
                                 SummaryDict[cell][orf]["category"] = category
 
         # ****************************** CLUSTERING OF ORFS BASED ON GENOMIC PROXIMITY *************************************
-        # if not args.orfs:
-        print("Identifying genomic proximities and putative operons")
-        CoordDict = defaultdict(lambda: defaultdict(list))
-        orfNameDict = defaultdict(lambda: defaultdict(list))
-        if args.contig_names != "NA":
-            for i in SummaryDict.keys():
-                if i != "category":
-                    for j in SummaryDict[i]:
-                        contigLS = contig.split(args.contig_names + args.delim)
-                        numOrf = firstNum(contigLS[1])
-                        contig = args.contig_names
-                        CoordDict[i][contig].append(int(numOrf))
-                        orfNameDict[contig + args.delim + numOrf] = j
+        if not args.orfs:
+            print("Identifying genomic proximities and putative operons")
+            CoordDict = defaultdict(lambda: defaultdict(list))
+            orfNameDict = defaultdict(lambda: defaultdict(list))
+            if args.contig_names != "NA":
+                for i in SummaryDict.keys():
+                    if i != "category":
+                        for j in SummaryDict[i]:
+                            contigLS = contig.split(args.contig_names + args.delim)
+                            numOrf = firstNum(contigLS[1])
+                            contig = args.contig_names
+                            CoordDict[i][contig].append(int(numOrf))
+                            orfNameDict[contig + args.delim + numOrf] = j
+            else:
+                for i in SummaryDict.keys():
+                    if i != "category":
+                        for j in SummaryDict[i]:
+                            contig = allButTheLast(j, args.delim)
+                            numOrf = lastItem(j.split(args.delim))
+                            CoordDict[i][contig].append(int(numOrf))
+
+            counter = 0
+            print("Clustering ORFs...")
+            print("")
+            out = open(outDirectory + "/FinalSummary-dereplicated-clustered.csv", "w")
+            for i in CoordDict.keys():
+                print(".")
+                for j in CoordDict[i]:
+                    LS = (CoordDict[i][j])
+                    clusters = (cluster(LS, args.d))
+                    for k in clusters:
+                        if len(RemoveDuplicates(k)) == 1:
+
+                            orf = j + args.delim + str(k[0])
+
+                            if args.contig_names != "NA":
+                                orf = orfNameDict[orf]
+
+                            out.write(SummaryDict[i][orf]["category"] + "," + i + "," + orf + "," + SummaryDict[i][orf]["hmm"] +
+                                      "," + str(SummaryDict[i][orf]["hmmBit"]) + "," + str(counter) + "\n")
+
+                            out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+                            counter += 1
+
+                        else:
+                            for l in RemoveDuplicates(k):
+
+                                orf = j + args.delim + str(l)
+
+                                out.write(SummaryDict[i][orf]["category"] + "," + i + "," + orf + "," + SummaryDict[i][orf][
+                                    "hmm"] + "," + str(SummaryDict[i][orf]["hmmBit"]) + "," + str(counter) + "\n")
+
+                            out.write(
+                                "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+                            counter += 1
+            out.close()
+
         else:
+            counter = 0
+            out = open(outDirectory + "/FinalSummary-dereplicated-clustered.csv", "w")
             for i in SummaryDict.keys():
                 if i != "category":
                     for j in SummaryDict[i]:
-                        contig = allButTheLast(j, args.delim)
-                        numOrf = lastItem(j.split(args.delim))
-                        CoordDict[i][contig].append(int(numOrf))
-
-        counter = 0
-        print("Clustering ORFs...")
-        print("")
-        out = open(outDirectory + "/FinalSummary-dereplicated-clustered.csv", "w")
-        for i in CoordDict.keys():
-            print(".")
-            for j in CoordDict[i]:
-                LS = (CoordDict[i][j])
-                clusters = (cluster(LS, args.d))
-                for k in clusters:
-                    if len(RemoveDuplicates(k)) == 1:
-
-                        orf = j + args.delim + str(k[0])
-
-                        if args.contig_names != "NA":
-                            orf = orfNameDict[orf]
-
-                        out.write(SummaryDict[i][orf]["category"] + "," + i + "," + orf + "," + SummaryDict[i][orf]["hmm"] +
-                                  "," + str(SummaryDict[i][orf]["hmmBit"]) + "," + str(counter) + "\n")
-
-                        out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
-                        counter += 1
-
-                    else:
-                        for l in RemoveDuplicates(k):
-
-                            orf = j + args.delim + str(l)
-
-                            out.write(SummaryDict[i][orf]["category"] + "," + i + "," + orf + "," + SummaryDict[i][orf][
-                                "hmm"] + "," + str(SummaryDict[i][orf]["hmmBit"]) + "," + str(counter) + "\n")
-
+                        orf = j
+                        out.write(SummaryDict[i][orf]["category"] + "," + i + "," + orf + "," + SummaryDict[i][orf][
+                            "hmm"] + "," + str(SummaryDict[i][orf]["hmmBit"]) + "," + str(counter) + "\n")
                         out.write(
                             "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
                         counter += 1
-        out.close()
+
+
         time.sleep(5)
 
         # else:
@@ -1794,7 +1809,7 @@ def main():
                                         memoryDict[dataset][orf]["heme"] + "," +
                                         memoryDict[dataset][orf]["seq"] + "\n")
 
-                        if hmm in ["Cyc2_repCluster1.hmm", "Cyc2_repCluster2.hmm", "Cyc2_repCluster3.hmm"]:
+                        elif hmm in ["Cyc2_repCluster1", "Cyc2_repCluster2", "Cyc2_repCluster3"]:
 
                             seq = memoryDict[dataset][orf]["seq"]
 
@@ -1802,18 +1817,17 @@ def main():
                             + len(re.findall(r'C(....)CH', seq)) + len(re.findall(r'C(..............)CH', seq)) \
                             + len(re.findall(r'C(...............)CH', seq))
 
-                            if len(seq) > 375 and numhemes > 0:
-                                out.write(
-                                    memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
-                                    memoryDict[dataset][orf]["bit"] + "," +
-                                    memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
-                                    memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf][
-                                        "blastHit"] + "," +
-                                    memoryDict[dataset][orf]["blastEval"] + "," + memoryDict[dataset][orf][
-                                        "seq"] + "\n")
+                            if len(seq) >= 365:
+                                if numhemes > 0:
+                                    out.write(
+                                        memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
+                                        memoryDict[dataset][orf]["bit"] + "," +
+                                        memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                        memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf][
+                                            "blastHit"] + "," +
+                                        memoryDict[dataset][orf]["blastEval"] + "," + memoryDict[dataset][orf][
+                                            "seq"] + "\n")
 
-                            else:
-                                pass
 
                         elif hmm in ["MtoA", "MtrA", "MtrB_TIGR03509", "MtrC_TIGR03507"]:
                             operon = clusterDict[i]
