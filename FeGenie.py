@@ -438,8 +438,8 @@ def main():
                                                "corresponding to different genomes that you are providing, please use the \'-bams\' "
                                                "argument to provide a tab-delimited file that denotes which BAM file (or files) belongs "
                                                "with which genome", default="NA")
-    parser.add_argument('-delim', type=str, help="delimiter that separates contig names from ORF names (provide this flag if you are "
-                             "providing your own ORFs. Default delimiter for Prodigal-predicted ORFs is \'_\'", default="_")
+    # parser.add_argument('-delim', type=str, help="delimiter that separates contig names from ORF names (provide this flag if you are "
+    #                          "providing your own ORFs. Default delimiter for Prodigal-predicted ORFs is \'_\'", default="_")
 
     parser.add_argument('-contig_names', type=str, help="contig names in your provided FASTA files. Use this option"
                                                         "if you are providing gene calls in amino acid format (don't forget"
@@ -905,24 +905,13 @@ def main():
         # ****************************** CLUSTERING OF ORFS BASED ON GENOMIC PROXIMITY *************************************
         if not args.orfs:
             print("Identifying genomic proximities and putative operons")
-            CoordDict = defaultdict(lambda: defaultdict(list))
-            orfNameDict = defaultdict(lambda: defaultdict(list))
-            if args.contig_names != "NA":
-                for i in SummaryDict.keys():
-                    if i != "category":
-                        for j in SummaryDict[i]:
-                            contigLS = contig.split(args.contig_names + args.delim)
-                            numOrf = firstNum(contigLS[1])
-                            contig = args.contig_names
-                            CoordDict[i][contig].append(int(numOrf))
-                            orfNameDict[contig + args.delim + numOrf] = j
-            else:
-                for i in SummaryDict.keys():
-                    if i != "category":
-                        for j in SummaryDict[i]:
-                            contig = allButTheLast(j, args.delim)
-                            numOrf = lastItem(j.split(args.delim))
-                            CoordDict[i][contig].append(int(numOrf))
+
+            for i in SummaryDict.keys():
+                if i != "category":
+                    for j in SummaryDict[i]:
+                        contig = allButTheLast(j, _)
+                        numOrf = lastItem(j.split("_"))
+                        CoordDict[i][contig].append(int(numOrf))
 
             counter = 0
             print("Clustering ORFs...")
@@ -936,10 +925,7 @@ def main():
                     for k in clusters:
                         if len(RemoveDuplicates(k)) == 1:
 
-                            orf = j + args.delim + str(k[0])
-
-                            if args.contig_names != "NA":
-                                orf = orfNameDict[orf]
+                            orf = j + "_" + str(k[0])
 
                             out.write(SummaryDict[i][orf]["category"] + "," + i + "," + orf + "," + SummaryDict[i][orf]["hmm"] +
                                       "," + str(SummaryDict[i][orf]["hmmBit"]) + "," + str(counter) + "\n")
@@ -950,7 +936,7 @@ def main():
                         else:
                             for l in RemoveDuplicates(k):
 
-                                orf = j + args.delim + str(l)
+                                orf = j + "_" + str(l)
 
                                 out.write(SummaryDict[i][orf]["category"] + "," + i + "," + orf + "," + SummaryDict[i][orf][
                                     "hmm"] + "," + str(SummaryDict[i][orf]["hmmBit"]) + "," + str(counter) + "\n")
@@ -961,17 +947,76 @@ def main():
             out.close()
 
         else:
-            counter = 0
-            out = open(outDirectory + "/FinalSummary-dereplicated-clustered.csv", "w")
-            for i in SummaryDict.keys():
-                if i != "category":
-                    for j in SummaryDict[i]:
-                        orf = j
-                        out.write(SummaryDict[i][orf]["category"] + "," + i + "," + orf + "," + SummaryDict[i][orf][
-                            "hmm"] + "," + str(SummaryDict[i][orf]["hmmBit"]) + "," + str(counter) + "\n")
-                        out.write(
-                            "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
-                        counter += 1
+
+            if args.contig_names != "NA":
+                contigNameDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
+                contigNames = open(args.contig_names)
+                for orfname in contigNames:
+                    orfnameLS = orfname.rstrip().split("\t")
+                    contigNameDict[orfnameLS[0]]["contig"] = ls[1]
+                    contigNameDict[orfnameLS[0]]["position"] = ls[2]
+
+                CoordDict = defaultdict(lambda: defaultdict(list))
+                orfNameDict = defaultdict(lambda: defaultdict(list))
+                for i in SummaryDict.keys():
+                    if i != "category":
+                        for j in SummaryDict[i]:
+                            # contigLS = contig.split(args.contig_names + args.delim)
+                            numOrf = contigNameDict[j]["position"]
+                            contig = contigNameDict[j]["contig"]
+                            CoordDict[i][contig].append(int(numOrf))
+                            orfNameDict[contig + "_" + numOrf] = j
+                            CoordDict[i][contig].append(int(numOrf))
+
+                counter = 0
+                print("Clustering ORFs...")
+                print("")
+                out = open(outDirectory + "/FinalSummary-dereplicated-clustered.csv", "w")
+                for i in CoordDict.keys():
+                    print(".")
+                    for j in CoordDict[i]:
+                        LS = (CoordDict[i][j])
+                        clusters = (cluster(LS, args.d))
+                        for k in clusters:
+                            if len(RemoveDuplicates(k)) == 1:
+
+                                orf = orfNameDict[j + "_" + str(k[0])]
+
+                                out.write(
+                                    SummaryDict[i][orf]["category"] + "," + i + "," + orf + "," + SummaryDict[i][orf][
+                                        "hmm"] +
+                                    "," + str(SummaryDict[i][orf]["hmmBit"]) + "," + str(counter) + "\n")
+
+                                out.write(
+                                    "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+                                counter += 1
+
+                            else:
+                                for l in RemoveDuplicates(k):
+                                    orf = orfNameDict[j + "_" + str(l)]
+
+                                    out.write(SummaryDict[i][orf]["category"] + "," + i + "," + orf + "," +
+                                              SummaryDict[i][orf][
+                                                  "hmm"] + "," + str(SummaryDict[i][orf]["hmmBit"]) + "," + str(
+                                        counter) + "\n")
+
+                                out.write(
+                                    "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+                                counter += 1
+                out.close()
+
+            else:
+                counter = 0
+                out = open(outDirectory + "/FinalSummary-dereplicated-clustered.csv", "w")
+                for i in SummaryDict.keys():
+                    if i != "category":
+                        for j in SummaryDict[i]:
+                            orf = j
+                            out.write(SummaryDict[i][orf]["category"] + "," + i + "," + orf + "," + SummaryDict[i][orf][
+                                "hmm"] + "," + str(SummaryDict[i][orf]["hmmBit"]) + "," + str(counter) + "\n")
+                            out.write(
+                                "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
+                            counter += 1
 
 
         time.sleep(5)
@@ -1178,7 +1223,7 @@ def main():
         time.sleep(5)
         # ****************************** FILTERING OUT LIKELY FALSE POSITIVES *************************************
 
-        if not args.all_results:
+        if not args.all_results and not args.orfs:
 
             print("Pre-processing of final outout file")
             # fleet = ["EetA.hmm", "EetB.hmm", "Ndh2.hmm", "FmnB.hmm", "FmnA.hmm", "DmkA.hmm", "DmkB.hmm", "PplA.hmm"]
@@ -2286,7 +2331,8 @@ def main():
 
             out.close()
             time.sleep(5)
-            os.system("mv %s/FeGenie-summary-fixed.csv %s/FeGenie-summary.csv" % (outDirectory, outDirectory))
+            if not args.orfs:
+                os.system("mv %s/FeGenie-summary-fixed.csv %s/FeGenie-summary.csv" % (outDirectory, outDirectory))
 
         # ****************************** PRE-FINAL ALTERATION OF THE OUTPUT FILE ***************************************
         clu = 0
