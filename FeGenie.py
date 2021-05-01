@@ -761,6 +761,7 @@ def main():
     for i in meta:
         ls = i.rstrip().split("\t")
         metaDict[ls[0]] = ls[1]
+        print(ls[0])
 
     # ******************* BEGINNING MAIN ALGORITHM **********************************))))
 
@@ -770,7 +771,7 @@ def main():
         for FeCategory in HMMdirLS:
             if not re.match(r'\.', FeCategory) and FeCategory not in ["HMM-bitcutoffs.txt", "FeGenie-map.txt"]:
                 print("")
-                print(".")
+                print(2)
                 print("Looking for following iron-related functional category: " + FeCategory)
                 hmmDir = "%s/%s/" % (HMMdir, FeCategory)
                 hmmDirLS2 = os.listdir("%s/%s" % (HMMdir, FeCategory))
@@ -905,11 +906,12 @@ def main():
         # ****************************** CLUSTERING OF ORFS BASED ON GENOMIC PROXIMITY *************************************
         if not args.orfs:
             print("Identifying genomic proximities and putative operons")
-
+            CoordDict = defaultdict(lambda: defaultdict(list))
+            orfNameDict = defaultdict(lambda: defaultdict(list))
             for i in SummaryDict.keys():
                 if i != "category":
                     for j in SummaryDict[i]:
-                        contig = allButTheLast(j, _)
+                        contig = allButTheLast(j, "_")
                         numOrf = lastItem(j.split("_"))
                         CoordDict[i][contig].append(int(numOrf))
 
@@ -1687,6 +1689,7 @@ def main():
             for i in infile:
                 if not re.match(r'#', i):
                     ls = i.rstrip().split(",")
+                    print(ls)
                     if ls[6] != "cluster":
                         if not re.findall(r'defaultdict', ls[5]):
                             clu = ls[6]
@@ -1730,7 +1733,7 @@ def main():
                             clusterDict[ls[7]].append(hmm + "|" + dataset + "|" + orf)
                     else:
                         out.write(i.rstrip())
-
+            print("\n\n\n\n")
             for i in clusterDict.keys():
                 out.write("#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
                 for j in clusterDict[i]:
@@ -1740,6 +1743,10 @@ def main():
                     cat = memoryDict[dataset][orf]["cat"]
 
                     if cat in ["iron_aquisition-siderophore_transport_potential", "iron_aquisition-siderophore_transport", "iron_aquisition-heme_transport"]:
+                        print(j)
+                        print(dataset)
+                        print(orf)
+                        print("")
                         if len(Unique2(clusterDict[i])) < 2:
                             break
                         elif check1(clusterDict[i]) < 2:
@@ -1861,17 +1868,25 @@ def main():
                             numhemes = len(re.findall(r'C(..)CH', seq)) + len(re.findall(r'C(...)CH', seq)) \
                             + len(re.findall(r'C(....)CH', seq)) + len(re.findall(r'C(..............)CH', seq)) \
                             + len(re.findall(r'C(...............)CH', seq))
-
-                            if len(seq) >= 365:
-                                if numhemes > 0:
-                                    out.write(
-                                        memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
-                                        memoryDict[dataset][orf]["bit"] + "," +
-                                        memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
-                                        memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf][
-                                            "blastHit"] + "," +
-                                        memoryDict[dataset][orf]["blastEval"] + "," + memoryDict[dataset][orf][
-                                            "seq"] + "\n")
+                            if args.ref == "NA":
+                                if len(seq) >= 365:
+                                    if numhemes > 0:
+                                        out.write(
+                                            memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
+                                            memoryDict[dataset][orf]["bit"] + "," +
+                                            memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                            memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf]["seq"] + "\n")
+                            else:
+                                if len(seq) >= 365:
+                                    if numhemes > 0:
+                                        out.write(
+                                            memoryDict[dataset][orf]["cat"] + "," + dataset + "," + orf + "," + hmm + "," +
+                                            memoryDict[dataset][orf]["bit"] + "," +
+                                            memoryDict[dataset][orf]["cutoff"] + "," + memoryDict[dataset][orf]["clu"] + "," +
+                                            memoryDict[dataset][orf]["heme"] + "," + memoryDict[dataset][orf][
+                                                "blastHit"] + "," +
+                                            memoryDict[dataset][orf]["blastEval"] + "," + memoryDict[dataset][orf][
+                                                "seq"] + "\n")
 
 
                         elif hmm in ["MtoA", "MtrA", "MtrB_TIGR03509", "MtrC_TIGR03507"]:
@@ -2406,6 +2421,8 @@ def main():
                             "#####################################################################################################\n")
                     else:
                         for j in summaryDict[i]:
+                            if re.findall(r'Cyc2', j):
+                                print(j)
                             ls = j.split(",")
                             seq = ls[8]
                             hemeb = len(re.findall(r'G(.)[HR](.)C[PLAV]G', seq))
