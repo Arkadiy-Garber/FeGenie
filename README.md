@@ -11,14 +11,11 @@ Special thanks to Michael Lee (https://github.com/AstrobioMike) for helping to p
 
 
 ### Easy Installation (if you have Conda installed)
-    git clone https://github.com/Arkadiy-Garber/FeGenie.git
-    cd FeGenie
-    bash setup.sh
-    Rscript -e 'install.packages("grid", repos = "http://cran.us.r-project.org")'
-    Rscript -e 'install.packages("broom", repos = "http://cran.us.r-project.org”)'
-    Rscript -e 'install.packages("ggpubr", repos = "http://cran.us.r-project.org”)’
+    conda create -n fegenie -c conda-forge -c bioconda -c defaults fegenie=1.0 --yes
     conda activate fegenie
     FeGenie.py -h
+    
+    conda deactivate # when you are done using FeGenie and would like to deactivate the Conda environment for FeGenie
 
 ### Installation (if you don't have Conda)
     git clone https://github.com/Arkadiy-Garber/FeGenie.git
