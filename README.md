@@ -22,7 +22,7 @@ and when you are done using FeGenie and would like to deactivate the Conda envir
 ### Installation (if you don't have Conda)
     git clone https://github.com/Arkadiy-Garber/FeGenie.git
     cd FeGenie
-    bash setup_noconda.sh
+    bash setup.sh
     ./FeGenie.py -h
 
 ### Quick-start
