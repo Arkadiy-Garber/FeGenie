@@ -14,8 +14,10 @@ Special thanks to Michael Lee (https://github.com/AstrobioMike) for helping to p
     conda create -n fegenie -c conda-forge -c bioconda -c defaults fegenie=1.0 --yes
     conda activate fegenie
     FeGenie.py -h
-    
-    conda deactivate # when you are done using FeGenie and would like to deactivate the Conda environment for FeGenie
+
+and when you are done using FeGenie and would like to deactivate the Conda environment for FeGenie
+
+    conda deactivate
 
 ### Installation (if you don't have Conda)
     git clone https://github.com/Arkadiy-Garber/FeGenie.git
