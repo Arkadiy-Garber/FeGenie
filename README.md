@@ -7,7 +7,7 @@ Please see the Wiki page for introduction and tutorial on how to use this tool.
 
 Garber AI, Nealson KH, Okamoto A, McAllister SM, Chan CS, Barco RA and Merino N (2020) FeGenie: A Comprehensive Tool for the Identification of Iron Genes and Iron Gene Neighborhoods in Genome and Metagenome Assemblies. Front. Microbiol. 11:37. doi: [10.3389/fmicb.2020.00037](https://www.frontiersin.org/articles/10.3389/fmicb.2020.00037/full)
 
-Special thanks to Michael Lee (https://github.com/AstrobioMike) for helping to put together the setup.sh script, which signficantly eases installation.
+Special thanks to [Michael Lee](https://github.com/AstrobioMike) for helping to put together the Conda environment for FeGenie. Thanks to [Natasha Pavlovikj](https://github.com/npavlovikj) for creating the Conda recipe for FeGenie. Thanks to [Michał Sitko](https://github.com/note) for creating a Dockerfile for FeGenie.
 
 
 ### Easy Installation (if you have Conda installed)
