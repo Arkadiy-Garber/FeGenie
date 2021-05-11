@@ -31,7 +31,7 @@ The argument for -bin_ext needs to represent the filename extension of the FASTA
 
 
 ### Quick-start (if you installed using the 'setup_noconda.sh' script)
-    ./FeGenie.py -hmm_lib hmms/iron -bin_dir /directory/of/bins/ -bin_ext fasta -t 16 -out output_fegenie
+    ./FeGenie.py -bin_dir /directory/of/bins/ -bin_ext fasta -t 16 -out output_fegenie
 `hmms/iron` directory can be found within FeGenie's main repository
 -t 8 means that 8 threads will be used for HMMER and BLAST. If you have less than 16 available on your system, set this number lower (default = 1)
 
@@ -87,7 +87,7 @@ In case of running `FeGenie` with docker the only dependency you need to have in
 
 With docker installed you can run `FeGenie` in the following way:
 
-    docker run -it -v $(pwd):/data note/fegenie-deps ./FeGenie.py -bin_dir test_dataset -bin_ext txt -out fegenie_out -hmm_lib hmms/iron -t $(nproc)
+    docker run -it -v $(pwd):/data --env iron_hmms=/data/hmms/iron --env rscripts=/data/rscripts note/fegenie-deps ./FeGenie.py -bin_dir /data/test_dataset -bin_ext txt -out fegenie_out -t $(nproc)
 
 `./FeGenie.py ...` follows normal, non-dockerized flow of arguments.
 

@@ -5,7 +5,7 @@
 set -e
 
 echo "Running FeGenie..."
-./FeGenie.py -bin_dir ci/test_dataset -bin_ext txt -out ci/fegenie_out -hmm_lib hmms/iron -t $(nproc) -R rscripts --makeplots y
+./FeGenie.py -bin_dir ci/test_dataset -bin_ext txt -out ci/fegenie_out -t $(nproc) --makeplots y
 echo "FeGenie completed successfully. Verifying results..."
 
 mkdir -p ci/actual_output
