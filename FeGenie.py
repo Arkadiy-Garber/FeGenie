@@ -761,7 +761,6 @@ def main():
     for i in meta:
         ls = i.rstrip().split("\t")
         metaDict[ls[0]] = ls[1]
-        print(ls[0])
 
     # ******************* BEGINNING MAIN ALGORITHM **********************************))))
 
@@ -771,7 +770,6 @@ def main():
         for FeCategory in HMMdirLS:
             if not re.match(r'\.', FeCategory) and FeCategory not in ["HMM-bitcutoffs.txt", "FeGenie-map.txt"]:
                 print("")
-                print(2)
                 print("Looking for following iron-related functional category: " + FeCategory)
                 hmmDir = "%s/%s/" % (HMMdir, FeCategory)
                 hmmDirLS2 = os.listdir("%s/%s" % (HMMdir, FeCategory))
@@ -924,6 +922,7 @@ def main():
                 for j in CoordDict[i]:
                     LS = (CoordDict[i][j])
                     clusters = (cluster(LS, args.d))
+                    [[759,762,763,764,765], [5079,5080,5081]]
                     for k in clusters:
                         if len(RemoveDuplicates(k)) == 1:
 
@@ -1036,7 +1035,6 @@ def main():
         #                     "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "," + "#" + "\n")
         #
         #                 counter += 1
-
 
         # ************************** BLAST-BASED METHODS/LOOKING FOR UNMODELED MARKERS ********************************
         thermincola = "%s/iron_reduction/non-aligned/TherJR_SLCs.faa" % HMMdir
@@ -1689,7 +1687,6 @@ def main():
             for i in infile:
                 if not re.match(r'#', i):
                     ls = i.rstrip().split(",")
-                    print(ls)
                     if ls[6] != "cluster":
                         if not re.findall(r'defaultdict', ls[5]):
                             clu = ls[6]
@@ -1743,10 +1740,6 @@ def main():
                     cat = memoryDict[dataset][orf]["cat"]
 
                     if cat in ["iron_aquisition-siderophore_transport_potential", "iron_aquisition-siderophore_transport", "iron_aquisition-heme_transport"]:
-                        print(j)
-                        print(dataset)
-                        print(orf)
-                        print("")
                         if len(Unique2(clusterDict[i])) < 2:
                             break
                         elif check1(clusterDict[i]) < 2:
