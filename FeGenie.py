@@ -438,12 +438,15 @@ def main():
                                                "corresponding to different genomes that you are providing, please use the \'-bams\' "
                                                "argument to provide a tab-delimited file that denotes which BAM file (or files) belongs "
                                                "with which genome", default="NA")
+
     # parser.add_argument('-delim', type=str, help="delimiter that separates contig names from ORF names (provide this flag if you are "
     #                          "providing your own ORFs. Default delimiter for Prodigal-predicted ORFs is \'_\'", default="_")
 
     parser.add_argument('-contig_names', type=str, help="contig names in your provided FASTA files. Use this option"
                                                         "if you are providing gene calls in amino acid format (don't forget"
                                                         "to add the \'--orfs\' flag)", default="NA")
+
+    parser.add_argument('-cat', type=str, help="comma-separated list of iron gene categories you'd like FeGenie to look for (default = all categories)", default="NA")
 
     parser.add_argument('--gbk', type=str, help="include this flag if your bins are in Genbank format", const=True,
                         nargs="?")
@@ -489,6 +492,7 @@ def main():
 
     parser.add_argument('--nohup', type=str, help="include this flag if you are running FeGenie under \'nohup\', and would like to re-write a currently existing directory.", const=True,
                         nargs="?")
+
 
     # CHECKING FOR CONDA INSTALL
     os.system("echo ${iron_hmms} > HMMlib.txt")
@@ -765,10 +769,20 @@ def main():
     # ******************* BEGINNING MAIN ALGORITHM **********************************))))
 
     if not args.skip:
+        if args.cat == "NA":
+            catList = []
+            HMMdirLS = os.listdir(HMMdir)
+            for FeCategory in HMMdirLS:
+                if not re.match(r'\.', FeCategory) and FeCategory not in ["HMM-bitcutoffs.txt", "FeGenie-map.txt"]:
+                    catList.append(FeCategory)
+        else:
+            categories = args.cat
+            catList = categories.split(",")
+
         print("starting main pipeline...")
         HMMdirLS = os.listdir(HMMdir)
         for FeCategory in HMMdirLS:
-            if not re.match(r'\.', FeCategory) and FeCategory not in ["HMM-bitcutoffs.txt", "FeGenie-map.txt"]:
+            if not re.match(r'\.', FeCategory) and FeCategory not in ["HMM-bitcutoffs.txt", "FeGenie-map.txt"] and FeCategory in catList:
                 print("")
                 print("Looking for following iron-related functional category: " + FeCategory)
                 hmmDir = "%s/%s/" % (HMMdir, FeCategory)
