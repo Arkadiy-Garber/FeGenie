@@ -432,6 +432,15 @@ def main():
                                                 "a heatmap that summarizes the abundance of a certain gene that is based on "
                                                 "read coverage, rather than gene counts.", default="NA")
 
+    parser.add_argument('-which_bams', type=str, help="if you provided a tab-delimited file specifying multiple BAM files for "
+                                                "your metagenome assemblies or bins/genomes, FeGenie will, by default, "
+                                                "make the heatmap CSV and dotplot based on the average depth across all of BAM files. "
+                                                "However, with this argument, you can specify which bam in that file that you "
+                                                      "want FeGenie to use for the generation of a heatmap/dotplot. "
+                                                      "For example, if only coverage from the first BAM file is desired, "
+                                                      "then you can specify \'-which_bams 1\'. "
+                                                      "For the third BAM file in the provided tab-delimited file, \'-which_bams 3\ should be specified'", default="NA")
+
     parser.add_argument('-bam', type=str, help="BAM file. This option is only required if you would like to create "
                                                 "a heatmap that summarizes the abundance of a certain gene that is based on "
                                                 "read coverage, rather than gene counts. If you have more than one BAM file"
@@ -2625,7 +2634,11 @@ def main():
                     for k in depth:
                         LS = k.rstrip().split("\t")
                         if LS[0] != "contigName":
-                            depthDict[cell][LS[0]] = LS[2]
+                            if args.which_bams == "NA":
+                                depthDict[cell][LS[0]] = LS[2]
+                            else:
+                                column = int(args.which_bams)*2 + 1
+                                depthDict[cell][LS[0]] = LS[column]
                             total += float(LS[2])
                     normDict[cell] = total
 
@@ -2938,7 +2951,11 @@ def main():
                     for k in depth:
                         LS = k.rstrip().split("\t")
                         if LS[0] != "contigName":
-                            depthDict[cell][LS[0]] = LS[2]
+                            if args.which_bams == "NA":
+                                depthDict[cell][LS[0]] = LS[2]
+                            else:
+                                column = int(args.which_bams)*2 + 1
+                                depthDict[cell][LS[0]] = LS[column]
                             total += float(LS[2])
                     normDict[cell] = total
 
