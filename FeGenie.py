@@ -439,7 +439,7 @@ def main():
                                                       "want FeGenie to use for the generation of a heatmap/dotplot. "
                                                       "For example, if only coverage from the first BAM file is desired, "
                                                       "then you can specify \'-which_bams 1\'. "
-                                                      "For the third BAM file in the provided tab-delimited file, \'-which_bams 3\ should be specified'", default="NA")
+                                                      "For the third BAM file in the provided tab-delimited file, \'-which_bams 3\ should be specified'", default="average")
 
     parser.add_argument('-bam', type=str, help="BAM file. This option is only required if you would like to create "
                                                 "a heatmap that summarizes the abundance of a certain gene that is based on "
@@ -2587,7 +2587,7 @@ def main():
                     file = fasta(file)
                     normDict[i] = len(file.keys())
 
-            outHeat = open("%s/FeGenie-heatmap-data.csv" % outDirectory, "w")
+            outHeat = open("%s/FeGenie-heatmap-data.csv" % (outDirectory), "w")
             outHeat.write("X" + ',')
             for i in sorted(Dict.keys()):
                 outHeat.write(i + ",")
@@ -2634,7 +2634,7 @@ def main():
                     for k in depth:
                         LS = k.rstrip().split("\t")
                         if LS[0] != "contigName":
-                            if args.which_bams == "NA":
+                            if args.which_bams == "average":
                                 depthDict[cell][LS[0]] = LS[2]
                             else:
                                 column = int(args.which_bams)*2 + 1
@@ -2668,7 +2668,7 @@ def main():
                             gene = ls[3]
                             Dict[cell][process].append(float(depthDict[cell][contig]))
 
-            outHeat = open("%s/FeGenie-heatmap-data.csv" % outDirectory, "w")
+            outHeat = open("%s/FeGenie-%s-heatmap-data.csv" % (args.which_bams, outDirectory), "w")
             outHeat.write("X" + ',')
             for i in sorted(Dict.keys()):
                 outHeat.write(i + ",")
@@ -2729,7 +2729,7 @@ def main():
                             gene = ls[3]
                             Dict[cell][process].append(float(depthDict[contig]))
 
-            outHeat = open("%s/FeGenie-heatmap-data.csv" % outDirectory, "w")
+            outHeat = open("%s/FeGenie-heatmap-data.csv" % (outDirectory), "w")
             outHeat.write("X" + ',')
             for i in sorted(Dict.keys()):
                 outHeat.write(i + ",")
@@ -2751,15 +2751,29 @@ def main():
                   "This will not affect any of the output data that was already created. If you see plots generated, great! "
                   "If not, you can plot the data as you wish on your own, or start an issue on FeGenie's GitHub repository")
 
-            if args.norm:
-                os.system("Rscript --vanilla %s/DotPlot.R %s/FeGenie-heatmap-data.csv %s/" % (rscriptDir, outDirectory, outDirectory))
-                os.system(
-                    "Rscript --vanilla %s/dendro-heatmap.R %s/FeGenie-heatmap-data.csv %s/" % (rscriptDir, outDirectory, outDirectory))
+            if args.bams != "NA":
+                if args.norm:
+                    os.system("Rscript --vanilla %s/DotPlot.R %s/FeGenie-%s-heatmap-data.csv %s/" % (rscriptDir, outDirectory, args.which_bams, outDirectory))
+                    os.system(
+                        "Rscript --vanilla %s/dendro-heatmap.R %s/FeGenie-%s-heatmap-data.csv %s/" % (rscriptDir, outDirectory, args.which_bams, outDirectory))
+                else:
+                    os.system(
+                        "Rscript --vanilla %s/DotPlot-nonorm.R %s/FeGenie-%s-heatmap-data.csv %s/" % (rscriptDir, outDirectory, args.which_bams, outDirectory))
+                    os.system(
+                        "Rscript --vanilla %s/dendro-heatmap.R %s/FeGenie-%s-heatmap-data.csv %s/" % (rscriptDir, outDirectory, args.which_bams, outDirectory))
+
+                os.system("mv %s/Fegenie-dotplot.tiff %s/Fegenie-%-dotplot.tiff" % (outDirectory, outDirectory, args.which_bams))
+
             else:
-                os.system(
-                    "Rscript --vanilla %s/DotPlot-nonorm.R %s/FeGenie-heatmap-data.csv %s/" % (rscriptDir, outDirectory, outDirectory))
-                os.system(
-                    "Rscript --vanilla %s/dendro-heatmap.R %s/FeGenie-heatmap-data.csv %s/" % (rscriptDir, outDirectory, outDirectory))
+                if args.norm:
+                    os.system("Rscript --vanilla %s/DotPlot.R %s/FeGenie-heatmap-data.csv %s/" % (rscriptDir, outDirectory, outDirectory))
+                    os.system(
+                        "Rscript --vanilla %s/dendro-heatmap.R %s/FeGenie-heatmap-data.csv %s/" % (rscriptDir, outDirectory, outDirectory))
+                else:
+                    os.system(
+                        "Rscript --vanilla %s/DotPlot-nonorm.R %s/FeGenie-heatmap-data.csv %s/" % (rscriptDir, outDirectory, outDirectory))
+                    os.system(
+                        "Rscript --vanilla %s/dendro-heatmap.R %s/FeGenie-heatmap-data.csv %s/" % (rscriptDir, outDirectory, outDirectory))
 
             print("\n\n\n")
             print("...")
@@ -2824,7 +2838,7 @@ def main():
                                 out.write(i + "," + j + "," + str(hemec) + "," + str(hemeb) + "," + seq + "\n")
             out.close()
 
-        if args.hbm:
+        if args.hematite:
             print("Looking for hematite-binding motifs")
             positive = ["R", "H", "K"]
             negative = ["D", "E"]
@@ -2890,7 +2904,7 @@ def main():
                     file = fasta(file)
                     normDict[i] = len(file.keys())
 
-            outHeat = open("%s/FeGenie-heatmap-data.csv" % outDirectory, "w")
+            outHeat = open("%s/FeGenie-heatmap-data.csv" % (outDirectory), "w")
             outHeat.write("X" + ',')
             for i in sorted(Dict.keys()):
                 outHeat.write(i + ",")
@@ -2951,7 +2965,7 @@ def main():
                     for k in depth:
                         LS = k.rstrip().split("\t")
                         if LS[0] != "contigName":
-                            if args.which_bams == "NA":
+                            if args.which_bams == "average":
                                 depthDict[cell][LS[0]] = LS[2]
                             else:
                                 column = int(args.which_bams)*2 + 1
@@ -2973,7 +2987,7 @@ def main():
                             gene = ls[3]
                             Dict[cell][process].append(float(depthDict[cell][contig]))
 
-            outHeat = open("%s/FeGenie-heatmap-data.csv" % outDirectory, "w")
+            outHeat = open("%s/FeGenie-%s-heatmap-data.csv" % (args.which_bams, outDirectory), "w")
             outHeat.write("X" + ',')
             for i in sorted(Dict.keys()):
                 outHeat.write(i + ",")
@@ -3035,7 +3049,7 @@ def main():
                             gene = ls[3]
                             Dict[cell][process].append(float(depthDict[contig]))
 
-            outHeat = open("%s/FeGenie-heatmap-data.csv" % outDirectory, "w")
+            outHeat = open("%s/FeGenie-heatmap-data.csv" % (outDirectory), "w")
             outHeat.write("X" + ',')
             for i in sorted(Dict.keys()):
                 outHeat.write(i + ",")
@@ -3058,19 +3072,33 @@ def main():
                 "This will not affect any of the output data that was already created. If you see plots generated, great! "
                 "If not, you can plot the data as you wish on your own, or start an issue on FeGenie's GitHub repository")
 
-            if args.norm:
-                os.system("Rscript --vanilla %s/DotPlot.R %s/FeGenie-heatmap-data.csv %s/" % (
-                rscriptDir, outDirectory, outDirectory))
-                os.system(
-                    "Rscript --vanilla %s/dendro-heatmap.R %s/FeGenie-heatmap-data.csv %s/" % (
-                    rscriptDir, outDirectory, outDirectory))
+            if args.bams != "NA":
+                if args.norm:
+                    os.system("Rscript --vanilla %s/DotPlot.R %s/FeGenie-%s-heatmap-data.csv %s/" % (rscriptDir, outDirectory, args.which_bams, outDirectory))
+                    os.system(
+                        "Rscript --vanilla %s/dendro-heatmap.R %s/FeGenie-%s-heatmap-data.csv %s/" % (rscriptDir, outDirectory, args.which_bams, outDirectory))
+                else:
+                    os.system(
+                        "Rscript --vanilla %s/DotPlot-nonorm.R %s/FeGenie-%s-heatmap-data.csv %s/" % (rscriptDir, outDirectory, args.which_bams, outDirectory))
+                    os.system(
+                        "Rscript --vanilla %s/dendro-heatmap.R %s/FeGenie-%s-heatmap-data.csv %s/" % (rscriptDir, outDirectory, args.which_bams, outDirectory))
+
+                os.system("mv %s/Fegenie-dotplot.tiff %s/Fegenie-%-dotplot.tiff" % (outDirectory, outDirectory, args.which_bams))
+
             else:
-                os.system(
-                    "Rscript --vanilla %s/DotPlot-nonorm.R %s/FeGenie-heatmap-data.csv %s/" % (
+
+                if args.norm:
+                    os.system("Rscript --vanilla %s/DotPlot.R %s/FeGenie-heatmap-data.csv %s/" % (
                     rscriptDir, outDirectory, outDirectory))
-                os.system(
-                    "Rscript --vanilla %s/dendro-heatmap.R %s/FeGenie-heatmap-data.csv %s/" % (
-                    rscriptDir, outDirectory, outDirectory))
+
+                    os.system("Rscript --vanilla %s/dendro-heatmap.R %s/FeGenie-heatmap-data.csv %s/" % (
+                        rscriptDir, outDirectory, outDirectory))
+                else:
+                    os.system("Rscript --vanilla %s/DotPlot-nonorm.R %s/FeGenie-heatmap-data.csv %s/" % (
+                        rscriptDir, outDirectory, outDirectory))
+
+                    os.system("Rscript --vanilla %s/dendro-heatmap.R %s/FeGenie-heatmap-data.csv %s/" % (
+                        rscriptDir, outDirectory, outDirectory))
 
             print("\n\n\n")
             print("...")
