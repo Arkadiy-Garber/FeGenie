@@ -5,10 +5,6 @@ GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m'
 
-gzip -d HMM-lib.tar.gz
-tar xf HMM-lib.tar
-rm HMM-lib.tar
-
 gzip -d test_dataset.tar.gz
 tar xf test_dataset.tar
 rm test_dataset.tar
