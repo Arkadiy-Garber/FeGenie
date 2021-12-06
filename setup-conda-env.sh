@@ -18,10 +18,10 @@ conda config --add channels conda-forge 2> /dev/null
 conda config --add channels au-eoed 2> /dev/null
 
 ## creating GToTree environment and installing dependencies
-conda create -n fegenie_env hmmer diamond prodigal blast --yes
+conda create -n fegenie hmmer diamond prodigal blast --yes
 
 ## activating environment
-conda activate fegenie_env
+conda activate fegenie
 
 ## creating directory for conda-env-specific source files
 mkdir -p ${CONDA_PREFIX}/etc/conda/activate.d
@@ -36,7 +36,7 @@ export rscripts=\"$(pwd)/rscripts\"
 export HMM_dir=\"$(pwd)/hmms/iron\"" >> ${CONDA_PREFIX}/etc/conda/activate.d/env_vars.sh
 
 # re-activating environment so variable and PATH changes take effect
-conda activate fegenie_env
+conda activate fegenie
 
 
 printf "\n        ${GREEN}DONE!${NC}\n\n"
