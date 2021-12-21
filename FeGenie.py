@@ -2668,7 +2668,7 @@ def main():
                             gene = ls[3]
                             Dict[cell][process].append(float(depthDict[cell][contig]))
 
-            outHeat = open("%s/FeGenie-%s-heatmap-data.csv" % (args.which_bams, outDirectory), "w")
+            outHeat = open("%s/FeGenie-%s-heatmap-data.csv" % (outDirectory, args.which_bams), "w")
             outHeat.write("X" + ',')
             for i in sorted(Dict.keys()):
                 outHeat.write(i + ",")
@@ -2987,7 +2987,7 @@ def main():
                             gene = ls[3]
                             Dict[cell][process].append(float(depthDict[cell][contig]))
 
-            outHeat = open("%s/FeGenie-%s-heatmap-data.csv" % (args.which_bams, outDirectory), "w")
+            outHeat = open("%s/FeGenie-%s-heatmap-data.csv" % (outDirectory, args.which_bams), "w")
             outHeat.write("X" + ',')
             for i in sorted(Dict.keys()):
                 outHeat.write(i + ",")
