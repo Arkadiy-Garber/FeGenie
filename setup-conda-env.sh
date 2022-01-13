@@ -26,7 +26,7 @@ conda activate fegenie
 ## creating directory for conda-env-specific source files
 mkdir -p ${CONDA_PREFIX}/etc/conda/activate.d
 
-## adding FeGenie bin path and GToTree_HMM_dir variable:
+## adding FeGenie bin path and HMM_dir variable:
 echo '#!/bin/sh'" \
 
 export PATH=\"$(pwd):"'$PATH'\"" \
