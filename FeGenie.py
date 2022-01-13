@@ -506,12 +506,16 @@ def main():
     # CHECKING FOR CONDA INSTALL
     os.system("echo ${iron_hmms} > HMMlib.txt")
     os.system("echo ${rscripts} > rscripts.txt")
+
     file = open("HMMlib.txt")
+    HMMdir = ""
     for i in file:
         HMMdir = i.rstrip()
+
     bits = HMMdir + "/" + "HMM-bitcutoffs.txt"
 
     file = open("rscripts.txt")
+    rscriptDir = ""
     for i in file:
         rscriptDir = i.rstrip()
 
