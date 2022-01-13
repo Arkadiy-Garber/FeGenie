@@ -33,7 +33,7 @@ export PATH=\"$(pwd):"'$PATH'\"" \
 
 export rscripts=\"$(pwd)/rscripts\"
 
-export HMM_dir=\"$(pwd)/hmms/iron\"" >> ${CONDA_PREFIX}/etc/conda/activate.d/env_vars.sh
+export iron_hmms=\"$(pwd)/hmms/iron\"" >> ${CONDA_PREFIX}/etc/conda/activate.d/env_vars.sh
 
 # re-activating environment so variable and PATH changes take effect
 conda activate fegenie
