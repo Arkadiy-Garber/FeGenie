@@ -537,7 +537,9 @@ def main():
                   "you have Conda installed. Otherwise, please run the setupe-noconda.sh script and put FeGenie.py into your $PATH")
             raise SystemExit
 
-    os.system("rm -f HMMlib.txt rscripts.txt mainDir.txt")
+        os.system("rm mainDir.txt")
+
+    os.system("rm -f HMMlib.txt rscripts.txt")
 
     if len(sys.argv) == 1:
         parser.print_help(sys.stderr)
@@ -945,7 +947,7 @@ def main():
                 for j in CoordDict[i]:
                     LS = (CoordDict[i][j])
                     clusters = (cluster(LS, args.d))
-                    [[759,762,763,764,765], [5079,5080,5081]]
+                    unknown = [[759,762,763,764,765], [5079,5080,5081]]
                     for k in clusters:
                         if len(RemoveDuplicates(k)) == 1:
 
