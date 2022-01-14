@@ -2768,7 +2768,7 @@ def main():
                     os.system(
                         "Rscript --vanilla %s/dendro-heatmap.R %s/FeGenie-%s-heatmap-data.csv %s/" % (rscriptDir, outDirectory, args.which_bams, outDirectory))
 
-                os.system("mv %s/Fegenie-dotplot.tiff %s/Fegenie-%-dotplot.tiff" % (outDirectory, outDirectory, args.which_bams))
+                os.system("mv %s/Fegenie-dotplot.tiff %s/Fegenie-%s-dotplot.tiff" % (outDirectory, outDirectory, args.which_bams))
 
             else:
                 if args.norm:
