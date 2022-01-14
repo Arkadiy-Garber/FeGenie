@@ -18,7 +18,7 @@ conda config --add channels conda-forge 2> /dev/null
 conda config --add channels au-eoed 2> /dev/null
 
 ## creating GToTree environment and installing dependencies
-conda create -n fegenie -c r r-ggplot2 r-stringi r-reshape r-reshape2 r-tidyverse r-argparse r-ggdendro r-pvclust python=3.7 hmmer diamond prodigal blast metabat2 --yes
+conda create -n fegenie -c r r-ggplot2 r-stringi r-ggpubr r-reshape r-reshape2 r-tidyverse r-argparse r-ggdendro r-pvclust python=3.7 hmmer diamond prodigal blast metabat2 --yes
 
 ## activating environment
 conda activate fegenie
