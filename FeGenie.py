@@ -2594,9 +2594,9 @@ def main():
                     normDict[i] = len(file.keys())
 
             outHeat = open("%s/FeGenie-heatmap-data.csv" % (outDirectory), "w")
-            outHeat.write("X" + ',')
+            outHeat.write("X")
             for i in sorted(Dict.keys()):
-                outHeat.write(i + ",")
+                outHeat.write("," + i)
             outHeat.write("\n")
 
             for i in cats:
@@ -2604,9 +2604,9 @@ def main():
                 for j in sorted(Dict.keys()):
                     if not re.match(r'#', j):
                         if args.norm:
-                            outHeat.write(str((len(Dict[j][i]) / int(normDict[j])) * float(args.inflation)) + ",")
+                            outHeat.write("," + str((len(Dict[j][i]) / int(normDict[j])) * float(args.inflation)))
                         else:
-                            outHeat.write(str(len(Dict[j][i])) + ",")
+                            outHeat.write("," + str(len(Dict[j][i])))
                 outHeat.write("\n")
 
             outHeat.close()
@@ -2675,16 +2675,16 @@ def main():
                             Dict[cell][process].append(float(depthDict[cell][contig]))
 
             outHeat = open("%s/FeGenie-%s-heatmap-data.csv" % (outDirectory, args.which_bams), "w")
-            outHeat.write("X" + ',')
+            outHeat.write("X")
             for i in sorted(Dict.keys()):
-                outHeat.write(i + ",")
+                outHeat.write("," + i)
             outHeat.write("\n")
 
             for i in cats:
-                outHeat.write(i + ",")
+                outHeat.write(i)
                 for j in sorted(Dict.keys()):
                     if not re.match(r'#', j):
-                        outHeat.write(str(SUM(Dict[j][i])) + ",")
+                        outHeat.write("," + str(SUM(Dict[j][i])))
                 outHeat.write("\n")
 
             outHeat.close()
@@ -2736,16 +2736,16 @@ def main():
                             Dict[cell][process].append(float(depthDict[contig]))
 
             outHeat = open("%s/FeGenie-heatmap-data.csv" % (outDirectory), "w")
-            outHeat.write("X" + ',')
+            outHeat.write("X")
             for i in sorted(Dict.keys()):
-                outHeat.write(i + ",")
+                outHeat.write("," + i)
             outHeat.write("\n")
 
             for i in cats:
-                outHeat.write(i + ",")
+                outHeat.write(i)
                 for j in sorted(Dict.keys()):
                     if not re.match(r'#', j):
-                        outHeat.write(str(SUM(Dict[j][i])) + ",")
+                        outHeat.write("," + str(SUM(Dict[j][i])))
                 outHeat.write("\n")
 
         outHeat.close()
@@ -2911,19 +2911,19 @@ def main():
                     normDict[i] = len(file.keys())
 
             outHeat = open("%s/FeGenie-heatmap-data.csv" % (outDirectory), "w")
-            outHeat.write("X" + ',')
+            outHeat.write("X")
             for i in sorted(Dict.keys()):
-                outHeat.write(i + ",")
+                outHeat.write("," + i)
             outHeat.write("\n")
 
             for i in cats:
-                outHeat.write(i + ",")
+                outHeat.write(i)
                 for j in sorted(Dict.keys()):
                     if not re.match(r'#', j):
                         if args.norm:
-                            outHeat.write(str((len(Dict[j][i]) / int(normDict[j])) * float(args.inflation)) + ",")
+                            outHeat.write("," + str((len(Dict[j][i]) / int(normDict[j])) * float(args.inflation)))
                         else:
-                            outHeat.write(str(len(Dict[j][i])) + ",")
+                            outHeat.write("," + str(len(Dict[j][i])))
                 outHeat.write("\n")
 
             outHeat.close()
@@ -2994,16 +2994,16 @@ def main():
                             Dict[cell][process].append(float(depthDict[cell][contig]))
 
             outHeat = open("%s/FeGenie-%s-heatmap-data.csv" % (outDirectory, args.which_bams), "w")
-            outHeat.write("X" + ',')
+            outHeat.write("X")
             for i in sorted(Dict.keys()):
-                outHeat.write(i + ",")
+                outHeat.write("," + i)
             outHeat.write("\n")
 
             for i in cats:
-                outHeat.write(i + ",")
+                outHeat.write(i)
                 for j in sorted(Dict.keys()):
                     if not re.match(r'#', j):
-                        outHeat.write(str(SUM(Dict[j][i])) + ",")
+                        outHeat.write("," + str(SUM(Dict[j][i])))
                 outHeat.write("\n")
 
             outHeat.close()
@@ -3056,16 +3056,16 @@ def main():
                             Dict[cell][process].append(float(depthDict[contig]))
 
             outHeat = open("%s/FeGenie-heatmap-data.csv" % (outDirectory), "w")
-            outHeat.write("X" + ',')
+            outHeat.write("X")
             for i in sorted(Dict.keys()):
-                outHeat.write(i + ",")
+                outHeat.write("," + i)
             outHeat.write("\n")
 
             for i in cats:
-                outHeat.write(i + ",")
+                outHeat.write(i)
                 for j in sorted(Dict.keys()):
                     if not re.match(r'#', j):
-                        outHeat.write(str(SUM(Dict[j][i])) + ",")
+                        outHeat.write("," + str(SUM(Dict[j][i])))
                 outHeat.write("\n")
 
         outHeat.close()
@@ -3089,7 +3089,7 @@ def main():
                     os.system(
                         "Rscript --vanilla %s/dendro-heatmap.R %s/FeGenie-%s-heatmap-data.csv %s/" % (rscriptDir, outDirectory, args.which_bams, outDirectory))
 
-                os.system("mv %s/Fegenie-dotplot.tiff %s/Fegenie-%-dotplot.tiff" % (outDirectory, outDirectory, args.which_bams))
+                os.system("mv %s/Fegenie-dotplot.tiff %s/Fegenie-%s-dotplot.tiff" % (outDirectory, outDirectory, args.which_bams))
 
             else:
 
