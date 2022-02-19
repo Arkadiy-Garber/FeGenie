@@ -930,7 +930,7 @@ def main():
                                 SummaryDict[cell][orf]["hmmBit"] = hmmBit
                                 SummaryDict[cell][orf]["category"] = category
 
-        # ****************************** CLUSTERING OF ORFS BASED ON GENOMIC PROXIMITY *************************************
+        # ************************** CLUSTERING OF ORFS BASED ON GENOMIC PROXIMITY *********************************
         if not args.orfs:
             print("Identifying genomic proximities and putative operons")
             CoordDict = defaultdict(lambda: defaultdict(list))
@@ -2435,7 +2435,7 @@ def main():
                             hemeb = len(re.findall(r'G(.)[HR](.)C[PLAV]G', seq))
                             hbm = len(re.findall(r'[STC][AVILMFYWH][ST]P[ST]', seq))
                             out.write(
-                                ls[0] + "," + ls[1] + "," + str(idxDict[ls[2]]) + "," + ls[3] + "," + ls[4] + "," + ls[
+                                ls[0] + "," + ls[1] + "," + ls[2] + "," + ls[3] + "," + ls[4] + "," + ls[
                                     5] + "," + ls[6] + "," + ls[7] + "," + str(hemeb) + "," + str(hbm) + "," + ls[
                                     8] + "," + ls[9] + "," + ls[10] + "\n")
                         out.write(
@@ -2443,8 +2443,6 @@ def main():
                             "#####################################################################################################\n")
                     else:
                         for j in summaryDict[i]:
-                            if re.findall(r'Cyc2', j):
-                                print(j)
                             ls = j.split(",")
                             seq = ls[8]
                             hemeb = len(re.findall(r'G(.)[HR](.)C[PLAV]G', seq))
