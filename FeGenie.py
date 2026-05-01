@@ -512,38 +512,8 @@ def main():
     for i in file:
         HMMdir = i.rstrip()
 
-    bits = HMMdir + "/" + "HMM-bitcutoffs.txt"
-
-    file = open("rscripts.txt")
-    rscriptDir = ""
-    for i in file:
-        rscriptDir = i.rstrip()
-
-    try:
-        test = open(bits)
-
-    except FileNotFoundError:
-        os.system("which FeGenie.py > mainDir.txt")
-
-        file = open("mainDir.txt")
-        for i in file:
-            location = i.rstrip()
-        location = allButTheLast(location, "/")
-
-        HMMdir = location + "/hmms/iron/"
-        bits = HMMdir + "/" + "HMM-bitcutoffs.txt"
-        rscriptDir = location + "/rscripts/"
-
-        try:
-            test = open(bits)
-        except FileNotFoundError:
-            print("FeGenie could not locate the required directories. Please run the setup.sh script if "
-                  "you have Conda installed. Otherwise, please run the setupe-noconda.sh script and put FeGenie.py into your $PATH")
-            raise SystemExit
-
-        os.system("rm mainDir.txt")
-
-    os.system("rm -f HMMlib.txt rscripts.txt")
+    bits = "/home/ec2-user/bin/FeGenie/hmms/iron/HMM-bitcutoffs.txt"
+    rscriptDir = "/home/ec2-user/bin/FeGenie/rscripts/"
 
     if len(sys.argv) == 1:
         parser.print_help(sys.stderr)
@@ -564,10 +534,6 @@ def main():
         print("Exiting")
         raise SystemExit
 
-    if args.bam != "NA" and args.bams != "NA":
-        print("Please provide only one of the following flags: \'-bam\' or \'-bams\'.")
-        raise SystemExit
-
     if args.bin_ext != "NA":
         print(".")
     else:
@@ -577,29 +543,10 @@ def main():
         print("Exiting")
         raise SystemExit
 
-    try:
-        os.listdir(args.out)
-        print("Looks like you already have a directory with the name: " + args.out)
 
-        if args.nohup:
-            answer = "y"
-        else:
-            answer = input("Would you like FeGenie to proceed and potentially overwrite files in this directory? (y/n): ")
-        if answer == "y":
-            print("Ok, proceeding with analysis!")
-            try:
-                os.listdir(args.out + "/ORF_calls")
-            except FileNotFoundError:
-                os.system("mkdir %s/ORF_calls" % args.out)
-
-        else:
-            print("Exiting")
-            raise SystemExit
-
-    except FileNotFoundError:
-        print(".")
-        os.system("mkdir %s" % args.out)
-        os.system("mkdir %s/ORF_calls" % args.out)
+    print(".")
+    os.system("mkdir -p %s" % args.out)
+    os.system("mkdir -p %s/ORF_calls" % args.out)
 
     if lastItem(args.out) == "/":
         outDirectory = "%s" % args.out[0:len(args.out)-1]
@@ -634,7 +581,7 @@ def main():
                     testFile = open("%s/%s" % (binDir, i), "r")
                     for line in testFile:
                         if re.match(r'>', line):
-                            if re.findall(r'\|]', line):
+                            if re.findall(r'\|', line):
                                 print("Looks like one of your fasta files has a header containing the character: \|")
                                 print(
                                     "Unfortunately, this is a problem for FeGenie because it uses that character as delimiter to store important information.")
@@ -647,7 +594,7 @@ def main():
                         print("ORFS for %s found. Skipping Prodigal, and going with %s-proteins.faa" % (i, i))
                         for line in testFile:
                             if re.match(r'>', line):
-                                if re.findall(r'\|]', line):
+                                if re.findall(r'\|', line):
                                     print(
                                         "Looks like one of your fasta files has a header containing the character: \|")
                                     print(
@@ -659,7 +606,7 @@ def main():
                         binFile = open("%s/%s" % (binDir, i), "r")
                         for line in binFile:
                             if re.match(r'>', line):
-                                if re.findall(r'\|]', line):
+                                if re.findall(r'\|', line):
                                     print("Looks like one of your fasta files has a header containing the character: \|")
                                     print(
                                         "Unfortunately, this is a problem for FeGenie because it uses that character as delimiter to store important information.")
@@ -782,7 +729,7 @@ def main():
         metaDict[ls[0]] = ls[1]
 
     # ******************* BEGINNING MAIN ALGORITHM **********************************))))
-
+    HMMdir = "/home/ec2-user/bin/FeGenie/hmms/iron/"
     if not args.skip:
         if args.cat == "NA":
             catList = []
@@ -1493,12 +1440,12 @@ def main():
             time.sleep(5)
 
             # REMOVING FILES
-            os.system("rm %s/GeoThermin.csv" % outDirectory)
-            os.system("rm %s/*summary*" % outDirectory)
-            os.system("rm %s/FinalSummary-dereplicated-clustered-blast.csv" % outDirectory)
-            os.system("rm %s/*blast" % outDirectory)
-            os.system("rm %s/FinalSummary.csv" % outDirectory)
-            os.system("rm %s/FinalSummary-dereplicated-clustered.csv" % outDirectory)
+            # os.system("rm %s/GeoThermin.csv" % outDirectory)
+            # os.system("rm %s/*summary*" % outDirectory)
+            # os.system("rm %s/FinalSummary-dereplicated-clustered-blast.csv" % outDirectory)
+            # os.system("rm %s/*blast" % outDirectory)
+            # os.system("rm %s/FinalSummary.csv" % outDirectory)
+            # os.system("rm %s/FinalSummary-dereplicated-clustered.csv" % outDirectory)
             os.system("mv %s/FinalSummary-dereplicated-clustered-blast-filtered.csv %s/FeGenie-summary.csv" % (outDirectory, outDirectory))
 
             # OPTIONAL CROSS-VALIDATION AGAINST REFERENCE DATABASE
