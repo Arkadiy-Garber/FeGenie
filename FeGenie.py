@@ -581,7 +581,7 @@ def main():
                     testFile = open("%s/%s" % (binDir, i), "r")
                     for line in testFile:
                         if re.match(r'>', line):
-                            if re.findall(r'\|]', line):
+                            if re.findall(r'\|', line):
                                 print("Looks like one of your fasta files has a header containing the character: \|")
                                 print(
                                     "Unfortunately, this is a problem for FeGenie because it uses that character as delimiter to store important information.")
@@ -594,7 +594,7 @@ def main():
                         print("ORFS for %s found. Skipping Prodigal, and going with %s-proteins.faa" % (i, i))
                         for line in testFile:
                             if re.match(r'>', line):
-                                if re.findall(r'\|]', line):
+                                if re.findall(r'\|', line):
                                     print(
                                         "Looks like one of your fasta files has a header containing the character: \|")
                                     print(
@@ -606,7 +606,7 @@ def main():
                         binFile = open("%s/%s" % (binDir, i), "r")
                         for line in binFile:
                             if re.match(r'>', line):
-                                if re.findall(r'\|]', line):
+                                if re.findall(r'\|', line):
                                     print("Looks like one of your fasta files has a header containing the character: \|")
                                     print(
                                         "Unfortunately, this is a problem for FeGenie because it uses that character as delimiter to store important information.")
