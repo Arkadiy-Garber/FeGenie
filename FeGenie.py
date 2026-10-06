@@ -2411,13 +2411,7 @@ def main():
         # ****************************** REMOVING #'S ***************************************
         summary = open("%s/FeGenie-geneSummary-clusters.csv" % outDirectory, "r")
         out = open("%s/FeGenie-geneSummary.csv" % outDirectory, "w")
-        if args.ref != "NA":
-            out.write(
-                "category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore" + "," + "bitscore_cutoff" + "," + "clusterID" + "," + "heme_c_binding_motifs" + "," + "top_blast_hit" + "," + "blast_hit_evalue" + "," + "protein_sequence" + "\n")
-        else:
-            out.write(
-                "category" + "," + "genome/assembly" + "," + "orf" + "," + "HMM" + "," + "bitscore" + "," + "bitscore_cutoff" + "," + "clusterID" + "," + "heme_c_binding_motifs" + "," + "protein_sequence" + "\n")
-
+       
         for i in summary:
             if not re.search(r'#', i):
                 out.write(i.rstrip() + "\n")
@@ -2546,7 +2540,7 @@ def main():
             outHeat.write("\n")
 
             for i in cats:
-                outHeat.write(i + ",")
+                outHeat.write(i)
                 for j in sorted(Dict.keys()):
                     if not re.match(r'#', j):
                         if args.norm:
@@ -3082,6 +3076,21 @@ def main():
         print("")
         print("Pipeline finished without crashing!!! Thanks for using :)")
 
+# ****************************** REMOVE UNWANTED CSV OUTPUTS ******************************
+    # Keep only the three requested FeGenie CSV output files.
+    keep_csv = {
+        "FeGenie-heatmap-data.csv",
+        "FeGenie-geneSummary.csv",
+        "FeGenie-geneSummary-clusters.csv"
+    }
+
+    for filename in os.listdir(outDirectory):
+        if filename.endswith(".csv") and filename not in keep_csv:
+            filepath = os.path.join(outDirectory, filename)
+            try:
+                os.remove(filepath)
+            except OSError:
+                pass
 
 if __name__ == '__main__':
     main()
